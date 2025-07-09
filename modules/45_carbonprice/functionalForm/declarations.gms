@@ -34,6 +34,13 @@ p45_regiDiff_initialRatio(all_regi)         "inital ratio between global anchor 
 p45_regiDiff_endYr(all_regi)                "end year of regional differentiation, i.e. regional carbon price equal to global anchor trajectory thereafter"
 p45_regiDiff_exponent(all_regi)             "regional convergence exponent for ratio between global anchor and regional differentiated CO2 price trajectories"
 
+*** If cm_budgetCO2from2020Regi is not off, read regional carbon budget from switch
+$ifthen.RegiEmiBudget not "%cm_budgetCO2from2020Regi%" == "off"
+p45_budgetCO2from2020Regi(all_regi)                    "regional carbon budget (all regions)" / %cm_budgetCO2from2020Regi% /
+p45_actualbudgetco2Regi(all_regi)                      "regional - actual level of 2020-2100 cumulated emissions, including all CO2 for last iteration"
+p45_factorRescale_taxCO2Regi(iteration, all_regi)      "regional - Multiplicative factor for rescaling the CO2 price to reach the target"
+$endif.RegiEmiBudget
+
 *** If cm_taxCO2_regiDiff_convergence is not set to scenario, read in data from switch
 $ifThen.taxCO2regiDiffConvergence1 "%cm_taxCO2_regiDiff_convergence%" == "scenario"
 $else.taxCO2regiDiffConvergence1
@@ -53,12 +60,16 @@ $endIf.taxCO2regiDiffStartyearValue1
 scalars
 s45_actualbudgetco2                                     "actual level of 2020-2100 cumulated emissions, including all CO2 for last iteration"
 s45_actualbudgetco2_last                                "actual level of 2020-2100 cumulated emissions for previous iteration" /0/
+
+
 s45_factorRescale_taxCO2_exponent_before10              "exponent determining sensitivity    before iteration 10"
 s45_factorRescale_taxCO2_exponent_from10                "exponent determining sensitivity of CO2 price adjustment to CO2 budget deviation from iteration 10"
 ;
 
 *** Parameters only used in functionForm/postsolve.gms
 parameters 
+
+
 p45_taxCO2eq_anchor_iter(iteration,ttot)                "save p45_taxCO2eq_anchor in each iteration (before entering functionalForm/postsolve.gms) for debugging"
 o45_taxCO2eq_anchor_iterDiff_Itr(iteration)             "track pm_taxCO2eq_anchor_iterationdiff in 2100 over iterations"
 p45_taxCO2eq_anchor_iterationdiff_tmp(ttot)             "help parameter for iterative adjustment of taxes"

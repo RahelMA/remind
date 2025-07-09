@@ -31,8 +31,57 @@ if ((cm_emiscen eq 6) AND (cm_iterative_target_adj eq 5),
 	display sm_budgetCO2eqGlob;
 );
 
-*** Only run adjustment of carbon price trajectory if cm_emiscen eq 9 and if cm_iterative_target_adj is equal to 5,7 or 9.
-if((cm_emiscen eq 9) AND ((cm_iterative_target_adj eq 5) OR (cm_iterative_target_adj eq 7) OR (cm_iterative_target_adj eq 9)),
+
+
+***------------------------------------------------------------------------------------------------------------------------------------------------
+***regional eoc emission budget
+***------------------------------------------------------------------------------------------------------------------------------------------------
+$ifthen.RegiEmiBudget NOT "%cm_budgetCO2from2020Regi%" == "off"
+if(cm_iterative_target_adj eq 4,
+
+  p45_actualbudgetco2Regi(all_regi) = sum(t$(t.val eq 2100),pm_actualbudgetco2Regi(t, all_regi)); 
+  s45_factorRescale_taxCO2_exponent_before10 = 2;
+  s45_factorRescale_taxCO2_exponent_from10 = 1;
+  
+
+  
+
+
+*    Compute deviation from regional target budget
+*1.a. Compute regional adjustment factor
+
+  loop(all_regi,
+   if (p45_actualbudgetco2Regi(all_regi) > 0,  !! If budget positive for region
+
+    !! CO2 tax rescale factor (regionally differentiated)
+    if(iteration.val < 10,
+      p45_factorRescale_taxCO2Regi(iteration, all_regi) = 
+        max(0.1, (p45_actualbudgetco2Regi(all_regi) / p45_budgetCO2from2020Regi(all_regi))) ** s45_factorRescale_taxCO2_exponent_before10;
+    else
+      p45_factorRescale_taxCO2Regi(iteration, all_regi) = 
+        max(0.1, (p45_actualbudgetco2Regi(all_regi) / p45_budgetCO2from2020Regi(all_regi))) ** s45_factorRescale_taxCO2_exponent_from10;
+    );
+
+    
+
+  else  !! If budget is negative, needs to be revised with Tabea if this makes sense!
+    p45_factorRescale_taxCO2Regi(iteration, all_regi) = 0.8; 
+ 
+  );
+
+* 1.+3.  Multiply pm_taxCO2eq(regi) with regional adjustment factor
+  pm_taxCO2eq(t,all_regi)$(t.val gt 2025 AND t.val le 2100) = max(1* sm_DptCO2_2_TDpGtC,pm_taxCO2eq(t,all_regi) * p45_factorRescale_taxCO2Regi(t,all_regi) );
+);
+);
+$endif.RegiEmiBudget 
+
+***------------------------------------------------------------------------------------------------------------------------------------------------
+***END regional eoc emission budget 
+***------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+*** Only run adjustment of carbon price trajectory if cm_emiscen eq 9 and if cm_iterative_target_adj is equal to 4, 5,7 or 9.
+if((cm_emiscen eq 9) AND ((cm_iterative_target_adj eq 4) OR(cm_iterative_target_adj eq 5) OR (cm_iterative_target_adj eq 7) OR (cm_iterative_target_adj eq 9)),
 
 *** Save pm_taxCO2eq and p45_taxCO2eq_anchor over iterations for debugging
 pm_taxCO2eq_iter(iteration,ttot,regi) = pm_taxCO2eq(ttot,regi);
@@ -40,6 +89,8 @@ p45_taxCO2eq_anchor_iter(iteration,ttot) = p45_taxCO2eq_anchor(ttot);
 
 *** Compute absolute deviation of actual budget from target budget
 sm_globalBudget_absDev = s45_actualbudgetco2 - cm_budgetCO2from2020;
+
+
 
 ***--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 *** Part I and II (Global anchor trajectory and post-peak behaviour): Adjustment of global anchor trajectory to meet (peak or end-of-century) CO2 budget target prescribed via cm_budgetCO2from2020.

@@ -889,10 +889,11 @@ parameter
 parameter
   cm_iterative_target_adj   "settings on iterative adjustment for CO2 tax based on in-iteration emission or forcing level. Allow iteratively generated endogenous global CO2 tax under peak budget constraint or end-of-century budget constraint."
 ;
-  cm_iterative_target_adj = 0;      !! def = 0  !! regexp = 0|2|3|5|7|9
+  cm_iterative_target_adj = 0;      !! def = 0  !! regexp = 0|2|3|4|5|7|9
 *' * (0): no iterative adjustment of CO2 tax (terminology: CO2 price and CO2 tax in REMIND is used interchangeably)
 *' * (2): iterative adjustment of CO2 tax or cumulative emission based on climate forcing calculated by climate model magicc, for runs with budget or CO2 tax constraints. See ./modules/45_carbonprice/NDC/postsolve.gms for direct algorithm
 *' * (3): [requires 45_carbonprice = NDC and emiscen = 9] iterative adjustment of CO2 tax based on 2025 or 2030 regionally differentiated emissions, for runs with emission budget or CO2 tax constraints. See ./modules/45_carbonprice/NDC/postsolve.gms for direct algorithm
+*' * (4): [requires 45_carbonprice = functionalForm and emiscen = 9] iterative adjustment of CO2 tax based on economy-wide CO2 cumulative emission budget(2020-2100), for runs with emission budget or CO2 tax constraints. [see 45_carbonprice/functionalForm/postsolve.gms for direct algorithm]
 *' * (5): [requires 45_carbonprice = functionalForm and emiscen = 9] iterative adjustment of CO2 tax based on economy-wide CO2 cumulative emission budget(2020-2100), for runs with emission budget or CO2 tax constraints. [see 45_carbonprice/functionalForm/postsolve.gms for direct algorithm]
 *' * (7): [requires 45_carbonprice = functionalForm and emiscen = 9] iterative adjustment of CO2 tax based on economy-wide CO2 cumulative emission peak budget, for runs with emission budget or CO2 tax constraints. Features: results in a peak budget with zero net CO2 emissions after peak budget is reached. See core/postsolve.gms for direct algorithms [see 45_carbonprice/functionalForm/postsolve.gms for direct algorithm]
 *' * (9): [requires 45_carbonprice = functionalForm and emiscen = 9] iterative adjustment of CO2 tax based on economy-wide CO2 cumulative emission peak budget, for runs with emission budget or CO2 tax constraints. Features: 1) after the year when budget peaks, CO2 tax has an annual increase by cm_taxCO2_IncAfterPeakBudgYr, 2) automatically shifts cm_peakBudgYr to find the correct year of budget peaking for a given budget. [see 45_carbonprice/functionalForm/postsolve.gms for direct algorithm]
@@ -1941,6 +1942,11 @@ $setglobal c_CES_calibration_industry_FE_target  1
 $setglobal c_testOneRegi_region  EUR       !! def = EUR  !! regexp = [A-Z]{3}
 *' cm_taxrc_RE     "switch to define whether tax on (CO2 content of) energy imports is recycled to additional direct investments in renewables (wind, solar and storage)"
 $setglobal cm_taxrc_RE  none   !! def = none   !! regexp = none|REdirect
+
+*' cm_budgetCO2from2020Regi     "switch to eoc regional carbon budgets"
+$setglobal cm_budgetCO2from2020Regi  off !! def = off
+
+
 *' cm_emifacs_baseyear "base year for deriving nonCO2 emission factors/econometric estimates/scaling factors"
 *' (2005): Uses EDGAR data with 2005 as base year, and Lucas et al. 2007 IMAGE for N2O baselines
 *' (2020): Uses CEDS2024 data with 2020 as base year, and Harmsen et al. 2022 IMAGE for N2O baselines

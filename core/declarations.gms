@@ -112,6 +112,11 @@ pm_budgetCO2eq(all_regi)                             "budget for regional energy
 pm_actualbudgetco2(ttot)                             "actual level of cumulated emissions starting from 2020 [GtCO2]"
 p_actualbudgetco2_iter(iteration,ttot)               "track actual level of cumulated emissions starting from 2020 over iterations [GtCO2]"
 
+pm_actualbudgetco2Regi(ttot, all_regi)                             "Regional- actual level of cumulated emissions starting from 2020 [GtCO2]"
+p_actualbudgetco2_iterRegi(iteration,ttot, all_regi)               "Regional- track actual level of cumulated emissions starting from 2020 over iterations [GtCO2]"
+
+
+
 pm_dataccs(all_regi,char,rlf)                               "maximum CO2 storage capacity using CCS technology. [GtC]"
 pm_ccsinjecrate(all_regi)                                   "Regional CCS injection rate factor. 1/a."
 p_extRegiccsinjecrateRegi(ext_regi)                         "Regional CCS injection rate factor. 1/a. (extended regions)"
