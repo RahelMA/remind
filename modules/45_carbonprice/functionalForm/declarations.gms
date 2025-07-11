@@ -36,9 +36,12 @@ p45_regiDiff_exponent(all_regi)             "regional convergence exponent for r
 
 *** If cm_budgetCO2from2020Regi is not off, read regional carbon budget from switch
 $ifthen.RegiEmiBudget not "%cm_budgetCO2from2020Regi%" == "off"
-p45_budgetCO2from2020Regi(all_regi)                    "regional carbon budget (all regions)" / %cm_budgetCO2from2020Regi% /
-p45_actualbudgetco2Regi(all_regi)                      "regional - actual level of 2020-2100 cumulated emissions, including all CO2 for last iteration"
-p45_factorRescale_taxCO2Regi(iteration, all_regi)      "regional - Multiplicative factor for rescaling the CO2 price to reach the target"
+p45_budgetCO2from2020Regi(all_regi)                           "regional carbon budget (all regions)" / %cm_budgetCO2from2020Regi% /
+p45_actualbudgetco2Regi(all_regi)                             "regional - actual level of 2020-2100 cumulated emissions, including all CO2 for last iteration"
+p45_factorRescale_taxCO2Regi(iteration, all_regi)             "regional - Multiplicative factor for rescaling the CO2 price to reach the target"
+p45_factorRescale_taxCO2_FunneledRegi(iteration, all_regi)    "regional - Multiplicative factor for rescaling the CO2 price to reach the target - limited by an iteration-dependent funnel"
+p45_taxCO2eq_anchorRegi(ttot, all_regi)                       "regional anchor trajectory for regional CO2 price trajectories in T$/GtC = $/kgC"
+p45_taxCO2eq_anchor_until2150Regi(ttot, all_regi)             "regional anchor trajectory continued until 2150 - as if there was no change in trajectory after cm_peakBudgYr. Needed if cm_peakBudgYr was shifted right"
 $endif.RegiEmiBudget
 
 *** If cm_taxCO2_regiDiff_convergence is not set to scenario, read in data from switch

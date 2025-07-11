@@ -44,12 +44,7 @@ if(cm_iterative_target_adj eq 4,
   s45_factorRescale_taxCO2_exponent_from10 = 1;
   
 
-  
-
-
-*    Compute deviation from regional target budget
-*1.a. Compute regional adjustment factor
-
+*** 1. Compute deviation from regional target budget to set regional adjustment factor
   loop(all_regi,
    if (p45_actualbudgetco2Regi(all_regi) > 0,  !! If budget positive for region
 
@@ -57,21 +52,33 @@ if(cm_iterative_target_adj eq 4,
     if(iteration.val < 10,
       p45_factorRescale_taxCO2Regi(iteration, all_regi) = 
         max(0.1, (p45_actualbudgetco2Regi(all_regi) / p45_budgetCO2from2020Regi(all_regi))) ** s45_factorRescale_taxCO2_exponent_before10;
+      p45_factorRescale_taxCO2_FunneledRegi(iteration, all_regi) 
+        = max(min( 2 * EXP( -0.15 * iteration.val ) + 1.01 ,p45_factorRescale_taxCO2Regi(iteration, all_regi)),
+              1/ ( 2 * EXP( -0.15 * iteration.val ) + 1.01)
+          );
     else
       p45_factorRescale_taxCO2Regi(iteration, all_regi) = 
         max(0.1, (p45_actualbudgetco2Regi(all_regi) / p45_budgetCO2from2020Regi(all_regi))) ** s45_factorRescale_taxCO2_exponent_from10;
-    );
-
-    
-
+       );
   else  !! If budget is negative, needs to be revised with Tabea if this makes sense!
     p45_factorRescale_taxCO2Regi(iteration, all_regi) = 0.8; 
- 
-  );
+       );
+       display p45_actualbudgetco2Regi, p45_budgetCO2from2020Regi;
+      );
 
-* 1.+3.  Multiply pm_taxCO2eq(regi) with regional adjustment factor
-  pm_taxCO2eq(t,all_regi)$(t.val gt 2025 AND t.val le 2100) = max(1* sm_DptCO2_2_TDpGtC,pm_taxCO2eq(t,all_regi) * p45_factorRescale_taxCO2Regi(t,all_regi) );
-);
+*** 2. Shift anchor curve with regional adjustment factor
+
+    !! Apply CO2 tax rescale factor
+    p45_taxCO2eq_anchor_until2150Regi(ttot, all_regi)$(ttot.val ge 2005) = p45_taxCO2eq_anchor_until2150(ttot) * p45_factorRescale_taxCO2_FunneledRegi(iteration, all_regi) ;
+    display p45_taxCO2eq_anchor_until2150Regi;
+
+    !! Use rescaled p45_taxCO2eq_anchor_until2150 as starting point for re-defining p45_taxCO2eq_anchor
+    p45_taxCO2eq_anchorRegi(ttot, all_regi)$(ttot.val ge 2005) = p45_taxCO2eq_anchor_until2150Regi(ttot, all_regi);
+    
+    !! Always set carbon price constant after 2100 to prevent huge taxes after 2100 and the resulting convergence problems
+    p45_taxCO2eq_anchorRegi(t, all_regi)$(t.val gt 2100) = p45_taxCO2eq_anchorRegi("2100", all_regi);
+
+  pm_taxCO2eq(t,all_regi)$(t.val ge s45_interpolation_endYr) = p45_taxCO2eq_anchorRegi(t,all_regi);
 );
 $endif.RegiEmiBudget 
 
