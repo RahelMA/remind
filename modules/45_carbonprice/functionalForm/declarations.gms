@@ -10,6 +10,7 @@ scalars
 s45_taxCO2_startyear                        "CO2 tax provided by cm_taxCO2_startyear converted from $/t CO2eq to T$/GtC"
 s45_taxCO2_peakBudgYr                       "CO2 tax provided by cm_taxCO2_peakBudgYr converted from $/t CO2eq to T$/GtC"
 
+
 $ifThen.taxCO2functionalForm1 "%cm_taxCO2_functionalForm%" == "linear"
 s45_taxCO2_historical                       "historical level of CO2 tax converted from $/t CO2eq to T$/GtC"
 s45_taxCO2_historicalYr                     "year of s45_taxCO2_historical"
@@ -42,6 +43,8 @@ p45_factorRescale_taxCO2Regi(iteration, all_regi)             "regional - Multip
 p45_factorRescale_taxCO2_FunneledRegi(iteration, all_regi)    "regional - Multiplicative factor for rescaling the CO2 price to reach the target - limited by an iteration-dependent funnel"
 p45_taxCO2eq_anchorRegi(ttot, all_regi)                       "regional anchor trajectory for regional CO2 price trajectories in T$/GtC = $/kgC"
 p45_taxCO2eq_anchor_until2150Regi(ttot, all_regi)             "regional anchor trajectory continued until 2150 - as if there was no change in trajectory after cm_peakBudgYr. Needed if cm_peakBudgYr was shifted right"
+p45_temp_anchor(ttot, all_regi, iteration)
+p45_taxCO2eq_anchor_until2150Regi(ttot, all_regi);
 $endif.RegiEmiBudget
 
 *** If cm_taxCO2_regiDiff_convergence is not set to scenario, read in data from switch
@@ -89,6 +92,5 @@ p45_factorRescale_taxCO2(iteration)                     "Multiplicative factor f
 p45_factorRescale_taxCO2_Funneled(iteration)            "Multiplicative factor for rescaling the CO2 price to reach the target - limited by an iteration-dependent funnel"
 o45_pkBudgYr_flipflop(iteration)                        "Counter that tracks if flipfloping of cm_peakBudgYr occured in the last iterations"
 ;
-
 
 *** EOF ./modules/45_carbonprice/functionalForm/declarations.gms

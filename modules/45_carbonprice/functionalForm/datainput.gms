@@ -6,8 +6,8 @@
 *** |  Contact: remind@pik-potsdam.de
 *** SOF ./modules/45_carbonprice/functionalForm/datainput.gms
 
-*** Check that cm_iterative_target_adj is equal to 0, 5, 7, or 9
-if( not ((cm_iterative_target_adj = 0) or (cm_iterative_target_adj eq 5) or (cm_iterative_target_adj eq 7) or (cm_iterative_target_adj eq 9) ),
+*** Check that cm_iterative_target_adj is equal to 0, 4, 5, 7, or 9
+if( not ((cm_iterative_target_adj = 0) or (cm_iterative_target_adj eq 4) or (cm_iterative_target_adj eq 5) or (cm_iterative_target_adj eq 7) or (cm_iterative_target_adj eq 9) ),
   abort "The realization 45_carbonprice/functionalForm is only compatible with cm_iterative_target_adj = 0, 5, 7 or 9. Please adjust config file accordingly"
 );
 
