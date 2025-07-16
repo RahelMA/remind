@@ -41,29 +41,29 @@ if ((cm_emiscen eq 6) AND (cm_iterative_target_adj eq 5),
 $ifthen.RegiEmiBudget NOT "%cm_budgetCO2from2020Regi%" == "off"
 if(cm_iterative_target_adj eq 4,
 
-  p45_actualbudgetco2Regi(all_regi) = sum(t$(t.val eq 2100),pm_actualbudgetco2Regi(t, all_regi)); 
+  p45_actualbudgetco2Regi(regi) = sum(t$(t.val eq 2100), pm_actualbudgetco2Regi(t,regi)); 
   s45_factorRescale_taxCO2_exponent_before10 = 2;
   s45_factorRescale_taxCO2_exponent_from10 = 1;
   
 
 *** 1. Compute deviation from regional target budget to set regional adjustment factor
-  loop(all_regi,
-   if (p45_actualbudgetco2Regi(all_regi) > 0,  !! If budget positive for region
+  loop(regi,
+   if (p45_actualbudgetco2Regi(regi) > 0,  !! If budget positive for region
 
     !! CO2 tax rescale factor (regionally differentiated)
     if(iteration.val < 10,
-      p45_factorRescale_taxCO2Regi(iteration, all_regi) = 
-        max(0.1, (p45_actualbudgetco2Regi(all_regi) / p45_budgetCO2from2020Regi(all_regi))) ** s45_factorRescale_taxCO2_exponent_before10;
-      p45_factorRescale_taxCO2_FunneledRegi(iteration, all_regi) 
-        = max(min( 2 * EXP( -0.15 * iteration.val ) + 1.01 ,p45_factorRescale_taxCO2Regi(iteration, all_regi)),
+      p45_factorRescale_taxCO2Regi(iteration, regi) = 
+        max(0.1, (p45_actualbudgetco2Regi(regi) / p45_budgetCO2from2020Regi(regi))) ** s45_factorRescale_taxCO2_exponent_before10;
+      p45_factorRescale_taxCO2_FunneledRegi(iteration, regi) 
+        = max(min( 2 * EXP( -0.15 * iteration.val ) + 1.01 ,p45_factorRescale_taxCO2Regi(iteration,regi)),
               1/ ( 2 * EXP( -0.15 * iteration.val ) + 1.01)
           );
     else
-      p45_factorRescale_taxCO2Regi(iteration, all_regi) = 
-        max(0.1, (p45_actualbudgetco2Regi(all_regi) / p45_budgetCO2from2020Regi(all_regi))) ** s45_factorRescale_taxCO2_exponent_from10;
+      p45_factorRescale_taxCO2Regi(iteration, regi) = 
+        max(0.1, (p45_actualbudgetco2Regi(regi) / p45_budgetCO2from2020Regi(regi))) ** s45_factorRescale_taxCO2_exponent_from10;
        );
     else  !! If budget is negative, needs to be revised with Tabea if this makes sense!
-      p45_factorRescale_taxCO2Regi(iteration, all_regi) = 0.8; 
+      p45_factorRescale_taxCO2Regi(iteration,regi) = 0.8; 
        );
        display p45_actualbudgetco2Regi, p45_budgetCO2from2020Regi;
   );
@@ -75,13 +75,13 @@ if(cm_iterative_target_adj eq 4,
 
 
 * Compute all iterations
-p45_temp_anchor(ttot, all_regi, iteration)$(ttot.val ge 2005) = 
-    p45_taxCO2eq_anchor_until2150(ttot) * p45_factorRescale_taxCO2Regi(iteration, all_regi);
+p45_temp_anchor(ttot,regi,iteration)$(ttot.val ge 2005) = 
+    p45_taxCO2eq_anchor_until2150(ttot) * p45_factorRescale_taxCO2Regi(iteration,regi);
 
 
-* Select iteration
- loop(iteration2,
- p45_taxCO2eq_anchor_until2150Regi(ttot, all_regi)$(ttot.val ge 2005) = p45_temp_anchor(ttot, all_regi, iteration2));
+* Select current iteration
+ loop(iteration2$(iteration2.val le iteration.val),
+ p45_taxCO2eq_anchor_until2150Regi(ttot,regi)$(ttot.val ge 2005) = p45_temp_anchor(ttot,regi,iteration2));
 
 
 
@@ -92,12 +92,12 @@ p45_temp_anchor(ttot, all_regi, iteration)$(ttot.val ge 2005) =
   display p45_taxCO2eq_anchor_until2150Regi;
 
   !! Use rescaled p45_taxCO2eq_anchor_until2150 as starting point for re-defining p45_taxCO2eq_anchor
-  p45_taxCO2eq_anchorRegi(ttot, all_regi)$(ttot.val ge 2005) = p45_taxCO2eq_anchor_until2150Regi(ttot, all_regi);
+  p45_taxCO2eq_anchorRegi(ttot,regi)$(ttot.val ge 2005) = p45_taxCO2eq_anchor_until2150Regi(ttot, regi);
     
   !! Always set carbon price constant after 2100 to prevent huge taxes after 2100 and the resulting convergence problems
-  p45_taxCO2eq_anchorRegi(t, all_regi)$(t.val gt 2100) = p45_taxCO2eq_anchorRegi("2100", all_regi);
+  p45_taxCO2eq_anchorRegi(t,regi)$(t.val gt 2100) = p45_taxCO2eq_anchorRegi("2100",regi);
 
-  pm_taxCO2eq(t,all_regi)$(t.val ge s45_interpolation_endYr) = p45_taxCO2eq_anchorRegi(t,all_regi);
+pm_taxCO2eq(t,regi)$(t.val ge 2005) = p45_taxCO2eq_anchorRegi(t,regi);
 );
 $endif.RegiEmiBudget 
 
@@ -106,8 +106,8 @@ $endif.RegiEmiBudget
 ***------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-*** Only run adjustment of carbon price trajectory if cm_emiscen eq 9 and if cm_iterative_target_adj is equal to 4, 5,7 or 9.
-if((cm_emiscen eq 9) AND ((cm_iterative_target_adj eq 4) OR(cm_iterative_target_adj eq 5) OR (cm_iterative_target_adj eq 7) OR (cm_iterative_target_adj eq 9)),
+*** Only run adjustment of carbon price trajectory if cm_emiscen eq 9 and if cm_iterative_target_adj is equal to 5,7 or 9.
+if((cm_emiscen eq 9) AND ((cm_iterative_target_adj eq 5) OR (cm_iterative_target_adj eq 7) OR (cm_iterative_target_adj eq 9)),
 
 *** Save pm_taxCO2eq and p45_taxCO2eq_anchor over iterations for debugging
 pm_taxCO2eq_iter(iteration,ttot,regi) = pm_taxCO2eq(ttot,regi);

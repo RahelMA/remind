@@ -112,8 +112,8 @@ pm_budgetCO2eq(all_regi)                             "budget for regional energy
 pm_actualbudgetco2(ttot)                             "actual level of cumulated emissions starting from 2020 [GtCO2]"
 p_actualbudgetco2_iter(iteration,ttot)               "track actual level of cumulated emissions starting from 2020 over iterations [GtCO2]"
 
-pm_actualbudgetco2Regi(ttot, all_regi)                             "Regional- actual level of cumulated emissions starting from 2020 [GtCO2]"
-p_actualbudgetco2_iterRegi(iteration,ttot, all_regi)               "Regional- track actual level of cumulated emissions starting from 2020 over iterations [GtCO2]"
+pm_actualbudgetco2Regi(ttot,all_regi)                             "Regional- actual level of cumulated emissions starting from 2020 [GtCO2]"
+p_actualbudgetco2_iterRegi(iteration,ttot,all_regi)               "Regional- track actual level of cumulated emissions starting from 2020 over iterations [GtCO2]"
 
 
 
