@@ -6,9 +6,38 @@
 *** |  Contact: remind@pik-potsdam.de
 *** SOF ./modules/45_carbonprice/functionalForm/datainput.gms
 
-*** Check that cm_iterative_target_adj is equal to 0, 5, 7, or 9
-if( not ((cm_iterative_target_adj = 0) or (cm_iterative_target_adj eq 5) or (cm_iterative_target_adj eq 7) or (cm_iterative_target_adj eq 9) ),
+*** Check that cm_iterative_target_adj is equal to 0, 4, 5, 7, or 9
+if( not ((cm_iterative_target_adj = 0) or (cm_iterative_target_adj eq 4) or (cm_iterative_target_adj eq 5) or (cm_iterative_target_adj eq 55) or (cm_iterative_target_adj eq 7) or (cm_iterative_target_adj eq 9)),
   abort "The realization 45_carbonprice/functionalForm is only compatible with cm_iterative_target_adj = 0, 5, 7 or 9. Please adjust config file accordingly"
+);
+
+*** Unless cm_budgetAllocation eq 0, set the regional budget constraints based on shares
+* a) shares determined in config
+$ifthen.regi_share not "%cm_budgetCO2from2020RegiShare%" == "off"
+if (cm_budgetAllocation eq 20,
+    pm_budgetCO2from2020Regi(regi)  = pm_budgetCO2from2020RegiShare(regi) * cm_budgetCO2from2020;
+);
+
+* b) allocation by GDP over time (scenario-dependent!) => equal GDP emission intensity
+if (cm_budgetAllocation eq 1,
+   pm_budgetCO2from2020RegiShare(regi) =  sum(t, pm_gdp_gdx(t,regi)$(t.val gt 2020 AND t.val lt 2100)) /
+                                      sum((regi2,t2), pm_gdp_gdx(t2,regi2)$(t2.val gt 2020 AND t2.val lt 2100)) ; 
+   pm_budgetCO2from2020Regi(regi)  = pm_budgetCO2from2020RegiShare(regi) * cm_budgetCO2from2020;
+);
+
+* c) allocation by total population => equal per capita
+if (cm_budgetAllocation eq 2,
+   pm_budgetCO2from2020RegiShare(regi) =  sum(t,      pm_pop(t,regi)$(t.val gt 2020 AND t.val lt 2100)) / 
+                                           sum((regi2,t2), pm_pop(t2,regi2)$(t2.val gt 2020 AND t2.val lt 2100)); 
+   pm_budgetCO2from2020Regi(regi)  = pm_budgetCO2from2020RegiShare(regi) * cm_budgetCO2from2020;
+);
+$endif.regi_share
+
+** Compute the absolute budget deviation tolerance level
+if(cm_regionalBudgetTolerance_Abs > 0,
+    pm_regionalBudget_absDevTol(regi) = cm_regionalBudgetTolerance_Abs;
+  else 
+  pm_regionalBudget_absDevTol(regi) =  cm_regionalBudgetTolerance_Rel * pm_budgetCO2from2020Regi(regi);
 );
 
 *** Read pm_taxCO2eq from path_gdx_ref
@@ -335,7 +364,11 @@ $endIf.CO2taxInterpolation1
   );
 );
 
-display s45_interpolation_startYr, s45_interpolation_endYr;
+!!s45_YearBeforeStartYear = cm_startYear - pm_dt(cm_startYear).val ; 
+
+s45_YearBeforeStartYear = smax(ttot$( ttot.val lt cm_startyear ), ttot.val); !! Timestep before startyear
+
+display s45_interpolation_startYr, s45_interpolation_endYr; 
 
 *** Step IV.2: Create interpolation
 pm_taxCO2eq(ttot,regi) = p45_taxCO2eq_path_gdx_ref(ttot,regi); !! Initialize pm_taxCO2eq with p45_taxCO2eq_path_gdx_ref. Then overwrite all time steps after cm_startyear

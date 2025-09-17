@@ -387,6 +387,25 @@ if (abs(p80_globalBudget_absDev_iter(iteration)) gt cm_budgetCO2_absDevTol,
   p80_messageShow("target") = YES;
 );
 
+*** check regional budget target, must be within tolerance level of target value
+$ifthen.regi_budget not "%cm_budgetCO2from2020Regi%" == "off"
+if(cm_iterative_target_adj eq 55,
+  p80_regionalBudget_absDev_iter(iteration,regi) = pm_budgetDeviation(regi);
+  loop(regi,
+  if(cm_regionalBudgetTolerance_Abs = 0, 
+    if (abs(p80_regionalBudget_absDev_iter(iteration,regi)) gt abs(cm_regionalBudgetTolerance_Rel * pm_budgetCO2from2020Regi(regi)),
+      s80_bool = 0;
+      p80_messageShow("regiBudget") = YES;
+    );
+  else
+    if (abs(p80_regionalBudget_absDev_iter(iteration,regi)) gt abs(cm_regionalBudgetTolerance_Abs),
+      s80_bool = 0;
+      p80_messageShow("regiBudget") = YES;
+    );
+  );
+  );  
+);
+$endif.regi_budget
 *** additional criterion: if damage internalization is on, is damage iteration converged?
 p80_sccConvergenceMaxDeviation_iter(iteration) = pm_sccConvergenceMaxDeviation;
 p80_gmt_conv_iter(iteration) = pm_gmt_conv;
@@ -457,7 +476,7 @@ display "Reasons for non-convergence in this iteration (if not yet converged)";
         );
 $ifthen.emiMkt not "%cm_emiMktTarget%" == "off"       
         if(sameas(convMessage80, "regiTarget"),
-		      display "#### 7) A regional climate target has not been reached yet.";
+		      display "#### 8.) A regional climate target has not been reached yet.";
           display "#### Check out the pm_emiMktTarget_dev parameter of 47_regipol module.";
           display "#### For budget targets, the parameter gives the percentage deviation of current emissions in relation to the target value.";
           display "#### For yearly targets, the parameter gives the current emissions minus the target value in relative terms to the 2005 emissions.";
@@ -467,6 +486,20 @@ $ifthen.emiMkt not "%cm_emiMktTarget%" == "off"
           display pm_taxemiMkt_iteration;
 	      );
 $endif.emiMkt  
+
+$ifthen.regi_budget not "%cm_budgetCO2from2020Regi%" == "off"
+         if(sameas(convMessage80, "regiBudget"),
+		      display "#### 7.) A regional budget target has not been reached yet.";
+          display "#### check p80_regionalBudget_absDev_iter and p45_actualbudgetco2Regi_iter for the deviation from the";
+          display "#### regional target CO2 budget pm_budgetCO2from2020Regi (convergence";
+          display "#### criterion defined via pm_regionalBudget_absDevTol based on cm_regionalBudgetTolerance_Rel [default = 30%]), as well as";
+          display "#### pm_taxCO2eq_iter and pm_taxCDR_iter (regional CO2 and CDR tax paths tracked over iterations [T$/GtC]) and"; 
+          display "#### pm_taxCO2eq_anchor_iterationdiff and pm_taxCDR_anchor_iterationdiff (difference in global anchor carbon"; 
+          display p80_regionalBudget_absDev_iter;
+	      );
+$endif.regi_budget
+
+
 $ifthen.cm_implicitQttyTarget not "%cm_implicitQttyTarget%" == "off"    
         if(sameas(convMessage80, "implicitEnergyTarget"),
 		      display "#### 10) A quantity target has not been reached yet.";
@@ -565,16 +598,16 @@ if( (s80_bool eq 0) and (iteration.val eq cm_iteration_max),     !! reached max 
       if(sameas(convMessage80, "anticip"),
 		      display "#### 5.) The fadeout price anticipation terms are not sufficiently small.";
 	     );
-        if(sameas(convMessage80, "target"),
+      if(sameas(convMessage80, "target"),
 		      display "#### 6.) A global climate target has not been reached yet.";
           display "#### check sm_globalBudget_absDev for the deviation from the global target CO2 budget (convergence criterion defined via cm_budgetCO2_absDevTol [default = 2 Gt CO2]), as well as";
           display "#### pm_taxCO2eq_iter (regional CO2 tax path tracked over iterations [T$/GtC]) and"; 
           display "#### pm_taxCO2eq_anchor_iterationdiff (difference in global anchor carbon price to the last iteration [T$/GtC]) in diagnostics section below."; 
           display sm_globalBudget_absDev;
-	      );
+	      );    
 $ifthen.emiMkt not "%cm_emiMktTarget%" == "off"       
         if(sameas(convMessage80, "regiTarget"),
-		      display "#### 7) A regional climate target has not been reached yet.";
+		      display "#### 8.) A regional climate target has not been reached yet.";
           display "#### Check out the pm_emiMktTarget_dev parameter of 47_regipol module.";
           display "#### For budget targets, the parameter gives the percentage deviation of current emissions in relation to the target value.";
           display "#### For yearly targets, the parameter gives the current emissions minus the target value in relative terms to the 2005 emissions.";
@@ -584,6 +617,17 @@ $ifthen.emiMkt not "%cm_emiMktTarget%" == "off"
           display pm_taxemiMkt_iteration;
 	      );
 $endif.emiMkt
+
+$ifthen.regi_budget not "%cm_budgetCO2from2020Regi%" == "off"
+if(sameas(convMessage80, "regiBudget"),
+		      display "#### 7.) An regional budget target has not been reached yet.";
+          display "#### Check p45_factorRescale_taxCO2Regi_Funnelled to identify the regions where"; 
+          display "#### The price is still adjusted. If flip-flopping: try a smaller funnel. If ";
+          display "#### regiona cannot get to its target: try a larger funnel or different input.gdx";
+          display p45_factorRescale_taxCO2Regi_Funneled;
+      );
+$endif.regi_budget
+
 $ifthen.cm_implicitQttyTarget not "%cm_implicitQttyTarget%" == "off"    
         if(sameas(convMessage80, "implicitEnergyTarget"),
 		      display "#### 10) A quantity target has not been reached yet.";

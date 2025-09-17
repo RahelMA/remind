@@ -378,7 +378,7 @@ $setglobal emicapregi  none           !! def = none
 *' *    [Global anchor trajectory]: The realization uses a global anchor trajectory based on which the regional carbon price trajectories are defined.
 *' *                                The functional form (linear/exponential) of the global anchor trajectory is chosen via cm_taxCO2_functionalForm [default = linear].
 *' *                                The (initial) carbon price in cm_startyear is chosen via cm_taxCO2_startyear. This value is endogenously adjusted to meet CO2 budget targets if cm_iterative_target_adj is set to 5, 7, or 9.
-*' *                                (linear):      The linear curve is determined by the two points (cm_taxCO2_historicalYr, cm_taxCO2_historical) and either (cm_startyear, cm_taxCO2_startyear) or (cm_peakBudgYr, cm_taxCO2_peakBudgYr) - see describtions of switches for more details. 
+*' *                                (linear):      The linear curve is determined by the two points (cm_taxCO2_historicalYr, cm_taxCO2_historical) and either (cm_startyear, cm_taxCO2_startyear) or (cm_peakBudgYr, cm_taxCO2_peakBudgYr) - see descriptions of switches for more details. 
 *' *                                               By default, cm_taxCO2_historicalYr is the last timestep before cm_startyear, and cm_taxCO2_historical is the carbon price in that timestep in the reference run (path_gdx_ref) - computed as the maximum of pm_taxCO2eq over all regions.
 *' *                                (exponential): The exponential curve is determined by exponential growth rate (cm_taxCO2_expGrowth).
 *' *    [Post-peak behaviour]:      The global anchor trajectory can be adjusted after reaching the peak of global CO2 emissions in cm_peakBudgYr. See cm_iterative_target_adj and 45_carbonprice/functionalForm/realization.gms for details.
@@ -548,6 +548,50 @@ parameter
 ;
   cm_budgetCO2_absDevTol      = 2;   !! def = 2 !! regexp = is.nonnegative
 *' 
+parameter
+  cm_regionalBudgetTolerance_Rel
+;
+  cm_regionalBudgetTolerance_Rel = 0.3; !! def = 0.3 !! regexp. is.nonnegative
+*'
+parameter                 
+  cm_regionalBudgetTolerance_Abs  "absolute deviation from a regional target. If = 0 -> Relative tolerance is used instead"
+;
+  cm_regionalBudgetTolerance_Abs = 0; !! def = 0 !! regexp. is.nonnegative
+*'
+parameter
+  cm_budgetAllocation
+;
+  cm_budgetAllocation = 0; !! def = 0 !! regexp. is.nonnegative
+*' For making the calculation of regional distribution endogenous. When turned off: read in shares
+*' 
+parameter 
+  cm_EOCstartShape
+;
+  cm_EOCstartShape = 1; !! def = 1
+*' (0) = the input gdx' regional carbon price is used for rescaling in postsolve after first iteration, i.e. need to use a reasonable input (not NPI)
+*' (1) = the input gdx' global anchor trajectory carbon price is used, i.e. gleiche Steigungen
+*' 
+parameter 
+  cm_funnelFactor
+;
+  cm_funnelFactor = 2; !! def = 2
+*' 
+parameter 
+  cm_funnelExponent
+;
+  cm_funnelExponent = 0.18; !! def = 0.18
+*' 
+parameter 
+  cm_funnelLower 
+;
+  cm_funnelLower = 0.001; !! def = 0.005 !! regexp. is.nonnegative
+*' 
+parameter 
+  cm_CPslopeAdjustment        "whether the slope of the carbon price is adjusted endogenously or the entire curve is just shifted up and down"
+;
+  cm_CPslopeAdjustment = 0; !! def = 0 
+*' (0): no adjustment of the slope; i.e. carbon price shape chosen from the input-gdx and the curve is shifted up and down from cm_startYear
+*' (1): endogenous adjustment of the slope, i.e. linear increase to the highest carbon price
 
 parameter
   cm_peakBudgYr       "time of global net-zero CO2 emissions (peak budget)"
@@ -889,14 +933,15 @@ parameter
 parameter
   cm_iterative_target_adj   "settings on iterative adjustment for CO2 tax based on in-iteration emission or forcing level. Allow iteratively generated endogenous global CO2 tax under peak budget constraint or end-of-century budget constraint."
 ;
-  cm_iterative_target_adj = 0;      !! def = 0  !! regexp = 0|2|3|5|7|9
+  cm_iterative_target_adj = 0;      !! def = 0  !! regexp = 0|2|3|4|5|7|9|55
 *' * (0): no iterative adjustment of CO2 tax (terminology: CO2 price and CO2 tax in REMIND is used interchangeably)
-*' * (2): iterative adjustment of CO2 tax or cumulative emission based on climate forcing calculated by climate model magicc, for runs with budget or CO2 tax constraints. See ./modules/45_carbonprice/NDC/postsolve.gms for direct algorithm
+*' * (2): [requires emiscen = 9 (?)] iterative adjustment of CO2 tax or cumulative emission based on climate forcing calculated by climate model magicc, for runs with budget or CO2 tax constraints. See ./modules/15_climate/magicc7_ar6/postsolve.gms for direct algorithm
 *' * (3): [requires 45_carbonprice = NDC and emiscen = 9] iterative adjustment of CO2 tax based on 2025 or 2030 regionally differentiated emissions, for runs with emission budget or CO2 tax constraints. See ./modules/45_carbonprice/NDC/postsolve.gms for direct algorithm
+*' * (4): Regional Budgets[requires 45_carbonprice = functionalForm and emiscen = 9] iterative adjustment of CO2 tax based on economy-wide CO2 cumulative emission budget(2020-2100), for runs with regional emission budget or CO2 tax constraints. [see 45_carbonprice/functionalForm/postsolve.gms for direct algorithm]
 *' * (5): [requires 45_carbonprice = functionalForm and emiscen = 9] iterative adjustment of CO2 tax based on economy-wide CO2 cumulative emission budget(2020-2100), for runs with emission budget or CO2 tax constraints. [see 45_carbonprice/functionalForm/postsolve.gms for direct algorithm]
 *' * (7): [requires 45_carbonprice = functionalForm and emiscen = 9] iterative adjustment of CO2 tax based on economy-wide CO2 cumulative emission peak budget, for runs with emission budget or CO2 tax constraints. Features: results in a peak budget with zero net CO2 emissions after peak budget is reached. See core/postsolve.gms for direct algorithms [see 45_carbonprice/functionalForm/postsolve.gms for direct algorithm]
 *' * (9): [requires 45_carbonprice = functionalForm and emiscen = 9] iterative adjustment of CO2 tax based on economy-wide CO2 cumulative emission peak budget, for runs with emission budget or CO2 tax constraints. Features: 1) after the year when budget peaks, CO2 tax has an annual increase by cm_taxCO2_IncAfterPeakBudgYr, 2) automatically shifts cm_peakBudgYr to find the correct year of budget peaking for a given budget. [see 45_carbonprice/functionalForm/postsolve.gms for direct algorithm]
-*'
+*'*' (55): Regional Budgets with Peak Budget Shape
 parameter
   cm_NDC_divergentScenario  "choose scenario about convergence of CO2eq prices [45_carbonprice = NDC]"
 ;
@@ -1799,11 +1844,14 @@ $setglobal cm_taxCO2_regiDiff_convergence   scenario    !! def = scenario
 ***                - if cm_taxCO2_regiDiff equals (none), (initialSpread10), (initialSpread20), or (gdpSpread), it is determined by the region-specific spread in the start year
 ***                - if cm_taxCO2_regiDiff equals (ScenarioMIP2035),(ScenarioMIP2050), (ScenarioMIP2070), (ScenarioMIP2100), or (manual), it is implicity determined by the regional carbon prices in the period before cm_startyear (from path_gdx_ref), and the regional speed of convergence
 *** Alternatively, regional carbon prices in $/t CO2eq can be set manually if cm_taxCO2_regiDiff equals (ScenarioMIP2035), (ScenarioMIP2050), (ScenarioMIP2070), (ScenarioMIP2100), or (manual).
-*** In this case, the provided regional carbon prices in cm_startyear are used as the starting point for the convergence, thereby also effecting time periods thereafter
+*** In this case, the manually provided regional carbon prices are used in cm_startyear as the starting point for the convergence, thereby also effecting time periods thereafter
 *** For example, setting the switch to GLO 50, SSA 5, CHA 40 means that in cm_startyear, SSA has carbon price of 5$/tCO2,  CHA has carbon price of 40$/tCO2, and all other regions have carbon price of 50$/tCO2.
 *** Important note: If regional carbon prices in the start year are manually set, the regional values are used as lower bounds for pm_taxCO2eq
 $setglobal cm_taxCO2_regiDiff_startyearValue endogenous !! def = "endogenous"
-
+*' cm_budgetCO2from2020Regi     "switch to set eoc regional carbon budgets"
+$setglobal cm_budgetCO2from2020Regi  off !! def = off
+*' cm_budgetCO2from2020RegiShare     "switch to set eoc regional carbon budget shares by region (for easier comparison than total budgets, endogenous calculation possible)"
+$setglobal cm_budgetCO2from2020RegiShare  off !! def = off
 *** cm_ind_energy_limit Switch for setting upper limits on industry energy
 *** efficiency improvements.  See ./modules/37_subsectors/datainput.gms for
 *** implementation.

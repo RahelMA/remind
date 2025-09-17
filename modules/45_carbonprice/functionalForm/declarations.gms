@@ -19,6 +19,8 @@ s45_regiDiff_gdpThreshold                   "reference value for GDP per capita 
 
 s45_interpolation_startYr                   "start year of interpolation from p45_taxCO2eq_path_gdx_ref to p45_taxCO2eq_regiDiff"
 s45_interpolation_endYr                     "end year of interpolation from p45_taxCO2eq_path_gdx_ref to p45_taxCO2eq_regiDiff"
+
+s45_YearBeforeStartYear 
 ;
 
 parameters
@@ -33,6 +35,41 @@ p45_regiDiff_startYr(all_regi)              "start year of convergence from regi
 p45_regiDiff_initialRatio(all_regi)         "inital ratio between global anchor and regional differentiated CO2 price trajectories"
 p45_regiDiff_endYr(all_regi)                "end year of regional differentiation, i.e. regional carbon price equal to global anchor trajectory thereafter"
 p45_regiDiff_exponent(all_regi)             "regional convergence exponent for ratio between global anchor and regional differentiated CO2 price trajectories"
+
+*** If cm_budgetCO2from2020Regi is not off, read regional carbon budget from switch and set additionally needed parameters
+$ifthen.regi_budget not "%cm_budgetCO2from2020Regi%" == "off"
+pm_budgetCO2from2020Regi(all_regi)                      "regional carbon budget (all regions)" / %cm_budgetCO2from2020Regi% /
+$endif.regi_budget
+
+$ifthen.regi_share not "%cm_budgetCO2from2020RegiShare%" == "off"
+pm_budgetCO2from2020RegiShare(all_regi)                 "regional carbon budget (all regions)" / %cm_budgetCO2from2020RegiShare% /
+$endif.regi_share
+
+p45_actualbudgetco2Regi(all_regi)                        "regional - actual level of 2020-2100 cumulated emissions, including all CO2 for last iteration"
+p45_actualbudgetco2Regi_iter(iteration,all_regi)                        "regional - actual level of 2020-2100 cumulated emissions, including all CO2 for last iteration"
+p45_factorRescale_taxCO2Regi(iteration,all_regi)         "regional - Multiplicative factor for rescaling the CO2 price to reach the target"
+p45_factorRescale_taxCO2Regi_Funneled(iteration, all_regi)
+p45_taxCO2eq_anchorRegi(ttot,all_regi)                   "regional anchor trajectory for regional CO2 price trajectories in T$/GtC = $/kgC"
+p45_taxCO2eq_anchorRegi_iter(ttot, all_regi, iteration)
+p45_temp_anchor(ttot,all_regi)                 "regionally shifted anchor for all iterations"
+p45_budgetDeviation_iter(iteration, all_regi)                            "regionally differentiated deviation form target"  
+
+pm_budgetDeviation(all_regi)                            "regionally differentiated deviation form target"  
+pm_regionalBudget_absDevTol(all_regi)
+
+
+p45_taxChange(all_regi) 
+p45_taxChange_iter(iteration, all_regi) 
+p45_BudgetChange(all_regi)
+p45_BudgetChange_iter(iteration, all_regi) 
+p45_ChangeSlope(all_regi) 
+p45_ChangeSlope_iter(iteration, all_regi) 
+p45_absolutePriceChange(all_regi) 
+p45_absolutePriceChange_iter(iteration, all_regi) 
+p45_newPrice(all_regi) 
+p45_newPrice_iter(iteration, all_regi) 
+p45_CarbonPriceSlope(all_regi)
+p45_CarbonPriceSlope_iter(iteration,all_regi)
 
 *** If cm_taxCO2_regiDiff_convergence is not set to scenario, read in data from switch
 $ifThen.taxCO2regiDiffConvergence1 "%cm_taxCO2_regiDiff_convergence%" == "scenario"
@@ -53,7 +90,8 @@ $endIf.taxCO2regiDiffStartyearValue1
 scalars
 s45_actualbudgetco2                                     "actual level of 2020-2100 cumulated emissions, including all CO2 for last iteration"
 s45_actualbudgetco2_last                                "actual level of 2020-2100 cumulated emissions for previous iteration" /0/
-s45_factorRescale_taxCO2_exponent_before10              "exponent determining sensitivity    before iteration 10"
+s45_factorRescale_taxCO2_exponent                       "exponent determining sensitivity adjusted by iteration for regional eoc budgets "
+s45_factorRescale_taxCO2_exponent_before10              "exponent determining sensitivity before iteration 10"
 s45_factorRescale_taxCO2_exponent_from10                "exponent determining sensitivity of CO2 price adjustment to CO2 budget deviation from iteration 10"
 ;
 

@@ -45,3 +45,5 @@ cm_taxCO2_peakBudgYr,input,added by codeCheck
 cm_taxCO2_regiDiff,input,added by codeCheck
 cm_taxCO2_interpolation,input,added by codeCheck
 cm_taxCO2_lowerBound_path_gdx_ref,input,added by codeCheck
+pm_budgetDeviation,parameter,not needed
+p45_budgetCO2from2020Regi,parameter,not needed

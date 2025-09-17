@@ -94,6 +94,26 @@
 		"sections": "c(0,1,2,3,4,5,99)",
 		"mainReg": "'World'"
 	},
+	"CDR": {
+		"projectLibrary": "'remind2'",
+		"sections": "c(0,1,3,9)"
+	},
+	"emi": {
+		"projectLibrary": "'remind2'",
+		"sections": "c(0,3)"
+	},
+	"CarMaOnly": {
+		"projectLibrary": "'remind2'",
+		"sections": "c(0,9)"
+	},
+	"EnergySupply": {
+		"projectLibrary": "'remind2'",
+		"sections": "c(0,4)"
+	},
+	"CDRextended": {
+		"projectLibrary": "'remind2'",
+		"sections": "c(0,1,3,4,9)"
+	},
 	"mySection": {
 		"sections": "0",
 		"userSectionPath": "normalizePath('./scripts/cs2/mySection.Rmd')"

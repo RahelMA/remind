@@ -7,7 +7,7 @@
 *** SOF ./modules/47_regipol/regiCarbonPrice/postsolve.gms
 
 ***---------------------------------------------------------------------------
-*** Auxiliar parameters:
+***  A) Auxiliar parameters:
 ***---------------------------------------------------------------------------
 
 *** net CO2 per Mkt (including bunkers and LULUCF)
@@ -139,12 +139,12 @@ p47_emiTargetMkt(ttot,regi, emiMktExt,"netGHG_LULUCFGrassi_intraRegBunker") =
 p47_emiTargetMkt_iter(iteration,ttot,regi, emiMktExt,emi_type_47) = p47_emiTargetMkt(ttot,regi,emiMktExt,emi_type_47);
 
 ***--------------------------------------------------
-*** Emission markets (EU Emission trading system and Effort Sharing)
+*** B) Emission markets (EU Emission trading system and Effort Sharing)
 ***--------------------------------------------------
 
 $IFTHEN.emiMkt not "%cm_emiMktTarget%" == "off" 
 
-*** Removing economy wide co2 tax parameters for regions within the emiMKt controlled targets (this is necessary here to remove any calculation made in other modules after the last run in the postsolve)
+*** B1 Removing economy wide co2 tax parameters for regions within the emiMKt controlled targets (this is necessary here to remove any calculation made in other modules after the last run in the postsolve)
   loop(ext_regi$regiEmiMktTarget(ext_regi),
     loop(regi$regi_groupExt(ext_regi,regi),
 *** Removing the economy wide co2 tax parameters for regions within the ETS markets
@@ -159,8 +159,9 @@ $IFTHEN.emiMkt not "%cm_emiMktTarget%" == "off"
       pm_taxrevNetNegEmi0(t,regi) = 0;
     );
   );
+******* CHECK WHAT HAS TO BE RESCALED *************************
 
-*** Calculating the current emission levels...
+*** B2 - a Calculating the current emission levels...
 loop((ttot,ttot2,ext_regi,emiMktExt,target_type_47,emi_type_47)$pm_emiMktTarget(ttot,ttot2,ext_regi,emiMktExt,target_type_47,emi_type_47),
 *** for budget targets
   if(sameas(target_type_47,"budget"), !! budget total CO2 target
@@ -179,7 +180,7 @@ loop((ttot,ttot2,ext_regi,emiMktExt,target_type_47,emi_type_47)$pm_emiMktTarget(
 );
 p47_emiMktCurrent_iter(iteration,ttot,ttot2,ext_regi,emiMktExt) = pm_emiMktCurrent(ttot,ttot2,ext_regi,emiMktExt); !!save current emission levels across iterations 
 
-*** Calculate target deviation...
+*** B2 - b Calculate target deviation...
 loop((ttot,ttot2,ext_regi,emiMktExt,target_type_47,emi_type_47)$pm_emiMktTarget(ttot,ttot2,ext_regi,emiMktExt,target_type_47,emi_type_47),
 *** for budget targets, target deviation is difference of current budget to target budget normalized by target budget
   if(sameas(target_type_47,"budget"),
@@ -192,7 +193,7 @@ loop((ttot,ttot2,ext_regi,emiMktExt,target_type_47,emi_type_47)$pm_emiMktTarget(
 );
 pm_emiMktTarget_dev_iter(iteration,ttot,ttot2,ext_regi,emiMktExt) = pm_emiMktTarget_dev(ttot,ttot2,ext_regi,emiMktExt); !!save regional target deviation across iterations for debugging of target convergence issues
 
-*** Checking sequentially if targets converged
+*** B2 - c Checking sequentially if targets converged
 loop((ext_regi,ttot2)$regiANDperiodEmiMktTarget_47(ttot2,ext_regi),
   p47_targetConverged(ttot2,ext_regi) = 0;
   loop((ttot,emiMktExt,target_type_47,emi_type_47)$((pm_emiMktTarget(ttot,ttot2,ext_regi,emiMktExt,target_type_47,emi_type_47))),
@@ -225,7 +226,7 @@ loop(ext_regi$regiEmiMktTarget(ext_regi),
 );
 p47_allTargetsConverged_iter(iteration,ext_regi) = pm_allTargetsConverged(ext_regi);
 
-*** define current target to be solved
+*** B2 - d define current target to be solved
 p47_currentConvergence_iter(iteration,ttot,ext_regi) = 0;
 loop(ext_regi$regiEmiMktTarget(ext_regi),
 *** solving targets sequentially, i.e. only apply target convergence algorithm if previous yearly targets were already achieved
@@ -245,6 +246,8 @@ loop(ext_regi$regiEmiMktTarget(ext_regi),
   );
 );
 
+******* START OF ACTUAL RESCALING CALCULATION *************************
+*** B3 - a   => starting stuff
 *** reference iteration from which to calculate the mitigation cost slope.
 loop((ext_regi,ttot)$regiANDperiodEmiMktTarget_47(ttot,ext_regi),
   if(ord(iteration) eq 1,
@@ -259,6 +262,8 @@ loop((ext_regi,ttot)$regiANDperiodEmiMktTarget_47(ttot,ext_regi),
 *** resetting rescale factor for the next iteration
 p47_factorRescaleSlope(ttot,ttot2,ext_regi,emiMktExt) = 0;
 pm_factorRescaleemiMktCO2Tax(ttot,ttot2,ext_regi,emiMktExt) = 0;
+
+*** B3 - b 
 *** Calculating the emissions tax rescale factor based on previous iterations emission reduction for current targets
 loop(ext_regi$regiEmiMktTarget(ext_regi),
   loop((ttot2)$(ttot2.val eq p47_currentConvergencePeriod(ext_regi)),
@@ -288,7 +293,7 @@ loop(ext_regi$regiEmiMktTarget(ext_regi),
                 pm_factorRescaleemiMktCO2Tax(ttot,ttot2,ext_regi,emiMktExt) = power(1+pm_emiMktTarget_dev(ttot,ttot2,ext_regi,emiMktExt), 2);
 ***           else, calculate rescale factor using quantities and prices slope changes  
               else
-***             if denominator in relation to reference is not close to zero, calculate the price slope in relation to the reference iteration mitigation and price levels
+***             if denominator in relation to reference is NOT close to zero, calculate the price slope in relation to the reference iteration mitigation and price levels
                 if(NOT(abs(pm_taxemiMkt_iteration(iteration,ttot2,regi,emiMkt) - pm_taxemiMkt_iteration(iteration2,ttot2,regi,emiMkt)) lt 1e-2),
                   regiEmiMktRescaleType(iteration,ttot,ttot2,ext_regi,emiMktExt,"slope_refIteration") = YES;
                   p47_factorRescaleSlope(ttot,ttot2,ext_regi,emiMktExt) = 

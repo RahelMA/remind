@@ -112,6 +112,9 @@ pm_budgetCO2eq(all_regi)                             "budget for regional energy
 
 pm_actualbudgetco2(ttot)                             "actual level of cumulated emissions starting from 2020 [GtCO2]"
 p_actualbudgetco2_iter(iteration,ttot)               "track actual level of cumulated emissions starting from 2020 over iterations [GtCO2]"
+pm_actualbudgetco2Regi(ttot,all_regi)                "Regional- actual level of cumulated emissions starting from 2020 [GtCO2]"
+p_actualbudgetco2_iterRegi(iteration,ttot,all_regi)  "Regional- track actual level of cumulated emissions starting from 2020 over iterations [GtCO2]"
+pm_actualbudgetco2Regi_noLULUCF(ttot,all_regi)
 
 pm_dataccs(all_regi,char,rlf)                               "maximum CO2 storage capacity using CCS technology. [GtC]"
 pm_ccsinjecrate(all_regi)                                   "Regional CCS injection rate factor. 1/a."
@@ -360,6 +363,8 @@ vm_taxrevimplicitPePriceTax(ttot,all_regi,all_enty)  "primary energy price targe
 v_changeProdStartyear(ttot,all_regi,all_te)          "absolute change of output with respect to the reference run for each te. Unit: [TWa] for all energy-conversion tech, [GtC] for the CCS chain in ccs2te (pipelines/injection)"
 v_relChangeProdStartYear(ttot,all_regi,all_te)       "calculating the relative change of output with respect to the reference run for each te. Unit: [Percent]"
 v_changeProdStartyearSlack(ttot,all_regi,all_te)     "slack variable to allow a minimum cost-free change with respect to the reference run"
+
+v_costFu(ttot,all_regi)                              "fuel costs"
 ;
 
 ***----------------------------------------------------------------------------------------
@@ -389,7 +394,6 @@ vm_prodFe(ttot,all_regi,all_enty,all_enty,all_te)    "fe production. [TWa]"
 vm_demFeNonEnergySector(ttot,all_regi,all_enty,all_enty,emi_sectors,all_emiMkt) "energy flows of non-energy feedstocks [TWa]"
 vm_demFeSector(ttot,all_regi,all_enty,all_enty,emi_sectors,all_emiMkt)          "fe demand per sector and emission market. Taxes should be applied to this variable or variables closer to the supply side whenever possible so the marginal prices include the tax effects. [TWa]"
 vm_demFeSector_afterTax(ttot,all_regi,all_enty,all_enty,emi_sectors,all_emiMkt) "fe demand per sector and emission market after tax. Demand sectors should use this variable in their fe balance equations so demand side marginals include taxes effects. [TWa]"
-v_costFu(ttot,all_regi)                              "fuel costs"
 vm_costFuEx(ttot,all_regi,all_enty)                  "fuel costs from exhaustible energy [tril$US]"
 vm_pebiolc_price(ttot,all_regi)                      "Bioenergy price according to MAgPIE supply curves [T$US/TWa]"
 
