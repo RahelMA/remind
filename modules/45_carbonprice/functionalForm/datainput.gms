@@ -34,11 +34,13 @@ if (cm_budgetAllocation eq 2,
 $endif.regi_share
 
 ** Compute the absolute budget deviation tolerance level
+$ifthen.regi_budget not "%cm_budgetCO2from2020Regi%" == "off"
 if(cm_regionalBudgetTolerance_Abs > 0,
     pm_regionalBudget_absDevTol(regi) = cm_regionalBudgetTolerance_Abs;
   else 
   pm_regionalBudget_absDevTol(regi) =  cm_regionalBudgetTolerance_Rel * pm_budgetCO2from2020Regi(regi);
 );
+$endif.regi_budget
 
 *** Read pm_taxCO2eq from path_gdx_ref
 Execute_Loadpoint 'input_ref' p45_taxCO2eq_path_gdx_ref = pm_taxCO2eq;
