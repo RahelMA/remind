@@ -181,9 +181,9 @@ if(cm_CPslopeAdjustment = 1,
 
       !! Calculate the carbon price slope between last year from input gdx and 2100
       p45_CarbonPriceSlope(regi) = 0; 
-      p45_CarbonPriceSlope(regi) = (p45_taxCO2eq_anchorRegi("2100",regi)) 
-                                      - sum(ttot3$(ttot3.val eq s45_YearBeforeStartYear), p45_taxCO2eq_anchorRegi(ttot3,regi))
-                                            /  (2100 - s45_YearBeforeStartYear);
+      p45_CarbonPriceSlope(regi) = (sum(ttot2$(ttot2.val eq 2100), p45_taxCO2eq_anchorRegi(ttot2,regi)) 
+                                  - sum(ttot3$(ttot3.val eq s45_YearBeforeStartYear), p45_taxCO2eq_anchorRegi(ttot3,regi)))
+                                            /  (s45_2100 - s45_YearBeforeStartYear);
       
       p45_taxCO2eq_anchorRegi(ttot,regi)$(ttot.val gt s45_YearBeforeStartYear AND ttot.val lt 2100) = 
                                           sum(ttot3$(ttot3.val eq s45_YearBeforeStartYear), p45_taxCO2eq_anchorRegi(ttot3,regi)) !! CO2 tax in last fixed period

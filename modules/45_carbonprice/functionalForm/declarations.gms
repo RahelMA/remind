@@ -21,6 +21,7 @@ s45_interpolation_startYr                   "start year of interpolation from p4
 s45_interpolation_endYr                     "end year of interpolation from p45_taxCO2eq_path_gdx_ref to p45_taxCO2eq_regiDiff"
 
 s45_YearBeforeStartYear 
+s45_2100                                      /2100/
 ;
 
 parameters
