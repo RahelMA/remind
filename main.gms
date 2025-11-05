@@ -1274,6 +1274,12 @@ parameter
   c_edgetReportAfter2010 = 0;   !! def = 0 full reporting  !! regexp = 1|0
 *'
 parameter
+  cm_RenShareTargets         "switch that turn on renewable share targets in the NPi2025 realization of the techpol module"
+;
+*' Note that the switch is only active in the NPi2025 realization of the 40_techpol module.
+  cm_RenShareTargets = 1;      !! def = 1 renewable share targets are on !! regexp = 1|0
+*'
+parameter
   cm_APsource                "data source for air pollution baseyear (2020) emissions"
 ;
   cm_APsource           = 1;      !! def = 1  !! regexp = 1|2

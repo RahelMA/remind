@@ -14,7 +14,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     [[#2229](https://github.com/remindmodel/remind/pull/2229)]
 
 ### added
--
+- **40_techpol** implement renewable energy share targets for NPi2025 realization based on NewClimate policy protocol
+    [[#2226](https://github.com/remindmodel/remind/pull/2226)]
 
 ### removed
 - **21_tax** remove input files with upper bounds on subsidies for final energy, as it is directly applied as part of input data generation
