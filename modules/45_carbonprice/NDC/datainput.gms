@@ -49,6 +49,21 @@ $endif
 $offdelim
   /             ;
 
+*** --------------------------------------------------------------------------
+*** use new GAMS internal variables for total GHG excl LULUCF and excl bunkers
+
+*** save BAU emissions from reporting in extra parameter
+Parameter p45_BAU_reg_emi_wo_LU_wo_bunkers_Rep(ttot,all_regi)   "p45_BAU_reg_emi_wo_LU_wo_bunkers loaded from reporting";
+p45_BAU_reg_emi_wo_LU_wo_bunkers_Rep(ttot,regi)=p45_BAU_reg_emi_wo_LU_wo_bunkers(ttot,regi);
+
+*** overwrite BAU emissions with emissions in GAMS variable from reference GDX
+p45_BAU_reg_emi_wo_LU_wo_bunkers(ttot,regi) = 0;
+Execute_Loadpoint 'input_ref' p45_BAU_reg_emi_wo_LU_wo_bunkers = vm_emiGHG_exclLULUCF_exclBunkers.l;
+*** convert from GtCeq/yr to MtCO2/yr
+p45_BAU_reg_emi_wo_LU_wo_bunkers(ttot,regi) = p45_BAU_reg_emi_wo_LU_wo_bunkers(ttot,regi) * sm_c_2_co2 * 1000;
+
+*** --------------------------------------------------------------------------
+
 *** parameters for selecting NDC years
 Set t_NDC_targetYear(ttot)                          "Years for which NDC emissions targets can be applied [0 or 1]" / %cm_NDC_targetYear% /;
 Scalar p45_minRatioOfCoverageToMax                  "only targets whose coverage is this times p45_bestNDCcoverage are considered. Use 1 for only best [0..1]" /0/;
