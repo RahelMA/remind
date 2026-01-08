@@ -124,7 +124,7 @@ runMAgPIE <- function(pathToRemindReport) {
 
     # Start MAgPIE
     message(round(Sys.time()), " Starting MAgPIE\n                    with  Report = ", pathToRemindReport, "\n                          Folder = ", cfg$cfg_mag$results_folder)
-    outfolder_mag <- cfg$cfg_mag$results_folder # start_run(cfg$cfg_mag, codeCheck = FALSE)
+    outfolder_mag <- start_run(cfg$cfg_mag, codeCheck = FALSE)
     pathToMagpieReport <- file.path(cfg$path_magpie, outfolder_mag, "report.mif")
     message(round(Sys.time()), " MAgPIE finished")
 

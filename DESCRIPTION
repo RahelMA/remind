@@ -49,7 +49,7 @@ Imports:
     ncdf4,
     nleqslv,
     optparse,
-    piamenv (>= 0.6.0),
+    piamenv (>= 0.7.3),
     piamInterfaces (>= 0.49.0),
     piamPlotComparison (>= 0.0.10),
     piamutils,

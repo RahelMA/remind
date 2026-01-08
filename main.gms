@@ -919,11 +919,11 @@ parameter
 *' * (7): [requires 45_carbonprice = functionalForm and emiscen = 9] iterative adjustment of CO2 tax based on economy-wide CO2 cumulative emission peak budget, for runs with emission budget or CO2 tax constraints. Features: results in a peak budget with zero net CO2 emissions after peak budget is reached. See core/postsolve.gms for direct algorithms [see 45_carbonprice/functionalForm/postsolve.gms for direct algorithm]
 *' * (9): [requires 45_carbonprice = functionalForm and emiscen = 9] global: iterative adjustment of CO2 tax based on economy-wide CO2 cumulative emission peak budget, for runs with emission budget or CO2 tax constraints. Features: 1) after the year when budget peaks, CO2 tax has an annual increase by cm_taxCO2_IncAfterPeakBudgYr, 2) automatically shifts cm_peakBudgYr to find the correct year of budget peaking for a given budget. [see 45_carbonprice/functionalForm/postsolve.gms for direct algorithm]
 parameter
-  cm_taxCO2_Shape             "Only used with [functionalFormRegi], determines whether the carbon price increases until 2100 or is constant as of the exogenously set cm_peakYear"
+  cm_taxCO2_Shape             "Only used with [functionalFormRegi, and functionalForm if cm_iterative_target_adj=5 (i.e. EOC budget)], determines whether the carbon price increases until 2100 or is constant as of the exogenously set cm_peakYear"
 ;
   cm_taxCO2_Shape = 1;            !! def = 1    !! regexp = 1|2
-*' * (1): EOC -  pm_taxCO2eq increases until 2100 according to cm_taxCO2_functionalForm for regional budget targets
-*' * (2): Peak - pm_taxCO2eq increases until an exogenously set "peak year" (via cm_peakBudgYear). Note: this does not necessarily correspond to the year in which the budget actually peaks.
+*' * (1): EOC -  pm_taxCO2eq increases until 2100 according to cm_taxCO2_functionalForm for EOC budget targets
+*' * (2): Peak - pm_taxCO2eq increases until an exogenously set "peak year" (via cm_peakBudgYear). Note: this does not necessarily correspond to the year in which the global or regional budget actually peaks.
 *'
 parameter 
   cm_CPslopeAdjustment        "Only used with [functionalFormRegi], determines whether the entire path is shifted up and down or the slope of is adjusted endogenously"
@@ -1379,8 +1379,8 @@ $setglobal cm_netZeroScen  NGFS_v4     !! def = "NGFS_v4"  !! regexp = NGFS_v4|N
 *' *  GLO 0.09, EUR_regi 0.15: default value. (0.09 means full retirement after 11 years, 10% standing after 10 years)
 $setglobal c_regi_earlyreti_rate  GLO 0.09, EUR_regi 0.15      !! def = GLO 0.09, EUR_regi 0.15
 *' *  c_tech_earlyreti_rate  "maximum percentage of capital stock of specific technologies that can be retired early in one year in specified regions. This switch overrides c_regi_earlyreti_rate to allow for fine-tuning of phase-out schedules, e.g. for implementation of certain policies or anticipated trends."
-*' *  GLO.(biodiesel 0.14, bioeths 0.1), EUR_regi.(biodiesel 0.15, bioeths 0.15), USA_regi.pc 0.13, REF_regi.pc 0.13, CHA_regi.pc 0.13: default value, including retirement of 1st gen biofuels, higher rate of coal phase-out for USA, REF and CHA
-$setglobal c_tech_earlyreti_rate  GLO.(biodiesel 0.14, bioeths 0.14), EUR_regi.(biodiesel 0.15, bioeths 0.15), USA_regi.pc 0.13, REF_regi.pc 0.13, CHA_regi.pc 0.13 !! def = GLO.(biodiesel 0.14, bioeths 0.14), EUR_regi.(biodiesel 0.15, bioeths 0.15), USA_regi.pc 0.13, REF_regi.pc 0.13, CHA_regi.pc 0.13
+*' *  USA_regi.pc 0.13, REF_regi.pc 0.13, CHA_regi.pc 0.13: default value, including retirement of 1st gen biofuels, higher rate of coal phase-out for USA, REF and CHA
+$setglobal c_tech_earlyreti_rate  USA_regi.pc 0.13, REF_regi.pc 0.13, CHA_regi.pc 0.13 !! def = USA_regi.pc 0.13, REF_regi.pc 0.13, CHA_regi.pc 0.13
 *** cm_LU_emi_scen   "choose emission baseline for CO2, CH4, and N2O land use emissions from MAgPIE"
 ***  (SSP1): emissions (from SSP1 scenario in MAgPIE)
 ***  (SSP2): emissions (from SSP2 scenario in MAgPIE)

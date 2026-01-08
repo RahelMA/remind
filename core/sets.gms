@@ -20,7 +20,8 @@ c_description    "%c_description%"   /"for model description, see explanatory te
 c_results_folder "%c_results_folder%"  /"for cfg$results_folder, see explanatory text"/
 c_model_version  "model version" /%c_model_version%/
 cm_GDPpopScen    "cm_GDPpopScen as set for use in GDX"      /%cm_GDPpopScen%/
-
+cm_APssp         "cm_APssp as set for use in GDX"           /%cm_APssp%/
+cm_APscen        "cm_APscen as set for use in GDX"          /%cm_APscen%/
 
 all_GDPpopScen    "all possible GDP scenarios"
 /
@@ -492,24 +493,6 @@ all_esty "energy services"
     esh2t_frgt_sm
     esgat_frgt_sm
 
-/
-
-all_sectorEmi "all sectors with emissions"
-/   indst        "emissions from industry sector"
-    res          "emissions from residential sector"
-    trans        "emissions from transport sector"
-    power        "emissions from power sector"
-    solvents     "emissions from solvents"
-    extraction   "emissions from fuel extraction"
-    indprocess   "process emissions from industry"
-    waste        "emissions from waste"
-/
-
-all_exogEmi "all exogenous emission types"
-/   Agriculture      "Exogenous emissions from Agriculture"
-    AgWasteBurning   "Exogenous emissions from Ag Waste Burning"
-    ForestBurning    "Exogenous emissions from Forest Burning"
-    GrasslandBurning "Exogenous emissions from Grassland Burning"
 /
 
 all_in   "all inputs and outputs of the CES function"
@@ -1968,20 +1951,6 @@ emiFuEx(all_enty)   "fugitive emissions"
     ch4gas     "fugitive emissions from gas production"
     ch4oil     "fugitive emissions from oil production"
 /
-sectorEndoEmi(all_sectorEmi)   "sectors with endogenous emissions"
-/
-    indst    "industry"
-    res      "residential"
-    trans    "transport"
-    power    "power"
-/
-sectorExogEmi(all_sectorEmi) "sectors with exogenous emissions"
-/
-    solvents
-    extraction
-    indprocess
-    waste
-/
 emi_sectors  "comprehensive sector set used for more detailed emissions accounting (REMIND-EU) and for CH4 tier 1 scaling - potentially to be integrated with similar set all_exogEmi"
 /
     power   "public electricity and heat production"
@@ -2895,45 +2864,6 @@ tsu2opTime5(tall,opTimeYr) "mapping for spinup time index to lifetime index"
     2000.6
     2005.1
 /
-
-sectorEndoEmi2te(all_enty,all_enty,all_te,sectorEndoEmi)   "map sectors to technologies"
-/
-    pegas.seel.ngcc.power
-    pegas.seel.ngt.power
-    seh2.seel.h2turb.power
-    pegas.seel.gaschp.power
-    pegas.sehe.gashp.power
-    pegas.segafos.gastr.indst
-    pegas.segafos.gastr.res
-    pecoal.seel.pc.power
-    pecoal.seel.coalchp.power
-    pecoal.sehe.coalhp.power
-    pecoal.sesofos.coaltr.indst
-    pecoal.sesofos.coaltr.res
-    peoil.seliqfos.refliq.trans
-    peoil.seliqfos.refliq.indst
-    peoil.seliqfos.refliq.res
-    peoil.seel.dot.power
-    pebiolc.seel.biochp.power
-    pebiolc.sehe.biohp.power
-    pebiolc.sesobio.biotr.indst
-    pebiolc.sesobio.biotr.res
-    pebiolc.sesobio.biotrmod.indst
-    seliqbio.fehos.tdbiohos.indst
-    seliqfos.fehos.tdfoshos.indst
-    seliqsyn.fehos.tdsynhos.indst
-    seliqbio.fehos.tdbiohos.res
-    seliqfos.fehos.tdfoshos.res
-    seliqsyn.fehos.tdsynhos.res
-    seliqbio.fedie.tdbiodie.trans
-    seliqfos.fedie.tdfosdie.trans
-    seliqsyn.fedie.tdsyndie.trans
-    seliqbio.fepet.tdbiopet.trans
-    seliqfos.fepet.tdfospet.trans
-    seliqsyn.fepet.tdsynpet.trans
-/
-
-
 
 ue2ppfen(all_enty,all_in)      "matching UE in ESM to ppfEn in MACRO"
 //
