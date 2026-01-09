@@ -8,4 +8,22 @@
 
 pm_Xport0(ttot,regi,tradePe) = vm_Xport.l(ttot,regi,tradePe);
 
+* Cumulative export of permits
+p24_XportPermCum(tall,all_regi) =
+    sum(tall2$(ord(tall2) <= ord(tall)),
+        vm_Xport.l(tall2,all_regi,"perm"));
+
+
+* Cumulative import of permits
+p24_MportPermCum(tall,all_regi) =
+    sum(tall2$(ord(tall2) <= ord(tall)),
+        vm_Mport.l(tall2,all_regi,"perm"));
+
+
+
+* Cumulative net
+p24_NetPermCum(tall,all_regi) =
+    p24_XportPermCum(tall,all_regi) - p24_MportPermCum(tall,all_regi);
+
+
 *** EOF ./modules/24_trade/standard/postsolve.gms
