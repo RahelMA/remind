@@ -105,7 +105,7 @@
 *'
 *' These prefixes are extended in some cases by a second letter:
 *'
-*' * "?m_" to designate objects used in the core and in at least one module.
+*' * "?m_" to designate objects used in the core and in at least one module. Declare it where it is calculated.
 *' * "?00_" to designate objects used in a single module, exclusively, with the 2-digit number corresponding
 *'          to the module number.
 *'
@@ -310,8 +310,8 @@ $setglobal agCosts  costs       !! def = costs
 $setglobal CES_parameters  load   !! def = load
 *'---------------------    30_biomass    ----------------------------------------
 *'
-*' * (magpie_40): using supply curves derived from MAgpIE 4.0
-$setglobal biomass  magpie_40     !! def = magpie_40
+*' * (magpie): using biomass supply curves derived from MAgpIE
+$setglobal biomass  magpie     !! def = magpie
 *'---------------------    31_fossil    ----------------------------------------
 *'
 *' * (timeDepGrades): time-dependent grade structure of fossil resources (oil & gas only)
@@ -516,6 +516,14 @@ parameter
 *' * (2): run until solution is sufficiently converged  - fine tolerances, for production runs.
 *' * (3): run until solution is sufficiently converged using very relaxed targets  - very coarse tolerances, two times higher than option 1. ! do not use in production runs !
 *'
+
+parameter
+  cm_MAgPIE_Nash      "run MAgPIE between Nash iterations"
+;
+  cm_MAgPIE_Nash   = 0;     !! def = 0  !! regexp = [0-1]
+*' * (0): REMIND runs standalone (emission factors are used, shiftfactors are set to zero)
+*' * (1): MAgPIE runs between certain Nash iterations (emission factors are set to zero because emissions are retrieved from the MAgPIE reporting, shift factors for supply curves are calculated)
+
 parameter
   cm_emiscen                "policy scenario choice"
 ;
@@ -747,7 +755,7 @@ parameter
   cm_phaseoutBiolc          "Switch that allows for a full phaseout of all bioenergy technologies globally"
 ;
   cm_phaseoutBiolc    = 0;         !! def = 0  !! regexp = 0|1
-***  Only working with magpie_40 realization of 30_biomass module.
+***  Only working with magpie realization of 30_biomass module.
 ***  (0): (default) No phaseout
 ***  (1): Phaseout capacities of all bioenergy technologies using pebiolc, as far
 ***       as historical bounds on bioenergy technologies allow it. This covers
@@ -911,11 +919,11 @@ parameter
 *' * (7): [requires 45_carbonprice = functionalForm and emiscen = 9] iterative adjustment of CO2 tax based on economy-wide CO2 cumulative emission peak budget, for runs with emission budget or CO2 tax constraints. Features: results in a peak budget with zero net CO2 emissions after peak budget is reached. See core/postsolve.gms for direct algorithms [see 45_carbonprice/functionalForm/postsolve.gms for direct algorithm]
 *' * (9): [requires 45_carbonprice = functionalForm and emiscen = 9] global: iterative adjustment of CO2 tax based on economy-wide CO2 cumulative emission peak budget, for runs with emission budget or CO2 tax constraints. Features: 1) after the year when budget peaks, CO2 tax has an annual increase by cm_taxCO2_IncAfterPeakBudgYr, 2) automatically shifts cm_peakBudgYr to find the correct year of budget peaking for a given budget. [see 45_carbonprice/functionalForm/postsolve.gms for direct algorithm]
 parameter
-  cm_taxCO2_Shape             "Only used with [functionalFormRegi], determines whether the carbon price increases until 2100 or is constant as of the exogenously set cm_peakYear"
+  cm_taxCO2_Shape             "Only used with [functionalFormRegi, and functionalForm if cm_iterative_target_adj=5 (i.e. EOC budget)], determines whether the carbon price increases until 2100 or is constant as of the exogenously set cm_peakYear"
 ;
   cm_taxCO2_Shape = 1;            !! def = 1    !! regexp = 1|2
-*' * (1): EOC -  pm_taxCO2eq increases until 2100 according to cm_taxCO2_functionalForm for regional budget targets
-*' * (2): Peak - pm_taxCO2eq increases until an exogenously set "peak year" (via cm_peakBudgYear). Note: this does not necessarily correspond to the year in which the budget actually peaks.
+*' * (1): EOC -  pm_taxCO2eq increases until 2100 according to cm_taxCO2_functionalForm for EOC budget targets
+*' * (2): Peak - pm_taxCO2eq increases until an exogenously set "peak year" (via cm_peakBudgYear). Note: this does not necessarily correspond to the year in which the global or regional budget actually peaks.
 *'
 parameter 
   cm_CPslopeAdjustment        "Only used with [functionalFormRegi], determines whether the entire path is shifted up and down or the slope of is adjusted endogenously"
@@ -1320,11 +1328,14 @@ parameter
 ***-----------------------------------------------------------------------------
 *' ####                     FLAGS
 ***-----------------------------------------------------------------------------
-*' cm_MAgPIE_coupling    "switch on coupling mode with MAgPIE"
+
+*' c_magpieIter      "Nash iterations in which MAgPIE runs in core/presolve"
 *'
-*' *  (off): off = REMIND expects to be run standalone (emission factors are used, shiftfactors are set to zero)
-*' *  (on): on  = REMIND expects to be run based on a MAgPIE reporting file (emission factors are set to zero because emissions are retrieved from the MAgPIE reporting, shift factors for supply curves are calculated)
-$setglobal cm_MAgPIE_coupling  off     !! def = "off"  !! regexp = off|on
+*' The content of this setgloabal is only used once to write it to the 'magpieIter' set in core/set.gms. 
+*' It is only a setglobal so that it is possible to deviate from the default by overwriting it from outside (prepare.R).
+*'
+$setglobal c_magpieIter  20,24,28,32     !! def = "20,24,28,32"  !! This regular expression works in manual test but not in checkFixCfg [0-9]{1,2}(,[0-9]{1,2})*
+
 *' cm_rcp_scen       "chooses RCP scenario"
 *'
 *' *  (none): no RCP scenario, standard setting
@@ -1336,13 +1347,23 @@ $setglobal cm_MAgPIE_coupling  off     !! def = "off"  !! regexp = off|on
 *' *  (rcp85): RCP8.5 [currently not operational: test and verify before using it!]
 $setglobal cm_rcp_scen  rcp45         !! def = "rcp45"  !! regexp = none|rcp20|rcp26|rcp37|rcp45|rcp60|rcp85
 *' cm_NDC_version            "choose version year of NDC targets as well as conditional vs. unconditional targets"
-*' *  (2024_cond):   all NDCs conditional to international financial support published until August 31, 2024
-*' *  (2024_uncond): all NDCs independent of international financial support published until August 31, 2024
-*' *  (2023_cond):   all NDCs conditional to international financial support published until December 31, 2023
-*' *  (2023_uncond): all NDCs independent of international financial support published until December 31, 2023
+*' *  (2025_cond_extrapol):       all NDCs conditional to international financial support published until September 2025 with extrapolation of 2030 targets to 2035 targets for conutries without 2035 target
+*' *  (2025_uncond_extrapol):     all NDCs independent of international financial support published until September 2025 with extrapolation of 2030 targets to 2035 targets for conutries without 2035 target
+*' *  (2025_cond):                all NDCs conditional to international financial support published until September 2025
+*' *  (2025_uncond):              all NDCs independent of international financial support published until September 2025
+*' *  (2024_cond):                all NDCs conditional to international financial support published until August 31, 2024
+*' *  (2024_uncond):              all NDCs independent of international financial support published until August 31, 2024
+*' *  (2023_cond):                all NDCs conditional to international financial support published until December 31, 2023
+*' *  (2023_uncond):              all NDCs independent of international financial support published until December 31, 2023
 *' *  Other supported years are 2022, 2021 and 2018, always containing NDCs published until December 31 of that year
-$setglobal cm_NDC_version  2024_cond    !! def = "2024_cond"  !! regexp = 20(18|2[1-5])_(un)?cond
-
+$setglobal cm_NDC_version  2024_cond    !! def = "2024_cond" !! regexp = 20(18|2[1-5])_(un)?cond(_extrapol)?$
+*' cm_NDC_targetYear            "choose years for which NDC emissions targets can be applied" [requires 45_carbonprice = NDC]
+*' * Examples on how to use:
+*' *  "2030" means that only 2030 target are included
+*' *  "2030, 2035, 2050" means that 2030, 2035 and 2050 targets are included
+*' * Note: including target years here does not mean they are automcatically considered in the carbonprice NDC realization. 
+*' * Depending on the p45_minRatioOfCoverageToMax parameter, each region receives the target year with the highest share of emissions covered under NDCs.
+$setglobal cm_NDC_targetYear  "2030"    !! def = "2030"
 *' cm_NPi_version            "choose version year of NPi targets for min and max targets in the form of conditional vs. unconditional"
 *' *  (2024_cond):   minimum technology targets are included from NewClimate latest policy modeling protocol in 2025
 *' *  (2024_uncond): maximal technology targets are included from NewClimate latest policy modeling protocol in 2025
@@ -1358,8 +1379,8 @@ $setglobal cm_netZeroScen  NGFS_v4     !! def = "NGFS_v4"  !! regexp = NGFS_v4|N
 *' *  GLO 0.09, EUR_regi 0.15: default value. (0.09 means full retirement after 11 years, 10% standing after 10 years)
 $setglobal c_regi_earlyreti_rate  GLO 0.09, EUR_regi 0.15      !! def = GLO 0.09, EUR_regi 0.15
 *' *  c_tech_earlyreti_rate  "maximum percentage of capital stock of specific technologies that can be retired early in one year in specified regions. This switch overrides c_regi_earlyreti_rate to allow for fine-tuning of phase-out schedules, e.g. for implementation of certain policies or anticipated trends."
-*' *  GLO.(biodiesel 0.14, bioeths 0.1), EUR_regi.(biodiesel 0.15, bioeths 0.15), USA_regi.pc 0.13, REF_regi.pc 0.13, CHA_regi.pc 0.13: default value, including retirement of 1st gen biofuels, higher rate of coal phase-out for USA, REF and CHA
-$setglobal c_tech_earlyreti_rate  GLO.(biodiesel 0.14, bioeths 0.14), EUR_regi.(biodiesel 0.15, bioeths 0.15), USA_regi.pc 0.13, REF_regi.pc 0.13, CHA_regi.pc 0.13 !! def = GLO.(biodiesel 0.14, bioeths 0.14), EUR_regi.(biodiesel 0.15, bioeths 0.15), USA_regi.pc 0.13, REF_regi.pc 0.13, CHA_regi.pc 0.13
+*' *  USA_regi.pc 0.13, REF_regi.pc 0.13, CHA_regi.pc 0.13: default value, including retirement of 1st gen biofuels, higher rate of coal phase-out for USA, REF and CHA
+$setglobal c_tech_earlyreti_rate  USA_regi.pc 0.13, REF_regi.pc 0.13, CHA_regi.pc 0.13 !! def = USA_regi.pc 0.13, REF_regi.pc 0.13, CHA_regi.pc 0.13
 *** cm_LU_emi_scen   "choose emission baseline for CO2, CH4, and N2O land use emissions from MAgPIE"
 ***  (SSP1): emissions (from SSP1 scenario in MAgPIE)
 ***  (SSP2): emissions (from SSP2 scenario in MAgPIE)
@@ -2039,6 +2060,15 @@ $setglobal cm_repeatNonOpt off      !! def = off  !! regexp = off|on
 *' @stop
 
 *-------------------------------------------------------------------------------------
+*** Track runtime
+File runtime /runtime.log /;
+***runtime.pc = 5;
+runtime.nd = 0;
+runtime.ap = 1;
+putclose runtime gyear(jnow):0:0 "-" gmonth(jnow):0:0 "-" gday(jnow):0:0 " " ghour(jnow):0:0 ":" gminute(jnow):0:0 ":" gsecond(jnow):0:0 ",GAMS," 0:0;
+
+*-------------------------------------------------------------------------------------
+
 *** automated checks and settings
 *ag* set conopt version
 option nlp = %cm_conoptv%;

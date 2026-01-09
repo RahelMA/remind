@@ -711,34 +711,39 @@ $endIf.cm_implicitPePriceTarget
 
 ***if all conditions are met, stop optimization.
 if(s80_bool eq 1,
+  if((sm_magpieIter < sm_magpieIterEnd) AND (cm_MAgPIE_Nash eq 1),
+    display "######################################################################################################";
+    display "Nash converged but MAgPIE hasn't run often enough yet. Continuing Nash.";
+    display "######################################################################################################";
+  else
 ***in automatic mode, set iteration_max such that no next iteration takes place 
-     if(cm_nash_autoconverge ne 0,
+    if(cm_nash_autoconverge ne 0,
       cm_iteration_max = iteration.val - 1;
-        );
-     OPTION decimals = 3;
-     s80_numberIterations = cm_iteration_max + 1;
-     display "######################################################################################################";
-     display "Run converged!!";
-     display "#### Nash Solution Report";
-     display "#### Convergence threshold reached within ",s80_numberIterations, "iterations.";
-     display "############";
-     display "Model solution parameters of last iteration";
-     display p80_repy;
-     display "#### Residual market surpluses in 2100 are:";
-     display  p80_surplusMax2100;
-     display "#### This meets the prescribed tolerance requirements of: ";
-     display  p80_surplusMaxTolerance;
-     display "#### Info: These residual market surplusses in monetary are :";
-     display  p80_defic_trade;
-     display "#### Info: And the sum of those (equivalent to Negishi's defic_sum):";
-     display  p80_defic_sum;
-     display "#### This value in percent of the NPV of consumption is: ";
-     display  p80_defic_sum_rel;
-     display "############";
-     display "######################################################################################################";
-     OPTION decimals = 3;
-     s80_converged = 1;         !! set machine-readable status parameter
-
+    );
+    OPTION decimals = 3;
+    s80_numberIterations = cm_iteration_max + 1;
+    display "######################################################################################################";
+    display "Run converged!!";
+    display "#### Nash Solution Report";
+    display "#### Convergence threshold reached within ",s80_numberIterations, "iterations.";
+    display "############";
+    display "Model solution parameters of last iteration";
+    display p80_repy;
+    display "#### Residual market surpluses in 2100 are:";
+    display  p80_surplusMax2100;
+    display "#### This meets the prescribed tolerance requirements of: ";
+    display  p80_surplusMaxTolerance;
+    display "#### Info: These residual market surplusses in monetary are :";
+    display  p80_defic_trade;
+    display "#### Info: And the sum of those (equivalent to Negishi's defic_sum):";
+    display  p80_defic_sum;
+    display "#### This value in percent of the NPV of consumption is: ";
+    display  p80_defic_sum_rel;
+    display "############";
+    display "######################################################################################################";
+    OPTION decimals = 3;
+    s80_converged = 1;         !! set machine-readable status parameter
+  );
 );
 
 *** check if any region has failed to solve consecutively for

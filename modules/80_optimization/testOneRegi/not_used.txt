@@ -75,3 +75,6 @@ sm_DptCO2_2_TDpGtC,input,added by codeCheck
 pm_factorRescale_taxCO2Regi_Funneled2,input,added by codeCheck
 pm_budgetDeviation,input,added by codeCheck
 pm_regionalBudget_absDevTol, input,added by codeCheck
+sm_magpieIter,switch,not needed
+sm_magpieIterEnd,switch,not needed
+cm_MAgPIE_Nash,switch,not needed

@@ -8,6 +8,10 @@
 prepare <- function() {
 
   timePrepareStart <- Sys.time()
+  # Record the time when the preparation starts in runtime.log
+  # The content of this file will be added to runstatistics.rda at the end.
+  cat("Saving timePrepareStart to runtime.log\n")
+  write(paste(Sys.time(), "prepare", 0, sep = ","), file = "runtime.log")
 
   # Load libraries
   #require(lucode, quietly = TRUE,warn.conflicts =FALSE)
@@ -105,17 +109,6 @@ prepare <- function() {
     create_input_for_50_damage_exogenous(as.character(cfg$files2export$start["input_damage.gdx"]))
   }
 
-  # If a path to a MAgPIE report is supplied use it as REMIND input (used for REMIND-MAgPIE coupling)
-  # ATTENTION: modifying gms files
-  if (!is.null(cfg$pathToMagpieReport)) {
-    getReportData(
-      path_to_report = cfg$pathToMagpieReport,
-      inputpath_mag  = cfg$gms$biomass,
-      inputpath_acc  = cfg$gms$agCosts,
-      var_luc        = cfg$var_luc
-    )
-  }
-
   # Update module paths in GAMS code
   update_modules_embedding()
 
@@ -190,10 +183,14 @@ prepare <- function() {
   ### ADD MODULE INFO IN SETS  ############# END #########
 
   # copy right gdx file to the output folder
-  gdx_name <- paste0("config/gdx-files/",cfg$gms$cm_CES_configuration,".gdx")
-  if (0 != system(paste('cp', gdx_name,
-			file.path(cfg$results_folder, 'input.gdx')))) {
-    stop('Could not copy gdx file ', gdx_name)
+  gdx_name <- paste0("config/gdx-files/", cfg$gms$cm_CES_configuration, ".gdx")
+  if (!file.copy(gdx_name, file.path(cfg$results_folder, 'input.gdx'))) {
+    errmsg <- 'Could not copy gdx file:\n   '
+    if (cfg$gms$CES_parameters == 'calibrate') {
+      errmsg <- paste0(errmsg,
+        'Calibration requires a start point, so copy the gdx file with the closest configuration and paste it to:\n   ')
+    }
+    stop(errmsg, gdx_name, '\n\n')
   } else {
     message('Copied ', gdx_name, ' to input.gdx')
   }
