@@ -1167,6 +1167,25 @@ $include "./core/input/pm_dataccs.cs3r"
 $offdelim
 ;
 
+*** import regionalized storage potential:
+table f_geoStorPot(all_regi,char)                       "different categories of geological storage potential for CO2. Unit: GtC"
+$ondelim
+$include "./core/input/f_geoStorPot.cs3r"
+$offdelim
+;
+
+*** set onshore (rlf "1") and offshore (rlf "2") storage potential according to c_geoStorPotScen
+if (c_geoStorPotScen eq 1,
+  pm_dataccs(all_regi, "quan", "1") = f_geoStorPot(all_regi, "TechPotOn");
+  pm_dataccs(all_regi, "quan", "2") = f_geoStorPot(all_regi, "TechPotOff");
+elseif (c_geoStorPotScen eq 2),
+  pm_dataccs(all_regi, "quan", "1") = f_geoStorPot(all_regi, "PlanetLimOn");
+  pm_dataccs(all_regi, "quan", "2") = f_geoStorPot(all_regi, "PlanetLimOff");
+elseif (c_geoStorPotScen eq 3),
+  pm_dataccs(all_regi, "quan", "1") = f_geoStorPot(all_regi, "MixedOld");
+  pm_dataccs(all_regi, "quan", "2") = 0;
+);
+
 ***-----------------------------------------------------------------------------
 *** adjustment cost parameter
 ***-----------------------------------------------------------------------------

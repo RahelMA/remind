@@ -903,6 +903,17 @@ parameter
 *' *   (1) reference (90%)
 *' *   (2) increased capture rate (99%)
 *'
+
+Parameter c_geoStorPotScen "select the amount of geological storage potential for CO2 offshore and onshore"
+;
+
+c_geoStorPotScen = 3;
+
+*' This switch determines the upper bound of the total geological storage potential for CO2 (onshore + offshore).
+*' *   (1) high: technical potential without any exclusion layers applied
+*' *   (2) low: applying all exclusion layers described in Gidden 2025, Table S1 of https://zenodo.org/records/15657543
+*' *   (3) old: formerly used scenario when there was only one grade
+
 parameter
   c_export_tax_scen         "choose which oil export tax is used in the model. 0 = none, 1 = fix"
 ;
