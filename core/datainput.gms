@@ -1176,13 +1176,13 @@ $offdelim
 
 *** set onshore (rlf "1") and offshore (rlf "2") storage potential according to c_geoStorPotScen
 if (c_geoStorPotScen eq 1,
-  pm_dataccs(all_regi, "quan", "1") = f_geoStorPot(all_regi, "TechPotOn");
-  pm_dataccs(all_regi, "quan", "2") = f_geoStorPot(all_regi, "TechPotOff");
+  pm_dataccs(all_regi, "quan", "1") = f_geoStorPot(all_regi, "potTechOn");
+  pm_dataccs(all_regi, "quan", "2") = f_geoStorPot(all_regi, "potTechOff");
 elseif (c_geoStorPotScen eq 2),
-  pm_dataccs(all_regi, "quan", "1") = f_geoStorPot(all_regi, "PlanetLimOn");
-  pm_dataccs(all_regi, "quan", "2") = f_geoStorPot(all_regi, "PlanetLimOff");
+  pm_dataccs(all_regi, "quan", "1") = f_geoStorPot(all_regi, "potLimOn");
+  pm_dataccs(all_regi, "quan", "2") = f_geoStorPot(all_regi, "potLimOff");
 elseif (c_geoStorPotScen eq 3),
-  pm_dataccs(all_regi, "quan", "1") = f_geoStorPot(all_regi, "MixedOld");
+  pm_dataccs(all_regi, "quan", "1") = f_geoStorPot(all_regi, "mixedOld");
   pm_dataccs(all_regi, "quan", "2") = 0;
 );
 

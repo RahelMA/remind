@@ -2212,6 +2212,11 @@ char            "characteristics of technologies"
     batteryVREcapRatio  "ratio of battery capacity to storage technology capacity"
     priceLow        "biochar price path assumption"
     priceHigh       "biochar price path assumption"
+    potTechOff      "technical geological storage potential Offshore"
+    potTechOn       "technical geological storage potential Onshore"
+    potLimOff       "limited geological storage potential Offshore"
+    potLimOn        "limited geological storage potential Onshore"
+    mixedOld        "old geological storage potential formerly used in REMIND"    
 /
 
 ***-----------------------------------------------------------------------------
