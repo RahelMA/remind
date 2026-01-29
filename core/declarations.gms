@@ -546,7 +546,7 @@ $ifthen.tech_CO2capturerate not "%c_tech_CO2capturerate%" == "off"
 p_tech_co2capturerate(all_te)                        "Technology specific CO2 capture rate, fraction of carbon from input fuel that is captured [share]" / %c_tech_CO2capturerate% /
 p_PECarriers_CarbonContent(all_enty)                 "Carbon content of PE carriers [GtC/TWa]"
 $endif.tech_CO2capturerate
-pm_dataccs(all_regi,char,rlf)                        "maximum CO2 storage capacity using CCS technology. [GtC]"
+pm_dataccs(all_regi,char,all_te)                     "maximum CO2 storage capacity using CCS technology. [GtC]"
 pm_ccsinjecrate(all_regi)                            "Regional CCS injection rate factor. [1/year]."
 p_extRegiccsinjecrateRegi(ext_regi)                  "Regional CCS injection rate factor. [1/year]. (extended regions)"
 ;

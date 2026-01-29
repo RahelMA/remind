@@ -29,7 +29,7 @@ pm_taxrevCO2Sector0(ttot,regi,emi_sectors) = p21_CO2TaxSectorMarkup(ttot,regi,em
 pm_taxrevCO2LUC0(t,regi) = pm_taxCO2eqSum(t,regi) * vm_emiMacSector.l(t,regi,"co2luc")$(cm_multigasscen ne 3);
 p21_taxrevCCS0(ttot,regi) = cm_frac_CCS * pm_data(regi,"omf","ccsinjeon") * pm_inco0_t(ttot,regi,"ccsinjeon") 
                             * ( sum(teCCS2rlf(te,rlf), sum(ccs2te(ccsCo2(enty),enty2,te), vm_co2CCS.l(ttot,regi,enty,enty2,te,rlf) ) ) )
-                            * (1/pm_ccsinjecrate(regi)) * sum(teCCS2rlf(te,rlf), sum(ccs2te(ccsCo2(enty),enty2,te), vm_co2CCS.l(ttot,regi,enty,enty2,te,rlf) ) ) / pm_dataccs(regi,"quan","1");
+                            * (1/pm_ccsinjecrate(regi)) * sum(teCCS2rlf(te,rlf), sum(ccs2te(ccsCo2(enty),enty2,te), vm_co2CCS.l(ttot,regi,enty,enty2,te,rlf) ) ) / pm_dataccs(regi,"quan","ccsinjeon");
 pm_taxrevNetNegEmi0(ttot,regi) = s21_frac_NetNegEmi * pm_taxCO2eqSum(ttot,regi) * ( (1 - cm_NetNegEmi_calculation) * vm_emiAllco2neg.l(ttot,regi) + cm_NetNegEmi_calculation * v21_emiAllco2neg_acrossIterations.l(ttot,regi) );
 p21_emiAllco2neg0(ttot,regi)  = vm_emiAllco2neg.l(ttot,regi);
 p21_emiAllco2neg_acrossIterations0(ttot,regi)  = v21_emiAllco2neg_acrossIterations.l(ttot,regi);

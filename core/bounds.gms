@@ -315,7 +315,7 @@ if(c_ccsinjecratescen > 0,
 *' DK 20100929: default value (pm_ccsinjecrate= 0.5%) is consistent with Interview Gerling (BGR)
 *' (http://www.iz-klima.de/aktuelles/archiv/news-2010/mai/news-05052010-2/): 
 *' 12 Gt storage potential in Germany, 50-75 Mt/a injection => 60 Mt/a => 60/12000=0.005
-  vm_co2CCS.up(t,regi,"cco2","ico2","ccsinjeon","1") = pm_dataccs(regi,"quan","1") * pm_ccsinjecrate(regi);
+  vm_co2CCS.up(t,regi,"cco2","ico2","ccsinjeon","1") = pm_dataccs(regi,"quan","ccsinjeon") * pm_ccsinjecrate(regi);
 
 *** Lower limit for 2020-2030 is capacities of all projects that are operational (2020-2030) from project data base
 *** Upper limit for 2025 and 2030 additionally includes all projects under construction and 30% 

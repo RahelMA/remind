@@ -925,7 +925,7 @@ q_ccsShare(t,regi) ..
 q_limitCCS(regi,ccs2te2(enty,"ico2",te),rlf)$teCCS2rlf(te,rlf)..
         sum(ttot $(ttot.val ge 2005), pm_ts(ttot) * vm_co2CCS(ttot,regi,enty,"ico2",te,rlf))
         =l=
-        pm_dataccs(regi,"quan",rlf);
+        pm_dataccs(regi,"quan",te);
 
 
 ***---------------------------------------------------------------------------
