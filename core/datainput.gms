@@ -1160,13 +1160,6 @@ loop(te,
 teEtaConst(te) = not teEtaIncr(te);
 display teEtaIncr;
 
-*** import regionalized CCS constraints:
-table pm_dataccs(all_regi,char,all_te)                       "maximum CO2 storage capacity using CCS technology. Unit: GtC"
-$ondelim
-$include "./core/input/pm_dataccs.cs3r"
-$offdelim
-;
-
 *** import regionalized storage potential:
 table f_geoStorPot(all_regi,char)                       "different categories of geological storage potential for CO2. Unit: GtC"
 $ondelim
@@ -1177,13 +1170,13 @@ $offdelim
 *** set onshore (rlf "1") and offshore (rlf "2") storage potential according to c_geoStorPotScen
 if (c_geoStorPotScen eq 1,
   pm_dataccs(all_regi, "quan", "ccsinjeon")  = f_geoStorPot(all_regi, "potTechOn");
-  pm_dataccs(all_regi, "quan", "ccsinjeoff") = f_geoStorPot(all_regi, "potTechOff");
+***  pm_dataccs(all_regi, "quan", "ccsinjeoff") = f_geoStorPot(all_regi, "potTechOff");
 elseif (c_geoStorPotScen eq 2),
   pm_dataccs(all_regi, "quan", "ccsinjeon")  = f_geoStorPot(all_regi, "potLimOn");
-  pm_dataccs(all_regi, "quan", "ccsinjeoff") = f_geoStorPot(all_regi, "potLimOff");
+***  pm_dataccs(all_regi, "quan", "ccsinjeoff") = f_geoStorPot(all_regi, "potLimOff");
 elseif (c_geoStorPotScen eq 3),
   pm_dataccs(all_regi, "quan", "ccsinjeon")  = f_geoStorPot(all_regi, "mixedOld");
-  pm_dataccs(all_regi, "quan", "ccsinjeoff") = 0;
+***  pm_dataccs(all_regi, "quan", "ccsinjeoff") = 0;
 );
 
 ***-----------------------------------------------------------------------------
