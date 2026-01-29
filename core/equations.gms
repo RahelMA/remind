@@ -912,7 +912,7 @@ q_balCCUvsCCS(t,regi) ..
 ;
 
 q_ccsShare(t,regi) ..
-  sum(teCCS2rlf(te, rlf), v_co2capture(t, regi, "cco2", "ico2", "ccsinje", rlf))  * 
+  sum(teCCS2rlf(te, rlf), v_co2capture(t, regi, "cco2", "ico2", "ccsinjeon", rlf))  * 
   v_ccsShare(t,regi) 
   =e=
   sum(teCCS2rlf(te, rlf), vm_co2CCS(t, regi, "cco2", "ico2", te, rlf))

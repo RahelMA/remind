@@ -1123,7 +1123,7 @@ parameter
   cm_carbonprice_temperatureLimit       = 1.8;   !! def = 1.8
 *'
 parameter
-  cm_frac_CCS          "tax on carbon transport & storage (ccsinje) to reflect risk of leakage, formulated as fraction of ccsinje O&M costs"
+  cm_frac_CCS          "tax on carbon transport & storage (ccsinjeon) to reflect risk of leakage, formulated as fraction of ccsinjeon O&M costs"
 ;
   cm_frac_CCS          = 10;   !! def = 10
 *'
@@ -1764,7 +1764,7 @@ $setglobal cm_adj_seed_multiplier  off
 $setglobal cm_adj_coeff_multiplier  off
 *** cm_inco0Factor "change investment costs. [factor]."
 *' *  (off): no scale-factor, use default investment costs (inco0) values
-*' *  (any value ge 0) list of techs with respective factor to change inco0 value by a multiplication factor. (e.g. "ccsinje 0.5,bioigccc 0.66)
+*' *  (any value ge 0) list of techs with respective factor to change inco0 value by a multiplication factor. (e.g. "ccsinjeon 0.5,bioigccc 0.66)
 *'  Note: if %cm_techcosts% == "GLO", switch will not work for policy runs, i.e. cm_startyear > 2005, for pc, ngt and ngcc as this gets overwritten in 05_initialCap module
 $setglobal cm_inco0Factor  off !! def = off
 *** cm_inco0RegiFactor "change investment costs regionalized technology values. [factor]."

@@ -154,7 +154,7 @@ lifetime               30        30          45          45          45         
 
 
 *** carbon management
-+             ccsinje    weathering         dac      oae_ng      oae_el
++             ccsinjeon    weathering         dac      oae_ng      oae_el
 tech_stat           0                         4
 inco0             350          0.01       18800         200         400
 floorcost                                  4800
