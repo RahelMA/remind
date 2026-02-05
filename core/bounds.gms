@@ -306,7 +306,7 @@ vm_cap.fx("2020",regi,te,rlf) $ (teBio(te) and teCCS(te)) = 0;
 
 *' switch to deactivate carbon sequestration
 if(c_ccsinjecratescen = 0,
-  vm_co2CCS.fx(t,regi_capturescen,"cco2","ico2","ccsinjeon","1") = 0;
+  vm_co2CCS.fx(t,regi_capturescen,"cco2","ico2",teCCS2rlf(te,rlf)) = 0;
 );
 
 *' bound on maximum annual carbon storage by region
@@ -315,7 +315,8 @@ if(c_ccsinjecratescen > 0,
 *' DK 20100929: default value (pm_ccsinjecrate= 0.5%) is consistent with Interview Gerling (BGR)
 *' (http://www.iz-klima.de/aktuelles/archiv/news-2010/mai/news-05052010-2/): 
 *' 12 Gt storage potential in Germany, 50-75 Mt/a injection => 60 Mt/a => 60/12000=0.005
-  vm_co2CCS.up(t,regi,"cco2","ico2","ccsinjeon","1") = pm_dataccs(regi,"quan","ccsinjeon") * pm_ccsinjecrate(regi);
+  vm_co2CCS.up(t,regi,"cco2","ico2","ccsinjeon","1")  = pm_dataccs(regi,"quan","ccsinjeon")  * pm_ccsinjecrate(regi);
+  vm_co2CCS.up(t,regi,"cco2","ico2","ccsinjeoff","1") = pm_dataccs(regi,"quan","ccsinjeoff") * pm_ccsinjecrate(regi);
 
 *** Lower limit for 2020-2030 is capacities of all projects that are operational (2020-2030) from project data base
 *** Upper limit for 2025 and 2030 additionally includes all projects under construction and 30% 
@@ -341,7 +342,7 @@ if(cm_emiscen = 1,
 
 if(cm_ccapturescen = 2, !! no carbon capture at all
   vm_cap.fx(t,regi_capturescen,teCCS,rlf) = 0;
-  vm_cap.fx(t,regi_capturescen,"ccsinjeon",rlf) = 0;
+  vm_cap.fx(t,regi_capturescen,teCCS2rlf(te,rlf)) = 0;
 elseif(cm_ccapturescen = 3), !! no bio carbon capture:
   vm_cap.fx(t,regi_capturescen,te,rlf) $ (teCCS(te) and teBio(te)) = 0;
 elseif(cm_ccapturescen = 4), !! no carbon capture in the electricity sector

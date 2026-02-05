@@ -224,7 +224,8 @@ all_te          "all energy technologies, including from modules"
     tdhes           "transmission and distribution for heat to stationary users"
     tdheb           "transmission and distribution for heat to buildings"
 
-    ccsinjeon         "injection of co2"
+    ccsinjeon       "transport, injection, and storage of co2 onshore"
+    ccsinjeoff      "transport, injection, and storage of co2 offshore"
 *** Storage technology:
     storspv         "storage technology for photo voltaic (PV)"
     storwind        "storage technology for wind onshore"
@@ -1145,7 +1146,8 @@ te(all_te)              "energy technologies"
     tdh2i           "helper technologies (without cost) to avoid sudden H2 use switching in buildings and industry"
     tdh2b           "helper technologies (without cost) to avoid sudden H2 use switching in buildings and industry"
 
-    ccsinjeon         "injection of co2, CCS related"
+    ccsinjeon       "transport, injection, and storage of co2 onshore, CCS related"
+    ccsinjeoff      "transport, injection, and storage of co2 offshore, CCS related"
 
     storspv         "storage technology for photo voltaic"
 ***        storwind        "storage technology for wind onshore"
@@ -1228,7 +1230,8 @@ teAdj(all_te)           "technologies with adjustment costs on capacity addition
     elh2            "hydrogen elecrolysis"
     h2turb          "hydrogen turbine for electricity production"
     h2curt          "hydrogen production from curtailment"
-    ccsinjeon         "injection of co2, CCS related"
+    ccsinjeon       "transport, injection, and storage of co2 onshore, CCS related"
+    ccsinjeoff      "transport, injection, and storage of co2 offshore, CCS related"
 
     storspv         "storage technology for PV"
 ***  storwind        "storage technology for wind onshore"
@@ -2524,6 +2527,7 @@ pc2te(all_enty,all_enty,all_te,all_enty)    "mapping for own consumption of tech
     segafos.fegas.tdfosgas.seel
     pegeo.sehe.geohe.seel
     cco2.ico2.ccsinjeon.seel
+    cco2.ico2.ccsinjeoff.seel
 /
 *NB* mappings for emissions, capture and leakage
 emi2te(all_enty,all_enty,all_te,all_enty)    " map emissions to technologies"
@@ -2630,6 +2634,7 @@ emi2te(all_enty,all_enty,all_te,all_enty)    " map emissions to technologies"
     segabio.fegas.tdbiogas.ch4
     segafos.fegas.tdfosgas.ch4
     cco2.ico2.ccsinjeon.co2
+    cco2.ico2.ccsinjeoff.co2
     pebiolc.seel.bioigccc.co2
     pebiolc.seel.bioigccc.cco2
     seliqbio.fehos.tdbiohos.bc
@@ -2744,11 +2749,13 @@ emi2fuelMine(all_enty,all_enty,rlf)   "missions from fossil fuel extraction"
 ccs2te(all_enty,all_enty,all_te)   "chain for ccs"
 /
     cco2.ico2.ccsinjeon
+    cco2.ico2.ccsinjeoff
 /
 
 ccs2Leak(all_enty,all_enty,all_te,all_enty)   "leakage along ccs chain"
 /
     cco2.ico2.ccsinjeon.co2
+    cco2.ico2.ccsinjeoff.co2
 /
 
 pe2rlf(all_enty,rlf)     "map exhaustible energy to grades for qm_fuel2pe"
@@ -2823,7 +2830,7 @@ teMat2rlf(all_te,rlf)     "mapping for material production technologies to grade
 
 teCCS2rlf(all_te,rlf)     "mapping for CCS technologies to grades"
 /
-    (ccsinjeon) . 1
+    (ccsinjeon,ccsinjeoff) . 1
 /
 
 teNoTransform2rlf(all_te,rlf) "mapping for no transformation technologies to grades"
