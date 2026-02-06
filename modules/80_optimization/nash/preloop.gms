@@ -65,7 +65,7 @@ if(p80_Mport0("2005",regi,tradePe) eq NA, p80_Mport0("2005",regi,tradePe) = 0);
 if((cm_emiscen ne 1) and (cm_emiscen ne 9) and (smax(t,pm_pvp(t,"perm"))) eq 0,
  loop(ttot$(ttot.val ge 2005),
 ***this is a 30$/tCo2eq in 2020 trajectory:     
-	pm_pvp(ttot,"perm") = 0.11*1.05**(ttot.val-2020) * pm_pvp(ttot,"good");
+	pm_pvp(ttot,"perm") = 0.18*1.05**(ttot.val-2020) * pm_pvp(ttot,"good");
  );
  pm_pvp("2005","perm")=0;
 );
