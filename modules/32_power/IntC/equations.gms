@@ -19,8 +19,7 @@ q32_balSe(t,regi,enty2)$(sameas(enty2,"seel"))..
   + sum(pc2te(enty4,entyFe(enty5),te,enty2), 
         pm_prodCouple(regi,enty4,enty5,te,enty2) * vm_prodFe(t,regi,enty4,enty5,te) )
   + sum(pc2te(enty,enty3,te,enty2),
-        sum(teCCS2rlf(te,rlf),
-            pm_prodCouple(regi,enty,enty3,te,enty2) * vm_co2CCS(t,regi,enty,enty3,te,rlf) ) )
+            pm_prodCouple(regi,enty,enty3,te,enty2) * vm_co2CCS(t,regi,te) )
     + vm_Mport(t,regi,enty2)
   =e=
     sum(se2fe(enty2,enty3,te), vm_demSe(t,regi,enty2,enty3,te) )

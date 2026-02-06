@@ -306,7 +306,7 @@ vm_cap.fx("2020",regi,te,rlf) $ (teBio(te) and teCCS(te)) = 0;
 
 *' switch to deactivate carbon sequestration
 if(c_ccsinjecratescen = 0,
-  vm_co2CCS.fx(t,regi_capturescen,"cco2","ico2","ccsinjeon","1") = 0;
+  vm_co2CCS.fx(t,regi_capturescen,teccsinje(te)) = 0;
 );
 
 *' bound on maximum annual carbon storage by region
@@ -315,7 +315,7 @@ if(c_ccsinjecratescen > 0,
 *' DK 20100929: default value (pm_ccsinjecrate= 0.5%) is consistent with Interview Gerling (BGR)
 *' (http://www.iz-klima.de/aktuelles/archiv/news-2010/mai/news-05052010-2/): 
 *' 12 Gt storage potential in Germany, 50-75 Mt/a injection => 60 Mt/a => 60/12000=0.005
-  vm_co2CCS.up(t,regi,"cco2","ico2","ccsinjeon","1") = pm_dataccs(regi,"quan","ccsinjeon") * pm_ccsinjecrate(regi);
+  vm_co2CCS.up(t,regi,te)$(teccsinje(te)) = pm_dataccs(regi,"quan",te)$(teccsinje(te)) * pm_ccsinjecrate(regi);
 
 *** Lower limit for 2020-2030 is capacities of all projects that are operational (2020-2030) from project data base
 *** Upper limit for 2025 and 2030 additionally includes all projects under construction and 30% 
@@ -325,8 +325,8 @@ if(c_ccsinjecratescen > 0,
 *** Potential of EU27 regions is pooled and redistributed according to GDP (Only upper limit for 2030)
 *** Norway and UK announced to store CO2 for EU27 countries. So 50% of Norway and UK potential in 2030 is attributed to EU27-Pool
   if(not cm_emiscen = 1, !! cm_emiscen 1 = BAU
-    vm_co2CCS.lo(t,regi,"cco2","ico2","ccsinjeon","1") $ (t.val <= 2030) = s_MtCO2_2_GtC * p_boundCapCCS(t,regi,"operational") $ (t.val <= 2030);
-    vm_co2CCS.up(t,regi,"cco2","ico2","ccsinjeon","1") $ (t.val <= 2030) = s_MtCO2_2_GtC * (
+    vm_co2CCS.lo(t,regi,"ccsinjeon") $ (t.val <= 2030) = s_MtCO2_2_GtC * p_boundCapCCS(t,regi,"operational") $ (t.val <= 2030);
+    vm_co2CCS.up(t,regi,"ccsinjeon") $ (t.val <= 2030) = s_MtCO2_2_GtC * (
         p_boundCapCCS(t,regi,"operational") $ (t.val <= 2030)
       + p_boundCapCCS(t,regi,"construction") $ (t.val <= 2030)
       + p_boundCapCCS(t,regi,"planned") $ (t.val <= 2030) * c_fracRealfromAnnouncedCCScap2030);

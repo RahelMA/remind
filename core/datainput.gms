@@ -1637,7 +1637,7 @@ p_prodAllReference(t,regi,te) =
   + sum(se2se(enty,enty2,te),  p_prodSeReference(t,regi,enty,enty2,te) )
   + sum(se2fe(enty,enty2,te),  pm_prodFEReference(t,regi,enty,enty2,te) )
   + sum(fe2ue(enty,enty2,te),  p_prodUeReference(t,regi,enty,enty2,te) )
-  + sum(ccs2te(enty,enty2,te), sum(teCCS2rlf(te,rlf), p_co2CCSReference(t,regi,enty,enty2,te,rlf) ) )
+  + sum(teccsinje(te), p_co2CCSReference(t,regi,te))
 ;
 
 *' initialize vm_changeProdStartyearCost for tax calculation
