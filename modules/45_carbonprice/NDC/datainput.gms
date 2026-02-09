@@ -64,8 +64,8 @@ $offdelim
 
 *** parameters for selecting NDC years
 Set t_NDC_targetYear(ttot)                          "Years for which NDC emissions targets can be applied [0 or 1]" / %cm_NDC_targetYear% /;
-Scalar p45_minRatioOfCoverageToMax                  "only targets whose coverage is this times p45_bestNDCcoverage are considered. Use 1 for only best [0..1]" /1.0/;
-Scalar p45_useSingleYearCloseTo                     "if 0: use all. If > 0: use only one single NDC target per country closest to this year (use 2030.4 to prefer 2030 over 2035 over 2025) [year]" /2030.4/;
+Scalar p45_minRatioOfCoverageToMax                  "only targets whose coverage is this times p45_bestNDCcoverage are considered. Use 1 for only best [0..1]" /0/;
+Scalar p45_useSingleYearCloseTo                     "if 0: use all. If > 0: use only one single NDC target per country closest to this year (use 2030.4 to prefer 2030 over 2035 over 2025) [year]" /0/;
 Set p45_NDCyearSet(ttot,all_regi)                   "YES for years whose NDC targets is used";
 Parameter p45_bestNDCcoverage(all_regi)             "highest coverage of NDC targets within region [0..1]";
 Parameter p45_distanceToOptyear(ttot,all_regi)      "distance to p45_useSingleYearCloseTo to favor years in case of multiple equally good targets [year]";
