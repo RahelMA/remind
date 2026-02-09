@@ -1256,13 +1256,6 @@ parameter
 *' Default assumption is that only 30% of announced or planned capacities will be realised, either due to discontinuation or delay
 
 parameter
-  cm_startIter_EDGET          "starting iteration of EDGE-T"
-;
-  cm_startIter_EDGET = 10;  !! def = 10, by default EDGE-T is run first in iteration 10  !! regexp = [0-9]+
-*' EDGE-T transport starting iteration of coupling
-*' def 10, EDGE-T coupling starts at 10, if you want to test whether infeasibilities after EDGE-T -> set it to 1 to check after first iteration
-*'
-parameter
   cm_deuCDRmax                 "switch to limit maximum annual CDR amount in Germany in MtCO2 per y"
 ;
   cm_deuCDRmax = -1; !! def = -1
@@ -1335,6 +1328,11 @@ parameter
 *' It is only a setglobal so that it is possible to deviate from the default by overwriting it from outside (prepare.R).
 *'
 $setglobal c_magpieIter  20,24,28,32     !! def = "20,24,28,32"  !! This regular expression works in manual test but not in checkFixCfg [0-9]{1,2}(,[0-9]{1,2})*
+
+
+*' c_transportIter      "Nash iterations in which EDGE-T runs"
+#'
+$setglobal c_transportIter 14,16,18,20,22,24,27,30,33,36,39,42,45,50,55,60,65,70,75,80,85,90,95   !! def = "14,16,18,20,22,24,27,30,33,36,39,42,45,50,55,60,65,70,75,80,85,90,95" 
 
 *' cm_rcp_scen       "chooses RCP scenario"
 *'
