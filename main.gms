@@ -1346,17 +1346,24 @@ $setglobal c_magpieIter  20,24,28,32     !! def = "20,24,28,32"  !! This regular
 *' *  (rcp60): RCP6.0 [currently not operational: test and verify before using it!]
 *' *  (rcp85): RCP8.5 [currently not operational: test and verify before using it!]
 $setglobal cm_rcp_scen  rcp45         !! def = "rcp45"  !! regexp = none|rcp20|rcp26|rcp37|rcp45|rcp60|rcp85
-*' cm_NDC_version            "choose version year of NDC targets as well as conditional vs. unconditional targets"
-*' *  (2025_cond_extrapol):       all NDCs conditional to international financial support published until September 2025 with extrapolation of 2030 targets to 2035 targets for conutries without 2035 target
-*' *  (2025_uncond_extrapol):     all NDCs independent of international financial support published until September 2025 with extrapolation of 2030 targets to 2035 targets for conutries without 2035 target
-*' *  (2025_cond):                all NDCs conditional to international financial support published until September 2025
-*' *  (2025_uncond):              all NDCs independent of international financial support published until September 2025
+*' cm_NDC_version            "choose version of NDC targets to be applied, including differentiation between conditional vs. unconditional targets"
+*' * This switch allows to run different states of NDC targets over the past years, allowing for comparison of NDC successio over the years. 
+*' * For the latest NDC version (2026_cond/uncond), the targets are based on the collection provided by PBL. The collection provides two formats for emissions targets. 
+*' * Note that for major emitters, we derive absolute emissions targets based on a detailed collection by PBL adding our own assumptions (e.g. regarding LULUCF emissions), while
+*' * for minor emitters, we rely on the absolute emissions targets directly provided by PBL. 
+*' * while for minor emitters, absolute emissions targets are directly taken from PBL collection. 
+*' *  (2026_cond):                all NDCs conditional to international financial support published until end of 2025 (PBL collection), note that for countries / regions with target ranges (e.g. EU 66-72% 2035 target)
+*' *                              the more ambitious target is chosen even if it is strictly speaking not a conditional NDC target
+*' *  (2026_uncond):              all NDCs independent of international financial support published until end of 2025 (PBL collection), note that for countries / regions with target ranges (e.g. EU 66-72% 2035 target) 
+*' *                              the less ambitious target is chosen even if it is strictly speaking not an unconditional NDC target
+*' *  (2024_cond_extrapol):       all NDCs conditional to international financial support published until August 31, 2024 with extrapolation of 2030 targets to 2035 targets for conutries without 2035 target
+*' *  (2024_uncond_extrapol):     all NDCs independent of international financial support published until August 31, 2024 with extrapolation of 2030 targets to 2035 targets for conutries without 2035 target
 *' *  (2024_cond):                all NDCs conditional to international financial support published until August 31, 2024
 *' *  (2024_uncond):              all NDCs independent of international financial support published until August 31, 2024
 *' *  (2023_cond):                all NDCs conditional to international financial support published until December 31, 2023
 *' *  (2023_uncond):              all NDCs independent of international financial support published until December 31, 2023
 *' *  Other supported years are 2022, 2021 and 2018, always containing NDCs published until December 31 of that year
-$setglobal cm_NDC_version  2024_cond    !! def = "2024_cond" !! regexp = 20(18|2[1-5])_(un)?cond(_extrapol)?$
+$setglobal cm_NDC_version  2024_cond    !! def = "2024_cond" !! regexp = 20(18|2[1-6])_(un)?cond(_extrapol)?$
 *' cm_NDC_targetYear            "choose years for which NDC emissions targets can be applied" [requires 45_carbonprice = NDC]
 *' * Examples on how to use:
 *' *  "2030" means that only 2030 target are included
