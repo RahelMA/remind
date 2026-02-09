@@ -153,11 +153,11 @@ vm_emiAllMkt(tall,all_regi,all_enty,all_emiMkt)      "total emissions per emissi
 *** ------------- Emissions Positive Variables --------------------------------
 positive variables
 
-v_co2capture(ttot,all_regi)                          "total captured CO2 [GtC/year]"
-vm_co2CCS(ttot,all_regi,all_te)                      "total CO2 injected into geological storage [GtC/a]"
-v_co2capturevalve(ttot,all_regi)                     "total CO2 emitted right after capture [GtC/a], note: used in q_balCCUvsCCS to account for different lifetimes of capture and CCU/CCS te and capacities [GtC/year]"
-v_ccsShare(ttot,all_regi)                            "fraction of captured CO2 that is stored geologically [share]"
-vm_emiCdrAll(ttot,all_regi)                          "all CDR emissions, net negative emissions from land-use change, gross removals for all other options [GtC/year]"
+v_co2capture(ttot,all_regi)                                 "total captured CO2 [GtC/year]"
+vm_co2CCS(ttot,all_regi,all_enty,all_enty,all_te,rlf)       "total CO2 injected into geological storage [GtC/a]"
+v_co2capturevalve(ttot,all_regi)                            "total CO2 emitted right after capture [GtC/a], note: used in q_balCCUvsCCS to account for different lifetimes of capture and CCU/CCS te and capacities [GtC/year]"
+v_ccsShare(ttot,all_regi)                                    "fraction of captured CO2 that is stored geologically [share]"
+vm_emiCdrAll(ttot,all_regi)                                  "all CDR emissions, net negative emissions from land-use change, gross removals for all other options [GtC/year]"
 ;
 
 
@@ -294,7 +294,7 @@ p_maxhistProdSeGrowthRate(all_regi,all_enty,all_te)  "maximum historic energy pr
 p_prodSeReference(ttot,all_regi,all_enty,all_enty,all_te) "Secondary Energy output of a technology in the reference run [TWa]"
 pm_prodFEReference(ttot,all_regi,all_enty,all_enty,all_te) "Final Energy output of a technology in the reference run [TWa]"
 p_prodUeReference(ttot,all_regi,all_enty,all_enty,all_te) "Useful Energy output of a technology in the reference run [TWa]"
-p_co2CCSReference(ttot,all_regi,all_te)              "Captured CO2 put through the CCS chain in ccs2te (pipelines/injection) in the reference run [GtC]"
+p_co2CCSReference(ttot,all_regi,all_enty,all_enty,all_te,rlf) "Captured CO2 put through the CCS chain in ccs2te (pipelines/injection) in the reference run [GtC]"
 p_prodAllReference(ttot,all_regi,all_te)             "Sum of the above in the reference run. As each technology has only one type of output, the differing units should not be a problem"
 
 *** CES calibration tarjectories industry and buildings
@@ -556,10 +556,10 @@ p_extRegiccsinjecrateRegi(ext_regi)                  "Regional CCS injection rat
 
 equations
 *** carbon management technology equations
-q_limitCCS(all_regi,all_te)                          "limit cumulated CO2 injection into geological storage to maximum storage potential"
+q_limitCCS(all_regi,all_enty,all_enty,all_te,rlf)    "limit cumulated CO2 injection into geological storage to maximum storage potential"
 
 *** capacity constraint for CCS (capacity * capacity factor = co2 injection)
-q_limitCapCCS(ttot,all_regi,all_te)                  "capacity constraint for ccs"
+q_limitCapCCS(ttot,all_regi,all_enty,all_enty,all_te,rlf)  "capacity constraint for ccs"
 ;
 
 *** ---------------------------------------------------------------------------

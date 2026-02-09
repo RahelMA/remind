@@ -142,9 +142,11 @@ q_balSe(t,regi,enty2)$( entySe(enty2) AND (NOT (sameas(enty2,"seel"))) )..
     * vm_prodFe(t,regi,enty4,enty5,te)
     )
   + sum(pc2te(enty,enty3,te,enty2),
+                sum(teCCS2rlf(te,rlf),
         pm_prodCouple(regi,enty,enty3,te,enty2)
-      * vm_co2CCS(t,regi,te)
-    )
+      * vm_co2CCS(t,regi,enty,enty3,te,rlf)
+                )
+         )
 ***   add (reused gas from waste landfills) to segas to not account for CO2
 ***   emissions - it comes from biomass
   + ( s_MtCH4_2_TWa
@@ -287,8 +289,8 @@ q_limitCapFe(t,regi,te)..
 ***---------------------------------------------------------------------------
 *' Definition of capacity constraints for CCS technologies:
 ***---------------------------------------------------------------------------
-q_limitCapCCS(t,regi,teccsinje(te))..
-         vm_co2CCS(t,regi,te)
+q_limitCapCCS(t,regi,ccs2te(enty,enty2,te),rlf)$teCCS2rlf(te,rlf)..
+         vm_co2CCS(t,regi,enty,enty2,te,rlf)
          =e=
          sum(teCCS2rlf(te,rlf), vm_capFac(t,regi,te) * vm_cap(t,regi,te,rlf));
 
@@ -579,9 +581,9 @@ q_emiTeDetailMkt(t,regi,enty,enty2,te,enty3,emiMkt)$(
         pm_emifac(t,regi,enty,enty2,te,enty3)
       * vm_demPe(t,regi,enty,enty2,te)
       )
-    + sum((ccs2Leak(enty,enty2,te,enty3)),
+    + sum((ccs2Leak(enty,enty2,te,enty3),teCCS2rlf(te,rlf)),
         pm_emifac(t,regi,enty,enty2,te,enty3)
-      * vm_co2CCS(t,regi,te)
+      * vm_co2CCS(t,regi,enty,enty2,te,rlf)
       )
     )$( sameas(emiMkt,"ETS") )
   + sum(se2fe(enty,enty2,te),
@@ -908,7 +910,7 @@ q_balcapture(t,regi) ..
 q_balCCUvsCCS(t,regi) ..
   v_co2capture(t,regi)
   =e=
-    sum(teccsinje(te), vm_co2CCS(t,regi,te))
+    sum(teCCS2rlf(te,rlf), vm_co2CCS(t,regi,"cco2","ico2",te,rlf))
   + sum(teCCU2rlf(te,rlf), vm_co2CCUshort(t,regi,"cco2","ccuco2short",te,rlf))
   + v_co2capturevalve(t,regi)
 ;
@@ -917,15 +919,15 @@ q_ccsShare(t,regi) ..
   v_co2capture(t,regi)  * 
   v_ccsShare(t,regi) 
   =e=
-  sum(teccsinje(te), vm_co2CCS(t,regi,te))
+  sum(teCCS2rlf(te, rlf), vm_co2CCS(t, regi, "cco2", "ico2", te, rlf))
 ;
 
 ***---------------------------------------------------------------------------
 *' Definition of the CCS transformation chain:
 ***---------------------------------------------------------------------------
 
-q_limitCCS(regi,teccsinje(te))..
-        sum(ttot $(ttot.val ge 2005), pm_ts(ttot) * vm_co2CCS(ttot,regi,te))
+q_limitCCS(regi,ccs2te2(enty,"ico2",te),rlf)$teCCS2rlf(te,rlf)..
+        sum(ttot $(ttot.val ge 2005), pm_ts(ttot) * vm_co2CCS(ttot,regi,enty,"ico2",te,rlf))
         =l=
         pm_dataccs(regi,"quan",te);
 
@@ -958,7 +960,7 @@ q_changeProdStartyear(t,regi,te)$( (t.val gt 2005) AND (t.val eq cm_startyear ) 
   + sum(se2se(enty,enty2,te), vm_prodSe(t,regi,enty,enty2,te)  - p_prodSeReference(t,regi,enty,enty2,te) )
   + sum(se2fe(enty,enty2,te), vm_prodFe(t,regi,enty,enty2,te)  - pm_prodFEReference(t,regi,enty,enty2,te) )
   + sum(fe2ue(enty,enty2,te), v_prodUe (t,regi,enty,enty2,te)  - p_prodUeReference(t,regi,enty,enty2,te) )
-  + sum(teccsinje(te),        vm_co2CCS(t,regi,te)             - p_co2CCSReference(t,regi,te) )
+  + sum(ccs2te(enty,enty2,te), sum(teCCS2rlf(te,rlf), vm_co2CCS(t,regi,enty,enty2,te,rlf) - p_co2CCSReference(t,regi,enty,enty2,te,rlf) ) )
 ;
 
 *' calculating the relative change

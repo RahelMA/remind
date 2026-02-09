@@ -1306,11 +1306,6 @@ teCCS(all_te)       "Technologies with carbon capture"
     bioh2c      "biomass to hydrogen with carbon capture"
 /
 
-teccsinje(all_te)
-/
-  ccsinjeon
-/
-
 te2teCCS(all_te,all_te) "Map an energy technology to its CCS equivalent"
 /
     ngcc      . ngccc      "natural gas combined cycle"
