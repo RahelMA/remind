@@ -1,2 +1,2 @@
-title;start;cm_nash_mode;cm_iteration_max;optimization;magpieIter;transportIter
+title;start;cm_nash_mode;cm_iteration_max;optimization;c_magpieIter;c_transportIter
 testOneRegiEnhanced;1;1;5;testOneRegi;;1,3
