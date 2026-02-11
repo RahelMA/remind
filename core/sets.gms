@@ -1323,6 +1323,12 @@ te2teCCS(all_te,all_te) "Map an energy technology to its CCS equivalent"
     bioh2     . bioh2c     "biomass to hydrogen"
 /
 
+teccsinje(all_te)         "transport, storage, and injection of ico2"
+/
+  ccsinjeon
+  ccsinjeoff
+/
+
 teNoCCS(all_te)     "Technologies without CCS"
 
 teChp(all_te)       "Technologies that produce seel as main output und sehe as secondary output - dynamically defined"
@@ -2889,7 +2895,6 @@ es2ppfen(all_esty,all_in)      "matching ES in ESM to ppfEn in MACRO"
 ***-----------------------------------------------------------------------------
 ***-----------------------------------------------------------------------------
 
-alias(ccs2te,ccs2te2);
 alias(pe2se,pe2se2);
 alias(se2fe,se2fe2);
 

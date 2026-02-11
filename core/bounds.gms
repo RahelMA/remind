@@ -331,6 +331,7 @@ if(c_ccsinjecratescen > 0,
         p_boundCapCCS(t,regi,"operational") $ (t.val <= 2030)
       + p_boundCapCCS(t,regi,"construction") $ (t.val <= 2030)
       + p_boundCapCCS(t,regi,"planned") $ (t.val <= 2030) * c_fracRealfromAnnouncedCCScap2030);
+      !! DKX: assumptions for ccsinjeoff
   );
 );
 

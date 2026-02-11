@@ -142,11 +142,11 @@ q_balSe(t,regi,enty2)$( entySe(enty2) AND (NOT (sameas(enty2,"seel"))) )..
     * vm_prodFe(t,regi,enty4,enty5,te)
     )
   + sum(pc2te(enty,enty3,te,enty2),
-                sum(teCCS2rlf(te,rlf),
-        pm_prodCouple(regi,enty,enty3,te,enty2)
-      * vm_co2CCS(t,regi,enty,enty3,te,rlf)
-                )
-         )
+        sum(teCCS2rlf(te,rlf),
+          pm_prodCouple(regi,enty,enty3,te,enty2)
+        * vm_co2CCS(t,regi,enty,enty3,te,rlf)
+        )
+    )
 ***   add (reused gas from waste landfills) to segas to not account for CO2
 ***   emissions - it comes from biomass
   + ( s_MtCH4_2_TWa
@@ -572,7 +572,7 @@ q_emiTe(t,regi,emiTe(enty))..
 *' transformations within the chain of CCS steps (Leakage).
 ***-----------------------------------------------------------------------------
 q_emiTeDetailMkt(t,regi,enty,enty2,te,enty3,emiMkt)$(
-                           emi2te(enty,enty2,te,enty3)
+                           emi2te(enty,enty2,te,enty3)  !! emi2te = cco2.ico2.ccsinje.co2
                         OR (pe2se(enty,enty2,te) AND sameas(enty3,"cco2")) ) ..
   vm_emiTeDetailMkt(t,regi,enty,enty2,te,enty3,emiMkt)
   =e=
@@ -581,7 +581,7 @@ q_emiTeDetailMkt(t,regi,enty,enty2,te,enty3,emiMkt)$(
         pm_emifac(t,regi,enty,enty2,te,enty3)
       * vm_demPe(t,regi,enty,enty2,te)
       )
-    + sum((ccs2Leak(enty,enty2,te,enty3),teCCS2rlf(te,rlf)),
+    + sum((ccs2Leak(enty,enty2,te,enty3),teCCS2rlf(te,rlf)), !! ccs2Leak = cco2.ico2.ccsinje.co2
         pm_emifac(t,regi,enty,enty2,te,enty3)
       * vm_co2CCS(t,regi,enty,enty2,te,rlf)
       )
@@ -926,7 +926,7 @@ q_ccsShare(t,regi) ..
 *' Definition of the CCS transformation chain:
 ***---------------------------------------------------------------------------
 
-q_limitCCS(regi,ccs2te2(enty,"ico2",te),rlf)$teCCS2rlf(te,rlf)..
+q_limitCCS(regi,ccs2te(enty,"ico2",te),rlf)$teCCS2rlf(te,rlf)..
         sum(ttot $(ttot.val ge 2005), pm_ts(ttot) * vm_co2CCS(ttot,regi,enty,"ico2",te,rlf))
         =l=
         pm_dataccs(regi,"quan",te);
