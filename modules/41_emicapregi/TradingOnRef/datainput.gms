@@ -17,22 +17,9 @@ p41_co2eq(t, regi) = p41_co2eq_in(t,regi,"co2");
 Execute_Loadpoint "input_bau" p41_co2eq_bau = vm_co2eq.l;
 
 
-*** Step 1: calculate regional mitigation based on cost-optimal and baseline emissions, and per-capita gdp (pm_gdp is in MER, pm_shPPPMER is the MER-PPP multiplier, 1 for USA, and ~0.3 for IND)
-***p41_precorrection_reduction(t,regi) = (pm_gdp(t,regi)/pm_shPPPMER(regi)/pm_pop(t,regi)/(sum(regi2,pm_gdp(t,regi2)/pm_shPPPMER(regi2))/sum(regi2,pm_pop(t,regi2))))** 1/3 
-***										*sum(regi2,p41_co2eq_bau(t,regi2)-p41_co2eq(t,regi2))/sum(regi2,p41_co2eq_bau(t,regi2))
-***										*p41_co2eq_bau(t,regi);
-*** Step 2: Calculate correction factor
-***p41_correct_factor(t) = sum(regi2,p41_precorrection_reduction(t,regi2))/sum(regi2,p41_co2eq_bau(t,regi2)-p41_co2eq(t,regi2));
-
-*** Step 3 is directly done in modules/41_emicapregi/AbilityToPay/bounds.gms	 
-*** vm_perm.fx(t,regi) = p41_co2eq_bau(t,regi) - p41_precorrection_reduction(t,regi)/p41_correct_factor(t);
-
 *** initialization of pm_shPermit
 pm_shPerm(t,regi) = p41_co2eq(t,regi)/sum(regi2, p41_co2eq(t,regi2));		
-
 pm_emicapglob(t) = sum(regi, p41_co2eq(t,regi));
 
-*pm_shPerm(t,regi) = p41_emicapregi(t,regi)/sum(regi2, p41_emicapregi(t,regi2));
-*pm_emicapglob(t) = sum(regi, p41_emicapregi(t,regi));
 		 
 *** EOF ./modules/41_emicapregi/AbilityToPay/datainput.gms

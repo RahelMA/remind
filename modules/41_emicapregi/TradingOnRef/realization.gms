@@ -6,8 +6,15 @@
 *** |  Contact: remind@pik-potsdam.de
 *** SOF ./modules/41_emicapregi/AbilityToPay/realization.gms
 
-*' @description
-*' Emission caps/permits are allocated according to the ability to pay principle  
+*' @description: Emission caps/permits are allocated according to a reference run
+*' There are three different trade patterns currently available.
+*'     cm_permittradescen  = 1;         !! def = 1  !! regexp = [1-3]
+*' *  (1): full permit trade (no restrictions)
+*' *  (2): no permit trade (only domestic mitigation)
+*' *  (3): limited trade (certain percentage of regional allowances)
+*'         for limited trade use cm_pemittradefinalyr   to set the final year until permit trading is allowed
+*'         with cm_pemittraderatio set the percentage of allowed trade
+
 
 *####################### R SECTION START (PHASES) ##############################
 $Ifi "%phase%" == "declarations" $include "./modules/41_emicapregi/TradingOnRef/declarations.gms"

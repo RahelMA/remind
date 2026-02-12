@@ -817,7 +817,18 @@ parameter
   cm_permittradescen  = 1;         !! def = 1  !! regexp = [1-3]
 *' *  (1): full permit trade (no restrictions)
 *' *  (2): no permit trade (only domestic mitigation)
-*' *  (3): limited trade (certain percentage of GDP)
+*' *  (3): limited trade (certain percentage of permits)
+*'
+parameter
+  cm_pemittradefinalyr        "Year until permit trading is allowed"
+;
+  cm_pemittradefinalyr  = 2060;         !! def = 2060
+*'  
+
+parameter
+  cm_pemittraderatio        "Percentage of restricted permit trading"
+;
+  cm_pemittraderatio  = 0.2;         !! def = 0.2  
 *'
 parameter
   cm_rentdiscoil            "[grades2poly] discount factor for the oil rent"

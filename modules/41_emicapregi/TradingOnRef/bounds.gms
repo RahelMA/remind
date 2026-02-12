@@ -17,12 +17,12 @@ vm_Mport.fx(t,regi,"perm") = 0;
 );
 *** limited permit trade: limit in terms of share of allocated permits
 if(cm_permittradescen eq 3,
-vm_Xport.up(t,regi,"perm")$(t.val le 2060)=abs(20/100*(p41_co2eq(t,regi)));
-vm_Xport.up(t,regi,"perm")$(t.val gt 2060)=0;
+vm_Xport.up(t,regi,"perm")$(t.val le cm_pemittradefinalyr)=abs(cm_pemittraderatio*(p41_co2eq(t,regi)));
+vm_Xport.up(t,regi,"perm")$(t.val gt cm_pemittradefinalyr)=0;
 vm_Xport.up(t,regi,"perm")$(t.val le 2025)=0;
 vm_Xport.lo(t,regi,"perm") = 0;
-vm_Mport.up(t,regi,"perm")$(t.val le 2060)=abs(20/100*(p41_co2eq(t,regi)));
-vm_Mport.up(t,regi,"perm")$(t.val gt 2060)=0;
+vm_Mport.up(t,regi,"perm")$(t.val le cm_pemittradefinalyr)=abs(cm_pemittraderatio*(p41_co2eq(t,regi)));
+vm_Mport.up(t,regi,"perm")$(t.val gt cm_pemittradefinalyr)=0;
 vm_Mport.up(t,regi,"perm")$(t.val le 2025)=0;
 vm_Mport.lo(t,regi,"perm") = 0;
 );
