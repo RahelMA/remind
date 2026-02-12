@@ -12,3 +12,6 @@ vm_co2eqGlob,input,questionnaire
 cm_emiscen,input,questionnaire
 p41_precorrection_reduction, parameter, ???
 p41_correct_factor, parameter, ???
+pm_shPPPMER,input,questionnaire
+pm_pop, parameter, ???
+pm_gdp,input,questionnaire

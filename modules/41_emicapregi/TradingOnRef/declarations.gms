@@ -13,8 +13,6 @@ vm_perm(ttot,all_regi)                          "emission allowances [GtCeq]"
 parameter
 pm_shPerm(tall, all_regi)                       "emission permit shares [share]"
 pm_emicapglob(tall)                             "global emission cap [GtC]" 
-p41_precorrection_reduction(tall,all_regi)      "reduction as calculated from 3rd root calculation, uncorrected "
-p41_correct_factor(tall)                        "correction factor so that global pathway matches"
 p41_co2eq_in(ttot,all_regi,all_enty)            "emissions from cost-optimal reference run"
 p41_co2eq(ttot,all_regi)                        "emissions from cost-optimal reference run"
 p41_co2eq_bau(ttot,all_regi)                    "emissions from no-policy baseline run"

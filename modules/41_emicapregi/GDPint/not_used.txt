@@ -13,3 +13,5 @@ pm_budgetCO2eq, parameter, ???
 pm_shPPPMER,input,questionnaire
 pm_gdp,input,questionnaire
 cm_permittradescen,input,questionnaire
+cm_pemittradefinalyr, input, ???
+cm_pemittraderatio, input, ???
