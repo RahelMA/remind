@@ -773,7 +773,7 @@ q_emiCdrAll(t,regi)..
   + ( !! pe2se-BECC 
       sum(emiBECCS2te(enty,enty2,te,enty3),vm_emiTeDetail(t,regi,enty,enty2,te,enty3)) !! positive value
         !! + gross DACC 
-      - sum(teCCS2rlf(te,rlf), vm_emiCdrTeDetail(t, regi, "dac"))) !! negative value
+      - vm_emiCdrTeDetail(t, regi, "dac")) !! negative value
       !! scaled by the fraction that gets stored geologically
      *  v_ccsShare(t,regi) 
   !! 2. gross CDR from Enhanced Weathering
