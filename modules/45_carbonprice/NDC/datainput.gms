@@ -10,7 +10,7 @@
 Execute_Loadpoint "input_ref" p45_taxCO2eq_bau = pm_taxCO2eq;
 
 *** initialize carbon price trajectory before target adjustment iterations by setting carbon price to NPi
-pm_taxCO2eq(t,regi) = pm_taxCO2eq_bau(t,regi);
+pm_taxCO2eq(t,regi) = p45_taxCO2eq_bau(t,regi);
 
 
 *** load NDC data

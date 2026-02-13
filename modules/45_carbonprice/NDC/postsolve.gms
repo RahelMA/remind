@@ -80,15 +80,23 @@ loop( p45_NDCyearSet(t2,regi) ,
 
 *** post-NDC target year development of CO2 price depends on switch cm_NDC_postTargetDevelopment
 $ifThen.cm_NDC_postTargetDevelopment "%cm_NDC_postTargetDevelopment%" == "constant"
-pm_taxCO2eq(t,regi)$(t.val gt p45_lastNDCyear(regi)) = pm_taxCO2eq(p45_lastNDCyear(regi),regi);
+loop(regi,
+  loop( t2$( t2.val eq p45_lastNDCyear(regi) ) ,
+    pm_taxCO2eq(t,regi)$(t.val gt t2.val) = pm_taxCO2eq(t2,regi);
+  );
+);
 $elseif.cm_NDC_postTargetDevelopment "%cm_NDC_postTargetDevelopment%" == "global_conv"
-*** convergence scheme after NDC target year: linear convergence to 100$/tCO2 in 2100 across regions
-pm_taxCO2eq("2100",regi) = 100 * sm_DptCO2_2_TDpGtC;
-pm_taxCO2eq(t,regi)$(t.val gt p45_lastNDCyear(regi) AND t.val le 2100) = pm_taxCO2eq(p45_lastNDCyear(regi),regi) 
-                                                                          + (pm_taxCO2eq("2100",regi)-pm_taxCO2eq(p45_lastNDCyear(regi),regi)) 
-                                                                            * (t.val - p45_lastNDCyear(regi)) 
-                                                                            / (2100 - p45_lastNDCyear(regi))
-;
+*** set carbon price to 100$/tCO2 from 2100
+pm_taxCO2eq(t,regi)$( t.val ge 2100) = 100 * sm_DptCO2_2_TDpGtC;
+*** linearly converge from carbon price of last NDC target year to 100$/tCO2 in 2100 for all regions
+loop(regi,
+  loop( t2$( t2.val eq p45_lastNDCyear(regi) ) ,
+    pm_taxCO2eq(t,regi)$(t.val gt t2.val AND t.val le 2100) = pm_taxCO2eq(t2,regi) 
+                                                              + (pm_taxCO2eq("2100",regi)-pm_taxCO2eq(t2,regi)) 
+                                                                * (t.val - t2.val) 
+                                                                / (2100 - t2.val);
+  );
+);
 $endif.cm_NDC_postTargetDevelopment
 
 *** apply assumption about minimum CO2 price after first NDC target year according to switch cm_NDC_CO2PriceMinimum
@@ -101,8 +109,12 @@ pm_taxCO2eq(t,regi)$(t.val gt p45_firstNDCyear(regi)) = max(  pm_taxCO2eq(t,regi
                                                               p45_taxCO2eq_bau(t,regi)  );
 $elseif.cm_NDC_CO2PriceMinimum "%cm_NDC_CO2PriceMinimum%" == "NonDecreasing"
 *** CO2 price cannot decrease after first NDC target year, but can increase or remain constant
-pm_taxCO2eq(t,regi)$(t.val gt p45_firstNDCyear(regi)) = max(  pm_taxCO2eq(t,regi), 
-                                                              pm_taxCO2eq(t-1,regi)  );
+loop(regi,
+  loop( t2$( t2.val eq p45_lastNDCyear(regi) ) ,
+    pm_taxCO2eq(t,regi)$(t.val gt t2.val) = max(  pm_taxCO2eq(t,regi), 
+                                                  pm_taxCO2eq(t2,regi)  );
+  );
+);
 $endif.cm_NDC_CO2PriceMinimum
 
 display pm_taxCO2eq;
