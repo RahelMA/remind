@@ -940,14 +940,6 @@ parameter
 *' (1): Input.gdx information *is* used to in 45_carbonprice/functionalFormRegi/datainput.gms
 *'
 parameter
-  cm_NDC_divergentScenario  "choose scenario about convergence of CO2eq prices [45_carbonprice = NDC]"
-;
-  cm_NDC_divergentScenario = 0;           !! def = 0  !! regexp = [0-2]
-*' *  (0) 70 years after 2030
-*' *  (1) 120 years after 2030
-*' *  (2) until year 3000 ("never")
-*'
-parameter
   cm_NDC_target_DevTol  "allowed NDC emissions target deviation relative to target emissions [45_carbonprice = NDC]"
 ;
   cm_NDC_target_DevTol = 0.01;           !! def = 0.01  
