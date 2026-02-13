@@ -1390,6 +1390,11 @@ $setglobal cm_NDC_postTargetDevelopment  constant    !! def = "constant"
 *' *  (NPi):                          carbon price cannot fall below carbon price of NPi run as this represent the development of current policies
 *' *  (NonDecreasing):                carbon price cannot decrease after first NDC target year, but can increase or remain constant 
 $setglobal cm_NDC_CO2PriceMinimum  NPi     !! def = "NPi"  !! regexp = zero|NPi|NonDecreasing
+*' cm_NDC_TargetCheckConv            "choose whether iterations should go on until all NDC emissions targets are fullfilled" [requires 45_carbonprice = NDC]
+*' This setting determines whether compliance with NDC emissions targets should be a criterion for convergence of REMIND. 
+*' *  (on):                         runs only converges if all NDC emissions targets are met within the tolerance defined by cm_NDC_target_DevTol
+*' *  (off):                        runs can converge even if some NDC emissions targets are not met within the tolerance defined by cm_NDC_target_DevTol, e.g. because of very high CO2 prices needed to meet them in the near-term
+$setglobal cm_NDC_TargetCheckConv  off      !! def = "off"  !! regexp = on|off
 *' cm_NPi_version            "choose version year of NPi targets for min and max targets in the form of conditional vs. unconditional"
 *' *  (2024_cond):   minimum technology targets are included from NewClimate latest policy modeling protocol in 2025
 *' *  (2024_uncond): maximal technology targets are included from NewClimate latest policy modeling protocol in 2025

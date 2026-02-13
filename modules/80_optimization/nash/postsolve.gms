@@ -344,18 +344,21 @@ loop((ttot,ttot2,ext_regi,emiMktExt)$pm_emiMktTarget_dev(ttot,ttot2,ext_regi,emi
 );
 $endif.emiMkt
 
+
 $ifthen.NDC "%carbonprice%" == "NDC" 
+$ifthen.targetCheck  "%cm_NDC_TargetCheckConv%" == "on"
 *** additional criterion: Were NDC emissions targets reached?
 loop((t,regi)$pm_NDCEmiTargetDeviation(t,regi),
 *** criterion actual emissions need to be either below target or only up to cm_NDC_target_DevTol higher than goal emissions
-  if( (pm_NDCEmiTargetDeviation(t,regi)  le -cm_NDC_target_DevTol)
-*** exclude SSA from target check because we do not implement this target but assume CO2 price ceiling
-      AND NOT sameas(regi,"SSA"),
+  if( (pm_NDCEmiTargetDeviation(t,regi)  le -cm_NDC_target_DevTol),
     s80_bool = 0;
     p80_messageShow("NDC") = YES;
   );
 );
+$endif.targetCheck
 $endif.NDC
+
+
 
 *** additional criterion: Were the quantity targets reached by implicit taxes and/or subsidies? 
 $ifthen.cm_implicitQttyTarget not "%cm_implicitQttyTarget%" == "off"
