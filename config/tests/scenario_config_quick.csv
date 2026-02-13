@@ -1,3 +1,2 @@
-title;start;cm_nash_mode;cm_iteration_max;optimization;c_magpieIter;c_transportIter;slurmConfig
-testOneRegiEnhanced;;1;5;testOneRegi;;;--qos=priority --nodes=1 --tasks-per-node=1 --mem=8000 --time=180
-testOneRegiTransport;1;1;5;testOneRegi;;2, 3;--qos=priority --nodes=1 --tasks-per-node=1 --mem=8000 --time=180
+title;start;cm_nash_mode;cm_iteration_max;optimization;results_folder;output;cm_quick_mode;force_replace;slurmConfig
+testOneRegi;1;1;1;testOneRegi;output/testOneRegi;reportingREMIND2MAgPIE;off;TRUE;--qos=priority --nodes=1 --tasks-per-node=1 --mem=8000 --time=60 --wait
