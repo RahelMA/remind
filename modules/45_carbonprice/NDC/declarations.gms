@@ -15,7 +15,6 @@ p45_factorRescaleCO2TaxLtd(ttot,all_regi)                "multiplicative factor 
 p45_factorRescaleCO2Tax_iter(iteration,ttot,all_regi)    "Track the changes of p45_factorRescaleCO2Tax over the iterations [1]"
 p45_factorRescaleCO2TaxLtd_iter(iteration,ttot,all_regi) "Track the changes of p45_factorRescaleCO2TaxLimited over the iterations [1]"
 p45_taxCO2eqFirstNDCyear(all_regi)                       "CO2eq tax in p45_firstNDCyear [T$/GtC]"
-p45_taxCO2eqLastNDCyear(all_regi)                        "CO2eq tax in p45_lastNDCyear [T$/GtC]"
 p45_taxCO2eq_bau(ttot,all_regi)                          "level of CO2 taxes in business as usual run [T$/GtC]"
 pm_NDCEmiTargetDeviation(ttot,all_regi)                  "deviation of REMIND emissions to NDC target emissions in last iteration normalized to NDC target emissions [0-1]"
 $ifthen not "%cm_NDC_CO2PriceLimit%" == "off"
