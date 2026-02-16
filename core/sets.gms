@@ -964,6 +964,7 @@ sets
     2024_cond, 2024_uncond,
     2025_cond, 2025_uncond,
     2025_cond_extrapol, 2025_uncond_extrapol
+    2026_cond, 2026_uncond
   /
   NPi_version "NPi data version for NPi realizations of 40_techpol and 45_carbonprice"
   /
