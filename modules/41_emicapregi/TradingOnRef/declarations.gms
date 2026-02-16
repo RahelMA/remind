@@ -4,7 +4,7 @@
 *** |  AGPL-3.0, you are granted additional permissions described in the
 *** |  REMIND License Exception, version 1.0 (see LICENSE file).
 *** |  Contact: remind@pik-potsdam.de
-*** SOF ./modules/41_emicapregi/AbilityToPay/declarations.gms
+*** SOF ./modules/41_emicapregi/TradingOnRef/declarations.gms
 
 variables
 vm_perm(ttot,all_regi)                          "emission allowances [GtCeq]"
@@ -15,7 +15,6 @@ pm_shPerm(tall, all_regi)                       "emission permit shares [share]"
 pm_emicapglob(tall)                             "global emission cap [GtC]" 
 p41_co2eq_in(ttot,all_regi,all_enty)            "emissions from cost-optimal reference run"
 p41_co2eq(ttot,all_regi)                        "emissions from cost-optimal reference run"
-p41_co2eq_bau(ttot,all_regi)                    "emissions from no-policy baseline run"
 ;
 
-*** EOF ./modules/41_emicapregi/AbilityToPay/declarations.gms
+*** EOF ./modules/41_emicapregi/TradingOnRef/declarations.gms

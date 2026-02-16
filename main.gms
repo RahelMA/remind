@@ -820,15 +820,15 @@ parameter
 *' *  (3): limited trade (certain percentage of permits)
 *'
 parameter
-  cm_pemittradefinalyr        "Year until permit trading is allowed"
+  cm_permitTradeFinalYr        "Year until permit trading is allowed"
 ;
-  cm_pemittradefinalyr  = 2060;         !! def = 2060
+  cm_permitTradeFinalYr  = 2100;         !! def = 2100
 *'  
 
 parameter
-  cm_pemittraderatio        "Percentage of restricted permit trading"
+  cm_permitTradeRatio        "Percentage of restricted permit trading"
 ;
-  cm_pemittraderatio  = 0.2;         !! def = 0.2  
+  cm_permitTradeRatio  = 0.2;         !! def = 0.2  
 *'
 parameter
   cm_rentdiscoil            "[grades2poly] discount factor for the oil rent"

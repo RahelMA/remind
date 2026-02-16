@@ -4,7 +4,7 @@
 *** |  AGPL-3.0, you are granted additional permissions described in the
 *** |  REMIND License Exception, version 1.0 (see LICENSE file).
 *** |  Contact: remind@pik-potsdam.de
-*** SOF ./modules/41_emicapregi/AbilityToPay/realization.gms
+*** SOF ./modules/41_emicapregi/TradingOnRef/realization.gms
 
 *' @description: Emission caps/permits are allocated according to a reference run
 *' There are three different trade patterns currently available.
@@ -21,4 +21,4 @@ $Ifi "%phase%" == "declarations" $include "./modules/41_emicapregi/TradingOnRef/
 $Ifi "%phase%" == "datainput" $include "./modules/41_emicapregi/TradingOnRef/datainput.gms"
 $Ifi "%phase%" == "bounds" $include "./modules/41_emicapregi/TradingOnRef/bounds.gms"
 *######################## R SECTION END (PHASES) ###############################
-*** EOF ./modules/41_emicapregi/AbilityToPay/realization.gms
+*** EOF ./modules/41_emicapregi/TradingOnRef/realization.gms
