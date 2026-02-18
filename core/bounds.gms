@@ -184,8 +184,11 @@ if(cm_startyear <= 2015,
                                     / 7.5;  !! this parameter is currently only for display and not further used to fix anything
   p_deltaCapFromRWfix("2010",regi,"tnrs") = ( p_CapFixFromRWfix("2015",regi,"tnrs") - pm_aux_capLowerLimit("tnrs",regi,"2015") )
                                     / 7.5; !! this parameter is currently only for display and not further used to fix anything
-  vm_cap.fx("2015",regi,"tnrs","1") = p_CapFixFromRWfix("2015",regi,"tnrs");
+*** keep nuclear power capacity in +-10% range of historic data for 2015, choose range to allow for some flexibility for the model
+  vm_cap.lo("2015",regi,"tnrs","1") = 0.9 * p_CapFixFromRWfix("2015",regi,"tnrs");
+  vm_cap.up("2015",regi,"tnrs","1") = 1.1 * p_CapFixFromRWfix("2015",regi,"tnrs");
 );
+
 
 if(cm_startyear <= 2020, !! require the realization of at least 70% of the plants that are currently under construction and thus might be finished until 2020 - should be updated with real-world 2020 numbers
    vm_deltaCap.lo("2020",regi,"tnrs","1") = 0.70 * pm_NuclearConstraint("2020",regi,"tnrs") / 5;
