@@ -1226,7 +1226,7 @@ loop(ttot$(ttot.val ge 2005),
   p_adj_seed_te(ttot,regi,"geohdr")     = 0.1;
   p_adj_seed_te(ttot,regi,"hydro")      = 0.25;
   p_adj_seed_te(ttot,regi,"windoff")    = 0.5;
-  p_adj_seed_te(ttot,regi,"spv")        = 2.00;
+  p_adj_seed_te(ttot,regi,"spv")        = 1.5;
   p_adj_seed_te(ttot,regi,"csp")        = 0.25;
   p_adj_seed_te(ttot,regi,"tnrs")       = 0.25;
 *** green hydrogen and synthetic fuels
@@ -1273,7 +1273,7 @@ $endif.cm_subsec_model_steel
   p_adj_coeff(ttot,regi,"hydro")        = 1.0;
   p_adj_coeff(ttot,regi,"windon")       = 0.25;
   p_adj_coeff(ttot,regi,"windoff")      = 0.35;
-  p_adj_coeff(ttot,regi,"spv")          = 0.15;
+  p_adj_coeff(ttot,regi,"spv")          = 0.18;
   p_adj_coeff(ttot,regi,"tnrs")         = 1.0;
 *** VRE storage and grid
   p_adj_coeff(ttot,regi,teGrid)         = 0.3;
