@@ -418,6 +418,12 @@ vm_capEarlyReti.lo(t,regi,te) $ (vm_capEarlyReti.up(t,regi,te) >= 1 and t.val > 
 *** CB 20120301: no early retirement for diesel oil turbines, they are used despite their economic non-competitiveness for various reasons.
 vm_capEarlyReti.fx(t,regi,"dot") = 0;
 
+*** for all regions except US and EUR do not allow early retirement until 2035
+loop(regi$(NOT(regi_group("USA_regi",regi) or regi_group("EUR_regi",regi))),
+  vm_capEarlyReti.lo(t,regi,te) $ (t.val <= 2030) = 0;
+  vm_capEarlyReti.up(t,regi,te) $ (t.val <= 2030) = 1e-6;
+);
+
 
 *** strong reliance on coal-to-liquids is not consistent with SSP1 storyline, therefore limit their use in the SSP1 and SSP2 policy scenarios
 $ifthen %c_SSP_forcing_adjust% == "forcing_SSP1"
