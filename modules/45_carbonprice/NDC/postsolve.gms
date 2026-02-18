@@ -6,7 +6,6 @@
 *** |  Contact: remind@pik-potsdam.de
 *** SOF ./modules/45_carbonprice/NDC/postsolve.gms
 
-if(cm_iterative_target_adj eq 3,
 
 display pm_taxCO2eq;
 
@@ -119,7 +118,5 @@ $endif.cm_NDC_CO2PriceMinimum
 
 display pm_taxCO2eq;
 
-*** end if from beginning of file (cm_iterative_target_adj eq 3)
-);
 
 *** EOF ./modules/45_carbonprice/NDC/postsolve.gms
