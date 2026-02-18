@@ -99,14 +99,14 @@ loop(regi,
 );
 $endif.cm_NDC_postTargetDevelopment
 
-*** apply assumption about minimum CO2 price after first NDC target year according to switch cm_NDC_CO2PriceMinimum
+*** apply assumption about minimum CO2 price according to switch cm_NDC_CO2PriceMinimum
 $ifThen.cm_NDC_CO2PriceMinimum "%cm_NDC_CO2PriceMinimum%" == "zero"
 *** no minimum CO2 price after first NDC target year, i.e. CO2 price can decrease to zero after first NDC target year, so do nothing
 $elseif.cm_NDC_CO2PriceMinimum "%cm_NDC_CO2PriceMinimum%" == "NPi"
 *** CO2 price cannot fall below carbon price of NPi run as this represents the development of current policies
 *** CO2 Price of NPi stored in p45_taxCO2eq_bau
-pm_taxCO2eq(t,regi)$(t.val gt p45_firstNDCyear(regi)) = max(  pm_taxCO2eq(t,regi), 
-                                                              p45_taxCO2eq_bau(t,regi)  );
+pm_taxCO2eq(t,regi) = max(  pm_taxCO2eq(t,regi),
+                            p45_taxCO2eq_bau(t,regi)  );
 $elseif.cm_NDC_CO2PriceMinimum "%cm_NDC_CO2PriceMinimum%" == "NonDecreasing"
 *** CO2 price cannot decrease after first NDC target year, but can increase or remain constant
 loop(regi,
