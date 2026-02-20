@@ -1171,6 +1171,11 @@ $ifthen.cm_subsec_model_steel "%cm_subsec_model_steel%" == "processes"
     idrcc           "Direct reduction CCS"
 $endif.cm_subsec_model_steel
 /
+
+***-----------------------------------------------------------------------------
+*** Definition of subsets of 'te':
+***-----------------------------------------------------------------------------
+
 teAdj(all_te)           "technologies with adjustment costs on capacity additions"
 /
     ngcc            "natural gas combined cycle"
@@ -1249,9 +1254,29 @@ $ifthen.cm_subsec_model_steel "%cm_subsec_model_steel%" == "processes"
 $endif.cm_subsec_model_steel
 /
 
-***-----------------------------------------------------------------------------
-*** Definition of subsets of 'te':
-***-----------------------------------------------------------------------------
+teEarlyReti(all_te)    "technologies for which early retirement of existing capacities is allowed (i.e. before end of technical lifetime)."
+/
+ngcc
+ngt
+gastr
+gaschp
+gashp
+gash2
+gasftrec
+refliq
+igcc
+pc
+coalchp
+coalhp
+coaltr
+coalgas
+coalftrec
+coalh2
+biochp
+biohp
+bioigcc
+tnrs
+/
 
 *** Note: technologies without endogenous learning can also have decreasing (or increasing) capital cost over time, due to for example convergence to global value
 teLearn(all_te)     "Learning technologies (for which investment costs are reduced endogenously through capacity deployment)."

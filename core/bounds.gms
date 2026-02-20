@@ -381,6 +381,36 @@ v_co2capturevalve.up(t,regi) = 1 * s_MtCO2_2_GtC;
 *' #### 5. Early retirement and phase-out of technologies
 *** ==================================================================
 
+
+
+*' Early Retirement
+*' Early retirement of capacities is not possible as long as vm_capEarlyReti is fixed to zero.
+*' If early retirement should be activated, vm_capEarlyReti is allowed to increase up to one.
+*' One means that 100% of standing capacity of this technology is retired and does not produce output in this time step.
+*' allow early retirement only for technologies in teEarlyReti
+vm_capEarlyReti.up(t,regi,te)$( NOT(teEarlyReti(te))) = 0;
+vm_capEarlyReti.up(t,regi,teEarlyReti) = 1;
+
+$ifthen.tech_earlyreti not "%c_tech_earlyreti_rate%" == "off"
+*' allow early retirement also for technology and region combinations as defined by c_tech_earlyreti_rate switch
+loop((ext_regi,te) $ p_techEarlyRetiRate(ext_regi,te),
+  vm_capEarlyReti.up(t,regi,te) $ (regi_group(ext_regi,regi)) = 1;
+);
+$endif.tech_earlyreti
+
+*** restrict early retirement to time frame between 2015 and 2100 where it is relevant
+vm_capEarlyReti.up(ttot,regi,te) $ (ttot.val < 2010 or ttot.val > 2110) = 0;
+
+*** for all regions except US and EUR do not allow early retirement until 2035
+loop(regi$(NOT(regi_group("USA_regi",regi) or regi_group("EUR_regi",regi))),
+  vm_capEarlyReti.up(t,regi,te) $ (t.val <= 2030) = 0;
+);
+
+*** lower bound of 0.01% to help the model to be aware of the early retirement option is time steps where it is active
+vm_capEarlyReti.lo(t,regi,teEarlyReti) $ ( vm_capEarlyReti.up(t,regi,teEarlyReti) eq 1 and t.val > 2010 and t.val <= 2100) = 1e-4;
+
+*' Phase-out of technologies
+
 *' Switch off coal-h2 hydrogen investments after 2020, and gas-h2 investments after 2030. Our current seh2 hydrogen represents
 *' only additional (clean) hydrogen use cases to current ones. However, as we have too high H2 demand in 2025 and 2030 from the
 *' input data, we need to allow grey hydrogen for these time periods to meet the hydrogen demand which cannot be fully met by
@@ -392,40 +422,8 @@ vm_cap.lo(t,regi,"coalh2",rlf) $ (t.val >= 2020) = 0;
 vm_cap.lo(t,regi,"gash2",rlf) $ (t.val > 2030) = 0;
 
 
-*** CB: allow for early retirement at the start of free model time
-*** allow non zero early retirement for all technologies to avoid mathematical errors
-vm_capEarlyReti.up(t,regi,te) = 1e-6;
-*** generally allow full early retiremnt for all fossil technologies without CCS
-vm_capEarlyReti.up(t,regi,teFosNoCCS(te)) = 1;
-*** allow nuclear early retirement
-vm_capEarlyReti.up(t,regi,"tnrs") = 1;
-*** allow early retirement of biomass used in electricity
-vm_capEarlyReti.up(t,regi,"bioigcc") = 1;
-*** allow early retirement of biomass used for heat and power
-vm_capEarlyReti.up(t,regi,"biohp") = 1;
-vm_capEarlyReti.up(t,regi,"biochp") = 1;
 
-*** allow early retirement for techs added to the c_tech_earlyreti_rate switch
-$ifthen.tech_earlyreti not "%c_tech_earlyreti_rate%" == "off"
-loop((ext_regi,te) $ p_techEarlyRetiRate(ext_regi,te),
-  vm_capEarlyReti.up(t,regi,te) $ (regi_group(ext_regi,regi)) = 1;
-);
-$endif.tech_earlyreti
 
-*** restrict early retirement to the modeling time frame (to reduce runtime, the early retirement equations are phased out after 2110)
-vm_capEarlyReti.up(ttot,regi,te) $ (ttot.val < 2010 or ttot.val > 2110) = 0;
-
-*** lower bound of 0.01% to help the model to be aware of the early retirement option
-vm_capEarlyReti.lo(t,regi,te) $ (vm_capEarlyReti.up(t,regi,te) >= 1 and t.val > 2010 and t.val <= 2100) = 1e-4;
-
-*** CB 20120301: no early retirement for diesel oil turbines, they are used despite their economic non-competitiveness for various reasons.
-vm_capEarlyReti.fx(t,regi,"dot") = 0;
-
-*** for all regions except US and EUR do not allow early retirement until 2035
-loop(regi$(NOT(regi_group("USA_regi",regi) or regi_group("EUR_regi",regi))),
-  vm_capEarlyReti.lo(t,regi,te) $ (t.val <= 2030) = 0;
-  vm_capEarlyReti.up(t,regi,te) $ (t.val <= 2030) = 1e-6;
-);
 
 
 *** strong reliance on coal-to-liquids is not consistent with SSP1 storyline, therefore limit their use in the SSP1 and SSP2 policy scenarios
