@@ -1339,9 +1339,9 @@ $setglobal c_magpieIter  20,24,28,32     !! def = "20,24,28,32"  !! This regular
 *' *  (rcp85): RCP8.5 [currently not operational: test and verify before using it!]
 $setglobal cm_rcp_scen  rcp45         !! def = "rcp45"  !! regexp = none|rcp20|rcp26|rcp37|rcp45|rcp60|rcp85
 *' cm_NDC_version            "choose version of NDC targets to be applied, including differentiation between conditional vs. unconditional targets"
-*' * This switch allows to run different states of NDC targets over the past years, allowing for comparison of NDC successio over the years. 
-*' * For the latest NDC version (2026_cond/uncond), the targets are based on the collection provided by PBL. The collection provides two formats for emissions targets. 
-*' * Note that for major emitters, we derive absolute emissions targets based on a detailed collection by PBL adding our own assumptions (e.g. regarding LULUCF emissions), while
+*' * This switch allows to run different states of NDC targets over the past years, allowing for comparison of NDC succession over the years. 
+*' * For the latest NDC version (2026_cond/uncond), the targets are based on the collection provided by PBL. The collection provides two formats for emissions targets, which we use as follows: 
+*' * For major emitters, we derive absolute emissions targets based on a detailed collection by PBL adding our own assumptions (e.g. regarding LULUCF emissions), while
 *' * for minor emitters, we rely on the absolute emissions targets directly provided by PBL. 
 *' * while for minor emitters, absolute emissions targets are directly taken from PBL collection. 
 *' *  (2026_cond):                all NDCs conditional to international financial support published until end of 2025 (PBL collection), note that for countries / regions with target ranges (e.g. EU 66-72% 2035 target)

@@ -349,7 +349,9 @@ $ifthen.NDC "%carbonprice%" == "NDC"
 $ifthen.targetCheck  "%cm_NDC_TargetCheckConv%" == "on"
 *** additional criterion: Were NDC emissions targets reached?
 loop((t,regi)$pm_NDCEmiTargetDeviation(t,regi),
-*** criterion actual emissions need to be either below target or only up to cm_NDC_target_DevTol higher than goal emissions
+*** pm_NDCEmiTargetDeviation gives the difference between actual model emissions and target emissions normalized to target emissions, 
+*** so a negative value means that actual emissions are below target, while a positive value means that actual emissions are above target.
+*** The convergence criterion is that actual emissions should at max up to cm_NDC_target_DevTol above the target.
   if( (pm_NDCEmiTargetDeviation(t,regi)  le -cm_NDC_target_DevTol),
     s80_bool = 0;
     p80_messageShow("NDC") = YES;
