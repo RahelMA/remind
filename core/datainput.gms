@@ -1605,6 +1605,39 @@ $ifthen.scaleDemand not "%cm_scaleDemand%" == "off"
   );
 $endif.scaleDemand
 
+*** Scale FE demand in building sectors
+$ifthen.scaleDemandBuildTable not "%cm_scaleDemandBuildTable%" == "off"
+
+Parameter f_scaleDemandBuildTable(ttot,all_regi) "Rescaling factor on industry final energy and usable energy demand, read-in from a table"
+/
+$ondelim
+$include "./core/input/f_fedemand_build_scaleDemand.cs4r"
+$offdelim
+/;
+
+pm_scaleDemandBuildTable(t,regi) = f_scaleDemandBuildTable;
+
+  loop( (t,regi,in) $ in_buildings_dyn36(in) ,
+    pm_fedemand(t,regi,in) = pm_fedemand(t,regi,in) * pm_scaleDemandBuildTable(t,regi)
+  );
+$endif.scaleDemandBuildTable
+
+*** Scale FE demand in industry sectors
+$ifthen.scaleDemandIndTable not "%cm_scaleDemandIndTable%" == "off"
+
+Parameter f_scaleDemandIndTable(ttot,all_regi) "Rescaling factor on industry final energy and usable energy demand, read-in from a table"
+/
+$ondelim
+$include "./core/input/f_fedemand_ind_scaleDemand.cs4r"
+$offdelim
+/;
+
+pm_scaleDemandIndTable(t,regi) = f_scaleDemandIndTable;
+
+  loop( (t,regi,in) $ in_industry_dyn37(in) ,
+    pm_fedemand(t,regi,in) = pm_fedemand(t,regi,in) * pm_scaleDemandIndTable(t,regi)
+  );
+$endif.scaleDemandIndTable
 
 *** initialize absolute deviation of global cumulated CO2 emissions budget from target budget
 sm_globalBudget_absDev = 0;
