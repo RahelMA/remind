@@ -1362,7 +1362,7 @@ $setglobal cm_NDC_version  2026_cond    !! def = "2024_cond" !! regexp = 20(18|2
 *' *  "2030, 2035, 2050" means that 2030, 2035 and 2050 targets are included
 *' * Note: including target years here does not mean they are automcatically considered in the carbonprice NDC realization. 
 *' * Depending on the p45_minRatioOfCoverageToMax parameter, each region receives the target year with the highest share of emissions covered under NDCs.
-$setglobal cm_NDC_targetYear  "2030, 2035"    !! def = "2030, 2035"
+$setglobal cm_NDC_targetYear  2030, 2035    !! def = "2030, 2035"
 *' cm_NDC_CO2PriceLimit            "sets regional upper limit for CO2 prices in NDC realization" [requires 45_carbonprice = NDC]"
 *' This serves to not force regions to reach NDC emissions targets at extremly high CO2 prices in the near-term. 
 *' Instead, regions go "as close as still plausible" to their NDC targets. 
@@ -1372,7 +1372,7 @@ $setglobal cm_NDC_targetYear  "2030, 2035"    !! def = "2030, 2035"
 *' *  In the example, that would mean that EUR has a CO2 price limit in 2035 of 150 + 0.2 * 150 * 5 = 300 USD/tCO2. 
 *' *  By default 2030 CO2 prices are limited to 150 USD/tCO2 in EUR, 80 USD/tCO2 in CAZ, USA, JPN and NEU, 50 USD/tCO2 in REF and MEA, 40 USD/tCO2 in LAM and CHA, 30 USD/tCO2 in OAS, 15 USD/tCO2 in IND and 10 USD/tCO2 in SSA.
 *' *  If set to "off", no CO2 price limits are applied in any region.
-$setglobal cm_NDC_CO2PriceLimit  "2030.EUR 150, 2030.(CAZ,USA, JPN, NEU) 80, 2030.(REF,MEA) 50, 2030.(LAM, CHA) 40, 2030.OAS 30, 2030.IND 15, 2030.SSA 10"    !! def = "2030.EUR 150, 2030.(CAZ,USA, JPN, NEU) 80, 2030.(REF,MEA) 50, 2030.(LAM, CHA) 40, 2030.OAS 30, 2030.IND 15, 2030.SSA 10" 
+$setglobal cm_NDC_CO2PriceLimit  2030.EUR 150, 2030.(CAZ,USA, JPN, NEU) 80, 2030.(REF,MEA) 50, 2030.(LAM, CHA) 40, 2030.OAS 30, 2030.IND 15, 2030.SSA 10    !! def = "2030.EUR 150, 2030.(CAZ,USA, JPN, NEU) 80, 2030.(REF,MEA) 50, 2030.(LAM, CHA) 40, 2030.OAS 30, 2030.IND 15, 2030.SSA 10" 
 *' cm_NDC_postTargetDevelopment            "choose assumption on co2 price trajectory after NDC target years" [requires 45_carbonprice = NDC]
 *' *  (constant):                     carbon price remains constant after the last NDC target year
 *' *  (global_conv):                  carbon price converges across regions to a global value of 100$/tCO2 by 2100
