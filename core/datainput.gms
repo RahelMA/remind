@@ -1615,8 +1615,9 @@ $include "./core/input/f_fedemand_build_scaleDemand.cs4r"
 $offdelim
 /;
 
-pm_scaleDemandBuildTable(t,regi) $ (t.val > 2025 ) = f_scaleDemandBuildTable(t,regi);
-pm_scaleDemandBuildTable(t,regi) $ (t.val > 2100 ) = pm_scaleDemandBuildTable("2100",regi);
+pm_scaleDemandBuildTable(t,regi) = f_scaleDemandBuildTable(t,regi);
+pm_scaleDemandBuildTable(t,regi) $ (t.val < 2030 ) = 1;  !! ensure that historic data is not changed
+pm_scaleDemandBuildTable(t,regi) $ (t.val > 2100 ) = pm_scaleDemandBuildTable("2100",regi); !! continue 2100 multiplier until end of time
 
   loop( (t,regi,in) $ in_buildings_dyn36(in) ,
     pm_fedemand(t,regi,in) = pm_fedemand(t,regi,in) * pm_scaleDemandBuildTable(t,regi)
@@ -1634,7 +1635,8 @@ $offdelim
 /;
 
 pm_scaleDemandIndTable(t,regi) $ (t.val > 2025 ) = f_scaleDemandIndTable(t,regi);
-pm_scaleDemandIndTable(t,regi) $ (t.val > 2100 ) = pm_scaleDemandIndTable("2100",regi);
+pm_scaleDemandIndTable(t,regi) $ (t.val < 2030 ) = 1;  !! ensure that historic data is not changed
+pm_scaleDemandIndTable(t,regi) $ (t.val > 2100 ) = pm_scaleDemandIndTable("2100",regi); !! continue 2100 multiplier until end of time
 
   loop( (t,regi,in) $ in_industry_dyn37(in) ,
     pm_fedemand(t,regi,in) = pm_fedemand(t,regi,in) * pm_scaleDemandIndTable(t,regi)
