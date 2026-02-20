@@ -940,14 +940,6 @@ parameter
 *' (1): Input.gdx information *is* used to in 45_carbonprice/functionalFormRegi/datainput.gms
 *'
 parameter
-  cm_NDC_divergentScenario  "choose scenario about convergence of CO2eq prices [45_carbonprice = NDC]"
-;
-  cm_NDC_divergentScenario = 0;           !! def = 0  !! regexp = [0-2]
-*' *  (0) 70 years after 2030
-*' *  (1) 120 years after 2030
-*' *  (2) until year 3000 ("never")
-*'
-parameter
   cm_NDC_target_DevTol  "allowed NDC emissions target deviation relative to target emissions [45_carbonprice = NDC]"
 ;
   cm_NDC_target_DevTol = 0.01;           !! def = 0.01  
@@ -1346,29 +1338,59 @@ $setglobal c_magpieIter  20,24,28,32     !! def = "20,24,28,32"  !! This regular
 *' *  (rcp60): RCP6.0 [currently not operational: test and verify before using it!]
 *' *  (rcp85): RCP8.5 [currently not operational: test and verify before using it!]
 $setglobal cm_rcp_scen  rcp45         !! def = "rcp45"  !! regexp = none|rcp20|rcp26|rcp37|rcp45|rcp60|rcp85
-*' cm_NDC_version            "choose version year of NDC targets as well as conditional vs. unconditional targets"
-*' *  (2025_cond_extrapol):       all NDCs conditional to international financial support published until September 2025 with extrapolation of 2030 targets to 2035 targets for conutries without 2035 target
-*' *  (2025_uncond_extrapol):     all NDCs independent of international financial support published until September 2025 with extrapolation of 2030 targets to 2035 targets for conutries without 2035 target
-*' *  (2025_cond):                all NDCs conditional to international financial support published until September 2025
-*' *  (2025_uncond):              all NDCs independent of international financial support published until September 2025
+*' cm_NDC_version            "choose version of NDC targets to be applied, including differentiation between conditional vs. unconditional targets"
+*' * This switch allows to run different states of NDC targets over the past years, allowing for comparison of NDC succession over the years. 
+*' * For the latest NDC version (2026_cond/uncond), the targets are based on the collection provided by PBL. The collection provides two formats for emissions targets, which we use as follows: 
+*' * For major emitters, we derive absolute emissions targets based on a detailed collection by PBL adding our own assumptions (e.g. regarding LULUCF emissions), while
+*' * for minor emitters, we rely on the absolute emissions targets directly provided by PBL. 
+*' * while for minor emitters, absolute emissions targets are directly taken from PBL collection. 
+*' *  (2026_cond):                all NDCs conditional to international financial support published until end of 2025 (PBL collection), note that for countries / regions with target ranges (e.g. EU 66-72% 2035 target)
+*' *                              the more ambitious target is chosen even if it is strictly speaking not a conditional NDC target
+*' *  (2026_uncond):              all NDCs independent of international financial support published until end of 2025 (PBL collection), note that for countries / regions with target ranges (e.g. EU 66-72% 2035 target) 
+*' *                              the less ambitious target is chosen even if it is strictly speaking not an unconditional NDC target
+*' *  (2024_cond_extrapol):       all NDCs conditional to international financial support published until August 31, 2024 with extrapolation of 2030 targets to 2035 targets for conutries without 2035 target
+*' *  (2024_uncond_extrapol):     all NDCs independent of international financial support published until August 31, 2024 with extrapolation of 2030 targets to 2035 targets for conutries without 2035 target
 *' *  (2024_cond):                all NDCs conditional to international financial support published until August 31, 2024
 *' *  (2024_uncond):              all NDCs independent of international financial support published until August 31, 2024
 *' *  (2023_cond):                all NDCs conditional to international financial support published until December 31, 2023
 *' *  (2023_uncond):              all NDCs independent of international financial support published until December 31, 2023
 *' *  Other supported years are 2022, 2021 and 2018, always containing NDCs published until December 31 of that year
-$setglobal cm_NDC_version  2024_cond    !! def = "2024_cond" !! regexp = 20(18|2[1-5])_(un)?cond(_extrapol)?$
+$setglobal cm_NDC_version  2026_cond    !! def = "2024_cond" !! regexp = 20(18|2[1-6])_(un)?cond(_extrapol)?$
 *' cm_NDC_targetYear            "choose years for which NDC emissions targets can be applied" [requires 45_carbonprice = NDC]
 *' * Examples on how to use:
 *' *  "2030" means that only 2030 target are included
 *' *  "2030, 2035, 2050" means that 2030, 2035 and 2050 targets are included
 *' * Note: including target years here does not mean they are automcatically considered in the carbonprice NDC realization. 
 *' * Depending on the p45_minRatioOfCoverageToMax parameter, each region receives the target year with the highest share of emissions covered under NDCs.
-$setglobal cm_NDC_targetYear  "2030"    !! def = "2030"
+$setglobal cm_NDC_targetYear  2030, 2035    !! def = "2030, 2035"
+*' cm_NDC_CO2PriceLimit            "sets regional upper limit for CO2 prices in NDC realization" [requires 45_carbonprice = NDC]"
+*' This serves to not force regions to reach NDC emissions targets at extremly high CO2 prices in the near-term. 
+*' Instead, regions go "as close as still plausible" to their NDC targets. 
+*' * Examples on how to use:
+*' *  "2030.EUR 150" means that EUR has maximum CO2 price of 150 USD/tCO2 in 2030. 
+*' *  The CO2 price limit is increased after the specified target year by 20%/yr. 
+*' *  In the example, that would mean that EUR has a CO2 price limit in 2035 of 150 + 0.2 * 150 * 5 = 300 USD/tCO2. 
+*' *  By default 2030 CO2 prices are limited to 150 USD/tCO2 in EUR, 80 USD/tCO2 in CAZ, USA, JPN and NEU, 50 USD/tCO2 in REF and MEA, 40 USD/tCO2 in LAM and CHA, 30 USD/tCO2 in OAS, 15 USD/tCO2 in IND and 10 USD/tCO2 in SSA.
+*' *  If set to "off", no CO2 price limits are applied in any region.
+$setglobal cm_NDC_CO2PriceLimit  2030.EUR 150, 2030.(CAZ,USA, JPN, NEU) 80, 2030.(REF,MEA) 50, 2030.(LAM, CHA) 40, 2030.OAS 30, 2030.IND 15, 2030.SSA 10    !! def = "2030.EUR 150, 2030.(CAZ,USA, JPN, NEU) 80, 2030.(REF,MEA) 50, 2030.(LAM, CHA) 40, 2030.OAS 30, 2030.IND 15, 2030.SSA 10" 
+*' cm_NDC_postTargetDevelopment            "choose assumption on co2 price trajectory after NDC target years" [requires 45_carbonprice = NDC]
+*' *  (constant):                     carbon price remains constant after the last NDC target year
+*' *  (global_conv):                  carbon price converges across regions to a global value of 100$/tCO2 by 2100
+$setglobal cm_NDC_postTargetDevelopment  constant    !! def = "constant"
+*' cm_NDC_CO2PriceMinimum            "choose assumption on minimal co2 price after first NDC target year" [requires 45_carbonprice = NDC]
+*' *  (zero):                         no minimum carbon price after first NDC target year, i.e. carbon price can decrease to zero after first NDC target year
+*' *  (NPi):                          carbon price cannot fall below carbon price of NPi run as this represent the development of current policies
+*' *  (NonDecreasing):                carbon price cannot decrease after first NDC target year, but can increase or remain constant 
+$setglobal cm_NDC_CO2PriceMinimum  NPi     !! def = "NPi"  !! regexp = zero|NPi|NonDecreasing
+*' cm_NDC_TargetCheckConv            "choose whether iterations should go on until all NDC emissions targets are fullfilled" [requires 45_carbonprice = NDC]
+*' This setting determines whether compliance with NDC emissions targets should be a criterion for convergence of REMIND. 
+*' *  (on):                         runs only converges if all NDC emissions targets are met within the tolerance defined by cm_NDC_target_DevTol
+*' *  (off):                        runs can converge even if some NDC emissions targets are not met within the tolerance defined by cm_NDC_target_DevTol, e.g. because of very high CO2 prices needed to meet them in the near-term
+$setglobal cm_NDC_TargetCheckConv  off      !! def = "off"  !! regexp = on|off
 *' cm_NPi_version            "choose version year of NPi targets for min and max targets in the form of conditional vs. unconditional"
 *' *  (2024_cond):   minimum technology targets are included from NewClimate latest policy modeling protocol in 2025
 *' *  (2024_uncond): maximal technology targets are included from NewClimate latest policy modeling protocol in 2025
 $setglobal cm_NPi_version  2025_cond    !! def = "2025_cond"  !! regexp = 2025_(un)?cond
-
 *' cm_netZeroScen     "choose scenario of net zero targets of netZero realization of module 46_carbonpriceRegi"
 *'
 *'  (NGFS_v4):        settings used for NGFS v4, 2023
