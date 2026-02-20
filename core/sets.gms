@@ -964,6 +964,7 @@ sets
     2024_cond, 2024_uncond,
     2025_cond, 2025_uncond,
     2025_cond_extrapol, 2025_uncond_extrapol
+    2026_cond, 2026_uncond
   /
   NPi_version "NPi data version for NPi realizations of 40_techpol and 45_carbonprice"
   /
@@ -1132,12 +1133,12 @@ te(all_te)              "energy technologies"
     tdsynhos        "transmission and distribution for heating oil from synthetic origin to stationary users"
     tdh2s           "transmission and distribution for hydrogen to stationary users"
     tdh2t           "transmission and distribution for hydrogen to transportation"
-    tdbiodie        "transmission and distribution for diesel from biomass origin to stationary users"
-    tdfosdie        "transmission and distribution for diesel from fossil origin to stationary users"
-    tdsyndie        "transmission and distribution for diesel from synthetic origin to stationary users"
-    tdbiopet        "transmission and distribution for petrol from biomass origin to stationary users"
-    tdfospet        "transmission and distribution for petrol from fossil origin to stationary users"
-    tdsynpet        "transmission and distribution for petrol from synthetic origin to stationary users"
+    tdbiodie        "transmission and distribution for diesel from biomass origin to transportation"
+    tdfosdie        "transmission and distribution for diesel from fossil origin to transportation"
+    tdsyndie        "transmission and distribution for diesel from synthetic origin to transportation"
+    tdbiopet        "transmission and distribution for petrol from biomass origin to transportation"
+    tdfospet        "transmission and distribution for petrol from fossil origin to transportation"
+    tdsynpet        "transmission and distribution for petrol from synthetic origin to transportation"
     tdbiosos        "transmission and distribution for solids from biomass origin to stationary users"
     tdfossos        "transmission and distribution for solids from fossil origin to stationary users"
     tdhes           "transmission and distribution for heat to stationary users"
