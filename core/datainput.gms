@@ -1615,7 +1615,7 @@ $include "./core/input/f_fedemand_build_scaleDemand.cs4r"
 $offdelim
 /;
 
-pm_scaleDemandBuildTable(t,regi) = f_scaleDemandBuildTable(t,regi);
+pm_scaleDemandBuildTable(t,regi) $ (t.val > 2025 ) = f_scaleDemandBuildTable(t,regi);
 pm_scaleDemandBuildTable(t,regi) $ (t.val > 2100 ) = pm_scaleDemandBuildTable("2100",regi);
 
   loop( (t,regi,in) $ in_buildings_dyn36(in) ,
@@ -1633,7 +1633,7 @@ $include "./core/input/f_fedemand_ind_scaleDemand.cs4r"
 $offdelim
 /;
 
-pm_scaleDemandIndTable(t,regi) = f_scaleDemandIndTable(t,regi);
+pm_scaleDemandIndTable(t,regi) $ (t.val > 2025 ) = f_scaleDemandIndTable(t,regi);
 pm_scaleDemandIndTable(t,regi) $ (t.val > 2100 ) = pm_scaleDemandIndTable("2100",regi);
 
   loop( (t,regi,in) $ in_industry_dyn37(in) ,
