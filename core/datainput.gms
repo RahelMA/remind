@@ -1617,6 +1617,7 @@ $offdelim
 
 pm_scaleDemandBuildTable(t,regi) = f_scaleDemandBuildTable(t,regi);
 pm_scaleDemandBuildTable(t,regi) $ (t.val < 2030 ) = 1;  !! ensure that historic data is not changed
+pm_scaleDemandBuildTable(t,regi) $ ( pm_scaleDemandBuildTable(t,regi) le 0) = 1;  !! If no multiplier was entered or a negative value was entered, override by 1. (FE values <0 are not possible)
 pm_scaleDemandBuildTable(t,regi) $ (t.val > 2100 ) = pm_scaleDemandBuildTable("2100",regi); !! continue 2100 multiplier until end of time
 
   loop( (t,regi,in) $ in_buildings_dyn36(in) ,
@@ -1625,7 +1626,7 @@ pm_scaleDemandBuildTable(t,regi) $ (t.val > 2100 ) = pm_scaleDemandBuildTable("2
 $endif.scaleDemandBuildTable
 
 *** Scale FE demand in industry sectors
-$ifthen.scaleDemandIndTable not "%cm_scaleDemandIndTable%" == "off"
+$ifthen.scaleDemandIndTable not "%c_scaleDemandIndTable%" == "off"
 
 Parameter f_scaleDemandIndTable(ttot,all_regi) "Rescaling factor on industry final energy and usable energy demand, read-in from a table"
 /
@@ -1634,12 +1635,13 @@ $include "./core/input/f_fedemand_ind_scaleDemand.cs4r"
 $offdelim
 /;
 
-pm_scaleDemandIndTable(t,regi) $ (t.val > 2025 ) = f_scaleDemandIndTable(t,regi);
-pm_scaleDemandIndTable(t,regi) $ (t.val < 2030 ) = 1;  !! ensure that historic data is not changed
-pm_scaleDemandIndTable(t,regi) $ (t.val > 2100 ) = pm_scaleDemandIndTable("2100",regi); !! continue 2100 multiplier until end of time
+p_scaleDemandIndTable(t,regi) $ (t.val > 2025 ) = f_scaleDemandIndTable(t,regi);
+p_scaleDemandIndTable(t,regi) $ (t.val < 2030 ) = 1;  !! ensure that historic data is not changed
+p_scaleDemandIndTable(t,regi) $ ( p_scaleDemandIndTable(t,regi) le 0) = 1;  !! If no multiplier was entered or a negative value was entered, override by 1. (FE values <0 are not possible)
+p_scaleDemandIndTable(t,regi) $ (t.val > 2100 ) = p_scaleDemandIndTable("2100",regi); !! continue 2100 multiplier until end of time
 
   loop( (t,regi,in) $ in_industry_dyn37(in) ,
-    pm_fedemand(t,regi,in) = pm_fedemand(t,regi,in) * pm_scaleDemandIndTable(t,regi)
+    pm_fedemand(t,regi,in) = pm_fedemand(t,regi,in) * p_scaleDemandIndTable(t,regi)
   );
 $endif.scaleDemandIndTable
 

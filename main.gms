@@ -1485,10 +1485,10 @@ $setGlobal cm_scaleDemand  off    !! def = off
 *** Requires re-calibration in order to work.
 *** When turned to "on", requires an input table f_fedemand_build_scaleDemand.cs4r to be added to core/input
 $setGlobal cm_scaleDemandBuildTable  off    !! def = off
-*** cm_scaleDemandIndTable - Rescaling factor on industry final energy and usable energy demand, with values coming from an input table.
+*** c_scaleDemandIndTable - Rescaling factor on industry final energy and usable energy demand, with values coming from an input table.
 *** Requires re-calibration in order to work.
 *** When turned to "on", requires an input table f_fedemand_ind_scaleDemand.cs4r to be added to core/input
-$setGlobal cm_scaleDemandIndTable  off    !! def = off
+$setGlobal c_scaleDemandIndTable  off    !! def = off
 *** cm_quantity_regiCO2target "emissions quantity upper bound from specific year for region group."
 ***   Example on how to use:
 ***     '2050.EUR_regi.netGHG 0.000001, obliges European GHG emissions to be approximately zero from 2050 onward"

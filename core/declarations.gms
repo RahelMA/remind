@@ -322,9 +322,9 @@ $ifthen.scaleDemandBuildTable not "%cm_scaleDemandBuildTable%" == "off"
   pm_scaleDemandBuildTable(ttot, all_regi)                 "Rescaling factor on buildings final energy and usable energy demand, read-in from a table" 
 $endif.scaleDemandBuildTable
 
-$ifthen.scaleDemandIndTable not "%cm_scaleDemandIndTable%" == "off"
+$ifthen.scaleDemandIndTable not "%c_scaleDemandIndTable%" == "off"
 *** FE demand rescaling parameters
-  pm_scaleDemandIndTable(ttot, all_regi)                 "Rescaling factor on industry final energy and usable energy demand, read-in from a table" 
+  p_scaleDemandIndTable(ttot, all_regi)                 "Rescaling factor on industry final energy and usable energy demand, read-in from a table" 
 $endif.scaleDemandIndTable
 
 *** energy prices
