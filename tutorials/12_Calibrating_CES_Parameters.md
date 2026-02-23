@@ -140,8 +140,9 @@ all REMIND users), or used in a local directory (e.g. for project work).
 1. Prepare the calibration directory:
   - To include calibration results in the PIK calibration repository, navigate to
   `/p/projects/remind/inputdata/CESparametersAndGDX/`.
-  - For use in a local directory, go to your local REMIND folder and type
-    `make set-local-calibration`. Navigate to the newly created folder `calibration_results/`.
+  - For use in a local directory, navigate to folder `calibration_results/`. It is
+    automatically created during CES calibration runs, or you can set it up manually
+    with `make set-local-calibration`.
 2. Use the `collect_calibration` script with one ore more paths to the completed
    calibration run directories as a parameter, for instance:
    ```sh
