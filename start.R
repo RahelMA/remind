@@ -530,6 +530,10 @@ if (any(c("--reprepare", "--restart") %in% flags)) {
       errorsfound <- errorsfound + ! gcresult
     } else if (start_now) {
       if (errorsfound == 0) {
+        if (cfg$gms$CES_parameters == "calibrate" && !dir.exists("calibration_results")) {
+          if (0 != system("./scripts/utils/set-local-calibration.sh"))
+            warning("Could not set up calibration_results/ automatically. Please run 'make set-local-calibration' manually.")
+        }
         submit(cfg)
       } else {
         message("   Not started, as errors were found.")

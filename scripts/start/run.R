@@ -36,12 +36,6 @@ run <- function() {
 
   } else if (cfg$gms$CES_parameters == "calibrate") {
 
-    # Set up calibration_results/ directory if it does not yet exist
-    if (!dir.exists(file.path(cfg$remind_folder, "calibration_results"))) {
-      if (0 != withr::with_dir(cfg$remind_folder, system("./scripts/utils/set-local-calibration.sh")))
-        warning("Could not set up calibration_results/ automatically. Please run 'make set-local-calibration' manually.")
-    }
-
     # Remember file modification time of fulldata.gdx to see if it changed
     fulldata_m_time <- Sys.time();
 
