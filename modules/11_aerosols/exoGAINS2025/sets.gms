@@ -11,9 +11,9 @@ emisForEmiFac11(all_enty)  "types of emissions that are only calculated in a pos
         NOx
         CO
         VOC
-        SO2
-        BC
-        OC
+        so2
+        bc
+        oc
         NH3
 /
 

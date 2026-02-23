@@ -918,30 +918,6 @@ sets
 
 regi(all_regi)  "all regions used in the solution process"
 
-*** region sets used for MAGICC
-RCP_regions_world_bunkers "five RCP regions plus total (world) and bunkers"
-/
-    WORLD
-    R5OECD
-    R5REF
-    R5ASIA
-    R5MAF
-    R5LAM
-    BUNKERS
-/
-
-RCP_regions_world(RCP_regions_world_bunkers) "five RCP regions plus total (world)"
-/
-    WORLD
-    R5OECD
-    R5REF
-    R5ASIA
-    R5MAF
-    R5LAM
-    BUNKERS
-/
-;
-
 ***-----------------------------------------------------------------------------
 ***-----------------------------------------------------------------------------
 ***   Miscellaneous sets
@@ -2116,33 +2092,6 @@ xirog       "parameters decribing exhaustible extraction coss including long-run
 /
     xi1, xi2, xi3, xi4, xi5, xi6, xi7, xi8, dec
 /
-*** emissions exported to MAGICC
-emiRCP "emission types exported to MAGICC"
-/
-    FossilCO2
-    OtherCO2
-    CH4
-    N2O
-    SOx
-    CO
-    NMVOC
-    NOx
-    BC
-    OC
-    NH3
-    CF4
-    C2F6
-    C6F14
-    HFC23
-    HFC32
-    HFC43-10
-    HFC125
-    HFC134a
-    HFC143a
-    HFC227ea
-    HFC245fa
-    SF6
-/
 
 p                "parameter for ch4 and n2o waste emissions and co2 cement emissions"
 /
@@ -2151,6 +2100,8 @@ p                "parameter for ch4 and n2o waste emissions and co2 cement emiss
     p3
     p4
 /
+
+
 *** This is a work-around to ensure emissions are printed in correct order.
 numberEmiRCP "number of emission types" / 1 * 23 /
 
