@@ -5,6 +5,24 @@
 # |  REMIND License Exception, version 1.0 (see LICENSE file).
 # |  Contact: remind@pik-potsdam.de
 
+# Thin wrapper around the shell script; extracted for testability.
+callSetLocalCalibration <- function(remind_folder) {
+  withr::with_dir(remind_folder, system("./scripts/utils/set-local-calibration.sh"))
+}
+
+# Ensures calibration_results/ exists in remind_folder, running the setup
+# script when it is absent.  Only called for CES calibration runs.
+ensureLocalCalibrationSetup <- function(remind_folder) {
+  caldir <- file.path(remind_folder, "calibration_results")
+  if (!dir.exists(caldir)) {
+    ret <- callSetLocalCalibration(remind_folder)
+    if (ret != 0) {
+      stop("Failed to set up calibration_results/ directory (exit code ", ret, "). ",
+           "Please run 'make set-local-calibration' manually.")
+    }
+  }
+}
+
 run <- function() {
 
   load("config.Rdata")
@@ -35,6 +53,9 @@ run <- function() {
                   " -ps=0 -pw=185 -pc=2 -gdxcompress=1 -holdFixedAsync=1 -logoption=", cfg$logoption))
 
   } else if (cfg$gms$CES_parameters == "calibrate") {
+
+    # Set up calibration_results/ directory if it does not yet exist
+    ensureLocalCalibrationSetup(cfg$remind_folder)
 
     # Remember file modification time of fulldata.gdx to see if it changed
     fulldata_m_time <- Sys.time();
