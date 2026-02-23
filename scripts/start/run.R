@@ -5,17 +5,12 @@
 # |  REMIND License Exception, version 1.0 (see LICENSE file).
 # |  Contact: remind@pik-potsdam.de
 
-# Thin wrapper around the shell script; extracted for testability.
-callSetLocalCalibration <- function(remind_folder) {
-  withr::with_dir(remind_folder, system("./scripts/utils/set-local-calibration.sh"))
-}
-
 # Ensures calibration_results/ exists in remind_folder, running the setup
 # script when it is absent.  Only called for CES calibration runs.
 ensureLocalCalibrationSetup <- function(remind_folder) {
   caldir <- file.path(remind_folder, "calibration_results")
   if (!dir.exists(caldir)) {
-    ret <- callSetLocalCalibration(remind_folder)
+    ret <- withr::with_dir(remind_folder, system("./scripts/utils/set-local-calibration.sh"))
     if (ret != 0) {
       stop("Failed to set up calibration_results/ directory (exit code ", ret, "). ",
            "Please run 'make set-local-calibration' manually.")
