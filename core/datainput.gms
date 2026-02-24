@@ -390,16 +390,17 @@ $endif.floorscen
 
 
 *** calculate floor costs for learning technologies based on GDP MER per capita in 2050
-$ifthen.floorscen %cm_floorCostScen% == "gdpScen"
+$ifthen.floorscen %cm_floorCostScen% == "gdpBased"
 *** compute GDP MER per capita in 2050 per region and the population-weighted global average
-*** see https://www.desmos.com/calculator/rbcjeoulgk for the shape of the sigmoid function
-    p_gdppcap2050_MER(regi) = pm_gdp("2050",regi) / pm_shPPPMER(regi) / pm_pop("2050",regi);
-    p_avgMER2050 = sum(regi, pm_gdp("2050",regi) / pm_shPPPMER(regi)) / sum(regi, pm_pop("2050",regi));
-*** apply sigmoid function: floor cost = old floor cost * (1.5 - 1/(1+exp(-4*(GDP_avg/GDP_region - 1))))
-*** so that regions with GDP MER per capita above global average get a floor cost multiplier above 1
-*** and regions with GDP MER per capita below global average get a floor cost multiplier below 1 (~0.5 at the low end)
-    pm_data(regi,"floorcost",teLearn(te))$(p_avgMER2050 ne 0 AND p_gdppcap2050_MER(regi) ne 0) =
-      p_oldFloorCostdata(regi,te) * (1.5 - 1 / (1 + exp(-4 * (p_avgMER2050 / p_gdppcap2050_MER(regi) - 1))));
+    p_GDPpCap2050(regi) = pm_gdp("2050",regi) / pm_pop("2050",regi);
+    p_GDPpCap2050_world = sum(regi, pm_gdp("2050",regi)) / sum(regi, pm_pop("2050",regi));
+*** apply sigmoid function (see shape on https://www.desmos.com/calculator/rbcjeoulgk):
+*** floor cost = standard floor cost * (1.5 - 1/(1+exp(-4*(GDP_avg/GDP_region - 1))))
+***   - regions with average GDP have multiplier 1
+***   - regions with very low GDP have multiplier 0.5
+***   - regions with very high GDP have multiplier 1.5
+    pm_data(regi,"floorcost",teLearn(te)) =
+      p_oldFloorCostdata(regi,te) * (1.5 - 1 / (1 + exp(-4 * (p_GDPpCap2050_world / (p_GDPpCap2050(regi) + sm_eps) - 1))));
 $endif.floorscen
 
 *** In case regionally differentiated investment costs should be used the corresponding entries are revised:
