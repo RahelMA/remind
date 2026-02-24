@@ -1136,19 +1136,19 @@ parameter
   cm_H2InBuildOnlyAfter = 2150;   !! def = 2150 (rule out H2 in buildings)
 *' For all years until the given year, FE demand for H2 in buildings is set to zero
 parameter
-  c_teNoLearngConvEndYr      "Year at which regional costs of non-learning technologies converge"
+  c_teNoLearnConvEndYr      "Year at which regional costs of non-learning technologies converge"
 ;
-  c_teNoLearngConvEndYr  = 2070;   !! def = 2070
+  c_teNoLearnConvEndYr  = 2070;   !! def = 2070
 *'
 parameter
-  c_LearnTeConvStartYear  "start year of cost convergence of learning technologies"
+  c_teLearnConvStartYr  "start year of cost convergence of learning technologies"
 ;
-c_LearnTeConvStartYear = 2025; !! def = 2025
+c_teLearnConvStartYr = 2025; !! def = 2025
 *'
 parameter
-  c_LearnTeConvEndYear "end year of cost convergence of learning technologies"
+  c_teLearnConvEndYr "end year of cost convergence of learning technologies"
 ;
-c_LearnTeConvEndYear = 2080;   !! def = 2080
+c_teLearnConvEndYr = 2080;   !! def = 2080
 *'
 parameter
   c_earlyRetiValidYr         "Year before which the early retirement rate designated by c_tech_earlyreti_rate holds"
@@ -1600,7 +1600,7 @@ $setglobal cm_in_limit_price_change "ue_steel_primary, kap_steel_primary"   !! d
 *** cm_calibration_string "def = off, else = additional string to include in the calibration name to be used" label for your calibration run to keep calibration files with different setups apart (e.g. with low elasticities, high elasticities)
 $setglobal cm_calibration_string  off    !!  def  =  off
 *** cm_techcosts -     use regionalized or globally homogenous technology costs for certain technologies
-*** (REG) regionalized technology costs with linear convergence between 2020 and year c_teNoLearngConvEndYr
+*** (REG) regionalized technology costs with linear convergence between 2020 and year c_teNoLearnConvEndYr
 *** (REG2040) regionalized technology costs given by p_inco0 until 2040, then stable without convergence
 *** (GLO) globally homogenous technology costs
 $setglobal cm_techcosts  REG       !! def = REG  !! regexp = REG|REG2040|GLO

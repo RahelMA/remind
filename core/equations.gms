@@ -472,16 +472,16 @@ q_costTeCapital(t,regi,teLearn) $ (pm_data(regi,"tech_stat",teLearn) < 4 or t.va
   ) $ (t.val > 2005 and t.val <= 2020)
 
 $ifthen.floorscen %cm_floorCostScen% == "default"
-*** from 2020 to c_LearnTeConvStartYear: use regional values
-  + macro_costRegi(t,regi,teLearn) $ (t.val > 2020 and t.val < c_LearnTeConvStartYear)
+*** from 2020 to c_teLearnConvStartYr: use regional values
+  + macro_costRegi(t,regi,teLearn) $ (t.val > 2020 and t.val < c_teLearnConvStartYr)
 
-*** c_LearnTeConvStartYear to c_LearnTeConvEndYear: assuming linear convergence of regional learning curves to global values
-  + ( (pm_ttot_val(t) - c_LearnTeConvStartYear) / (c_LearnTeConvEndYear-c_LearnTeConvStartYear) * macro_costGlob(t,regi,teLearn)
-    + (c_LearnTeConvEndYear - pm_ttot_val(t)) / (c_LearnTeConvEndYear-c_LearnTeConvStartYear) * macro_costRegi(t,regi,teLearn)
-  ) $ (t.val >= c_LearnTeConvStartYear and t.val <= c_LearnTeConvEndYear)
+*** c_teLearnConvStartYr to c_teLearnConvEndYr: assuming linear convergence of regional learning curves to global values
+  + ( (pm_ttot_val(t) - c_teLearnConvStartYr) / (c_teLearnConvEndYr-c_teLearnConvStartYr) * macro_costGlob(t,regi,teLearn)
+    + (c_teLearnConvEndYr - pm_ttot_val(t)) / (c_teLearnConvEndYr-c_teLearnConvStartYr) * macro_costRegi(t,regi,teLearn)
+  ) $ (t.val >= c_teLearnConvStartYr and t.val <= c_teLearnConvEndYr)
 
-*** after c_LearnTeConvEndYear: globally harmonized costs
-  + macro_costGlob(t,regi,teLearn) $ (t.val > c_LearnTeConvEndYear)
+*** after c_teLearnConvEndYr: globally harmonized costs
+  + macro_costGlob(t,regi,teLearn) $ (t.val > c_teLearnConvEndYr)
 $endif.floorscen
 
 $ifthenE.floorscen (sameas("%cm_floorCostScen%","pricestruc"))or(sameas("%cm_floorCostScen%","gdpBased"))

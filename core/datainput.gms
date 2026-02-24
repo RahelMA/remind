@@ -491,18 +491,18 @@ $ifthen.REG_techcosts "%cm_techcosts%" == "REG"   !! cm_techcosts REG
       pm_inco0_t(ttot,regi,te)$( ttot.val ge 2015 AND ttot.val lt 2025)
       = p_inco0(ttot,regi,te);
 
-*** from 2025 to c_teNoLearngConvEndYr, apply linear convergence of investment costs so that
+*** from 2025 to c_teNoLearnConvEndYr, apply linear convergence of investment costs so that
 *** all regions converge and stabilise at the technology cost data given in generisdata.prn
-      loop(ttot$( ttot.val ge 2020 AND ttot.val le c_teNoLearngConvEndYr ),
+      loop(ttot $ (ttot.val >= 2020 and ttot.val <= c_teNoLearnConvEndYr),
         pm_inco0_t(ttot,regi,te)
         = (
             (pm_ttot_val(ttot) - 2020) * fm_dataglob("inco0",te)
-            + (c_teNoLearngConvEndYr - pm_ttot_val(ttot)) * pm_inco0_t("2020",regi,te)
+            + (c_teNoLearnConvEndYr - pm_ttot_val(ttot)) * pm_inco0_t("2020",regi,te)
           )
-          / (c_teNoLearngConvEndYr - 2020);
+          / (c_teNoLearnConvEndYr - 2020);
       );
 
-      pm_inco0_t(ttot,regi,te)$( ttot.val gt c_teNoLearngConvEndYr ) = fm_dataglob("inco0",te);
+      pm_inco0_t(ttot,regi,te) $ (ttot.val > c_teNoLearnConvEndYr) = fm_dataglob("inco0",te);
     );
 
 *** re-insert effect of costMarkupAdvTech for IGCC in the regionalized cost
