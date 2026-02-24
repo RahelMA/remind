@@ -479,15 +479,13 @@ $ifthen.floorscen %cm_floorCostScen% == "default"
   + ( (pm_ttot_val(t) - c_LearnTeConvStartYear) / (c_LearnTeConvEndYear-c_LearnTeConvStartYear) * macro_costGlob(t,regi,teLearn)
     + (c_LearnTeConvEndYear - pm_ttot_val(t)) / (c_LearnTeConvEndYear-c_LearnTeConvStartYear) * macro_costRegi(t,regi,teLearn)
   ) $ (t.val >= c_LearnTeConvStartYear and t.val <= c_LearnTeConvEndYear)
+
+*** after c_LearnTeConvEndYear: globally harmonized costs
+  + macro_costGlob(t,regi,teLearn) $ (t.val > c_LearnTeConvEndYear)
 $endif.floorscen
 
 $ifthenE.floorscen (sameas("%cm_floorCostScen%","pricestruc"))or(sameas("%cm_floorCostScen%","gdpBased"))
-  + macro_costRegi(t,regi,teLearn) $ (t.val >= 2020 and t.val <= 2100)
-$endif.floorscen
-
-$ifthen.floorscen %cm_floorCostScen% == "default"
-*** after c_LearnTeConvEndYear: globally harmonized costs
-  + macro_costGlob(t,regi,teLearn) $ (t.val > c_LearnTeConvEndYear)
+  + macro_costRegi(t,regi,teLearn) $ (t.val > 2020)
 $endif.floorscen
 ;
 *' @stop
