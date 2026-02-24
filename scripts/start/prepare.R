@@ -188,7 +188,10 @@ prepare <- function() {
   if (file.copy(gdxConfig, gdxInput)) {
     message("Copied: ", gdxConfig, "\n    to: ", gdxInput)
   } else  {
-    stop("Could not copy gdx file:\n   ", gdxConfig, "\n\n")
+    stop(ifelse (cfg$gms$CES_parameters == "calibrate",
+        "Calibration requires a starting gdx; please copy the gdx file with the closest configuration and paste it to:",
+        "Could not find gdx file:"),
+      "\n    ", gdxConfig, "\n\n")
   }
 
   # choose which conopt files to copy

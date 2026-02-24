@@ -123,7 +123,7 @@ startedRuns <- 0
 waitingRuns <- 0
 modeltestRunsUsed <- 0
 
-nonStoppingError <- function(...) { # error display that still allows starting the other runs
+nonStoppingError <- function(...) { # error display that increments the global errorsfound counter
   message(red, "Error", NC, ": ", ...)
   errorsfound <<- errorsfound + 1 # operator <<- ensures that the global variable errorsfound is modified
 }
@@ -394,36 +394,38 @@ if (any(c("--reprepare", "--restart") %in% flags)) {
 
         # List available gdx files
         gdxFiles <- list.files(gdxFolder, pattern = "\\.gdx$", full.names = TRUE)
-        if (length(gdxFiles) == 0) { nonStoppingError(abortText) }
+        if (length(gdxFiles) == 0) {
+          nonStoppingError(abortText)
+        } else {
+          # Prompt user to choose an existing gdx file
+          gdxClosest <- gdxFiles[which.min(adist(basename(gdxConfig), basename(gdxFiles)))] # existing file with the closest name
+          abortOption <- paste0(crayon::red("ABORT"), ": you will then need to copy the gdx of your choice manually")
+          gdxFiles <- c(abortOption, gdxFiles)
+          gdxSelection <- gdxFiles[gms::chooseFromList(
+            ifelse(gdxFiles == gdxClosest, crayon::cyan(gdxFiles), gdxFiles),
+            type = "an existing gdx file that you would like to use",
+            userinfo = paste0("Leave empty to select existing gdx with ", crayon::cyan("most similar name")),
+            returnBoolean = TRUE,
+            multiple = FALSE
+          )]
 
-        # Prompt user to choose an existing gdx file
-        gdxClosest <- gdxFiles[which.min(adist(gdxConfig, gdxFiles))] # existing file with the closest name
-        abortOption <- paste0(crayon::red("ABORT"), ": you will then need to copy the gdx of your choice manually")
-        gdxFiles <- c(abortOption, gdxFiles)
-        gdxSelection <- gdxFiles[gms::chooseFromList(
-          ifelse(gdxFiles == gdxClosest, crayon::cyan(gdxFiles), gdxFiles),
-          type = "an existing gdx file that you would like to use",
-          userinfo = paste0("Leave empty to select existing gdx with ", crayon::cyan("most similar name")),
-          returnBoolean = TRUE,
-          multiple = FALSE
-        )]
+          if (length(gdxSelection) == 0) { gdxSelection <- gdxClosest } # default option
+          if (gdxSelection == abortOption || !file.copy(gdxSelection, gdxConfig)) { # abort option or copy failure
+            nonStoppingError(abortText)
+          } else {
+            message("Copied: ", gdxSelection, "\n    to: ", gdxConfig, "\n")
 
-        if (length(gdxSelection) == 0) { gdxSelection <- gdxClosest } # default option
-        if (gdxSelection == abortOption) { nonStoppingError(abortText) } # abort option
-
-        if (file.copy(gdxSelection, gdxConfig)) {
-          message("Copied: ", gdxSelection, "\n    to: ", gdxConfig, "\n")
-
-          # Add the .gdx and .inc to list of possible names
-          addLine <- function(line, path = "files") {
-            if (!file.exists(path)) message(path, " does not exist, you may have to manually add ", line)
-            else if (!(line %in% readLines(path))) {
-              write(line, path, append = TRUE)
-              message("Added in ", path, " the line ", line)
+            # Add the .gdx and .inc to list of possible names
+            addLine <- function(line, path = "files") {
+              if (!file.exists(path)) message(path, " does not exist, you may have to manually add ", line)
+              else if (!(line %in% readLines(path))) {
+                write(line, path, append = TRUE)
+                message("Added in ", path, " the line ", line)
+              }
             }
+            addLine(paste0(cfg$gms$cm_CES_configuration, ".gdx"), path = file.path(gdxFolder, "files"))
+            addLine(paste0(cfg$gms$cm_CES_configuration, ".inc"), path = file.path("./modules/29_CES_parameters/load/input", "files"))
           }
-          addLine(paste0(cfg$gms$cm_CES_configuration, ".gdx"), path = file.path(gdxFolder, "files"))
-          addLine(paste0(cfg$gms$cm_CES_configuration, ".inc"), path = file.path("./modules/29_CES_parameters/load/input", "files"))
         }
       }
     }
@@ -578,8 +580,11 @@ if (any(c("--reprepare", "--restart") %in% flags)) {
     } else if (start_now) {
       if (errorsfound == 0) {
         if (cfg$gms$CES_parameters == "calibrate" && !dir.exists("calibration_results")) {
-          if (0 != system("./scripts/utils/set-local-calibration.sh"))
+          if (0 == system("./scripts/utils/set-local-calibration.sh")) {
+            message("Folder calibration_results/ has been automatically set up.")
+          } else {
             warning("Could not set up calibration_results/ automatically. Please run 'make set-local-calibration' manually.")
+          }
         }
         submit(cfg)
       } else {
