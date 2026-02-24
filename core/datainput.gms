@@ -379,26 +379,16 @@ $ifthen.floorscen %cm_floorCostScen% == "pricestruc"
 $endif.floorscen
 
 
-*** calculate floor costs for learning technologies if there is technology transfer
-$ifthen.floorscen %cm_floorCostScen% == "techtrans"
-*** compute maximum income GDP PPP per capita among regions in 2050
-    p_gdppcap2050_PPP(regi) = pm_gdp("2050",regi) / pm_shPPPMER(regi) / pm_pop("2050",regi);
-    p_maxPPP2050 = SMax(regi, p_gdppcap2050_PPP(regi));
-*** take the ratio of the PPP income and the maximum income, and multiply with the global floor to get new floorcost that simulates tech transfer where costs are solely dependent on local wages, not on IP rent
-    pm_data(regi,"floorcost",teLearn(te))$(p_maxPPP2050 ne 0) = p_oldFloorCostdata(regi,te) * p_gdppcap2050_PPP(regi) / p_maxPPP2050;
-$endif.floorscen
-
-
-*** calculate floor costs for learning technologies based on GDP MER per capita in 2050
+*** calculate floor costs for learning technologies based on GDP MER per capita in 2050:
+***   - regions with average GDP have multiplier 1
+***   - regions with very low GDP have multiplier 0.5
+***   - regions with very high GDP have multiplier 1.5
 $ifthen.floorscen %cm_floorCostScen% == "gdpBased"
 *** compute GDP MER per capita in 2050 per region and the population-weighted global average
     p_GDPpCap2050(regi) = pm_gdp("2050",regi) / pm_pop("2050",regi);
     p_GDPpCap2050_world = sum(regi, pm_gdp("2050",regi)) / sum(regi, pm_pop("2050",regi));
 *** apply sigmoid function (see shape on https://www.desmos.com/calculator/rbcjeoulgk):
 *** floor cost = standard floor cost * (1.5 - 1/(1+exp(-4*(GDP_avg/GDP_region - 1))))
-***   - regions with average GDP have multiplier 1
-***   - regions with very low GDP have multiplier 0.5
-***   - regions with very high GDP have multiplier 1.5
     pm_data(regi,"floorcost",teLearn(te)) =
       p_oldFloorCostdata(regi,te) * (1.5 - 1 / (1 + exp(-4 * (p_GDPpCap2050_world / (p_GDPpCap2050(regi) + sm_eps) - 1))));
 $endif.floorscen
