@@ -208,8 +208,8 @@ pm_teAnnuity(all_te)                                 "Annuity factor of a techno
 *** parameters used for floor costs calculation
 p_maxRegTechCost2015(all_te)                         "highest historical regional investment cost in 2015, used to calculate regionally-differentiated floor costs of learning technologies"
 p_maxRegTechCost2020(all_te)                         "highest historical regional investment cost in 2020, used to calculate regionally-differentiated floor costs of learning technologies"
-p_GDPpCap2050(all_regi)                              "regional GDP per capita in 2050 [thousand $/capita]"
-p_GDPpCap2050_world                                  "global average GDP per capita in 2050 [thousand $/capita]"
+p_GDPpCap2050(all_regi)                              "regional GDP per capita in 2050 [$/capita]"
+p_GDPpCap2050_world                                  "global average GDP per capita in 2050 [$/capita]"
 p_maxSpvCost                                         "maximum spv investment cost among regions [T$/TW]" 
 p_oldFloorCostdata(all_regi,all_te)                  "print old floor cost data [T$/TW]"
 
