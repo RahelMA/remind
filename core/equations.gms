@@ -375,7 +375,7 @@ qm_deltaCapCumNet(ttot,regi,teLearn)$(ord(ttot) lt card(ttot) AND pm_ttot_val(tt
 *' Initial values for cumulated capacities (learning technologies only):
 *' (except for tech_stat 4 technologies that have no standing capacities in 2005 and ccap0 refers to another year)
 ***---------------------------------------------------------------------------
-q_capCumNet(t0,regi,teLearn)$(NOT (pm_data(regi,"tech_stat",teLearn) eq 4))..
+q_capCumNet(t0,regi,teLearn)$(pm_data(regi,"tech_stat",teLearn) < 4)..
   vm_capCum(t0,regi,teLearn)
   =e=
   pm_data(regi,"ccap0",teLearn);
@@ -459,7 +459,7 @@ $macro macro_capCum(t,regi,teLearn) (sum(regi2, vm_capCum(t,regi2,teLearn)) + pm
 $macro macro_costRegi(t,regi,teLearn) (pm_data(regi,"floorcost",teLearn) + pm_data(regi,"learnMult_wFC",teLearn) * macro_capCum(t,regi,teLearn) ** pm_data(regi,"learnExp_wFC",teLearn))
 $macro macro_costGlob(t,regi,teLearn) (fm_dataglob("floorcost",teLearn) + fm_dataglob("learnMult_wFC",teLearn) * macro_capCum(t,regi,teLearn) ** fm_dataglob("learnExp_wFC",teLearn))
 
-q_costTeCapital(t,regi,teLearn) $ (not (pm_data(regi,"tech_stat",teLearn) = 4 and t.val <= 2020)) ..
+q_costTeCapital(t,regi,teLearn) $ (pm_data(regi,"tech_stat",teLearn) < 4 or t.val > 2020) ..
   vm_costTeCapital(t,regi,teLearn)
   =e=
 *** until 2005: using global estimates better matches historic values
