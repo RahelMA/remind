@@ -388,9 +388,9 @@ $ifthen.floorscen %cm_floorCostScen% == "gdpBased"
     p_GDPpCap2050(regi) = pm_gdp("2050",regi) / pm_pop("2050",regi) * 1000;
     p_GDPpCap2050_world = sum(regi, pm_gdp("2050",regi)) / sum(regi, pm_pop("2050",regi)) * 1000;
 *** apply sigmoid function (see shape on https://www.desmos.com/calculator/rbcjeoulgk):
-*** floor cost = standard floor cost * (1.5 - 1/(1+exp(-4*(GDP_avg/GDP_region - 1))))
+*** floor cost = standard floor cost * (1.5 - 1 / (1 + exp(-4 * (2050 average GDPpCap / 2050 regional GDPpCap          - 1))))
     pm_data(regi,"floorcost",teLearn(te)) =
-      p_oldFloorCostdata(regi,te) * (1.5 - 1 / (1 + exp(-4 * (p_GDPpCap2050_world / (p_GDPpCap2050(regi) + sm_eps) - 1))));
+         p_oldFloorCostdata(regi,te) * (1.5 - 1 / (1 + exp(-4 * (p_GDPpCap2050_world  / (p_GDPpCap2050(regi) + sm_eps) - 1))));
 $endif.floorscen
 
 *** In case regionally differentiated investment costs should be used the corresponding entries are revised:
