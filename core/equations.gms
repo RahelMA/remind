@@ -514,7 +514,7 @@ $ifthen.floorscen %cm_floorCostScen% == "default"
   )$( t.val ge c_LearnTeConvStartYear AND t.val le c_LearnTeConvEndYear )
 $endif.floorscen
 
-$ifthenE.floorscen (sameas("%cm_floorCostScen%","pricestruc"))or(sameas("%cm_floorCostScen%","techtrans"))or(sameas("%cm_floorCostScen%","gdpBased"))
+$ifthenE.floorscen (sameas("%cm_floorCostScen%","pricestruc"))or(sameas("%cm_floorCostScen%","gdpBased"))
   + ( pm_data(regi,"floorcost",teLearn) 
       + pm_data(regi,"learnMult_wFC",teLearn)
         * ( sum(regi2, vm_capCum(t,regi2,teLearn))
@@ -529,7 +529,7 @@ $ifthen.floorscen %cm_floorCostScen% == "default"
       + fm_dataglob("learnMult_wFC",teLearn)
         * ( sum(regi2, vm_capCum(t,regi2,teLearn)) 
             + pm_capCumForeign(t,regi,teLearn) 
-            ) **(fm_dataglob("learnExp_wFC",teLearn))
+            ) ** fm_dataglob("learnExp_wFC",teLearn)
   )$(t.val gt c_LearnTeConvEndYear)
 $endif.floorscen
 ;
