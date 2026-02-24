@@ -388,6 +388,19 @@ $ifthen.floorscen %cm_floorCostScen% == "techtrans"
     pm_data(regi,"floorcost",teLearn(te))$(p_maxPPP2050 ne 0) = p_oldFloorCostdata(regi,te) * p_gdppcap2050_PPP(regi) / p_maxPPP2050;
 $endif.floorscen
 
+
+*** calculate floor costs for learning technologies based on GDP per capita PPP in 2050
+$ifthen.floorscen %cm_floorCostScen% == "gdpScen"
+*** compute GDP PPP per capita in 2050 per region and the maximum among regions
+    p_gdppcap2050_PPP(regi) = pm_gdp("2050",regi) / pm_shPPPMER(regi) / pm_pop("2050",regi);
+    p_maxPPP2050 = SMax(regi, p_gdppcap2050_PPP(regi));
+*** apply sigmoid function: floor cost = old floor cost * (1.5 - 1/(1+exp(-4*(GDP_max/GDP_region - 1))))
+*** so that richer regions (GDP_region -> GDP_max, i.e. GDP_max/GDP_region -> 1) get floor cost ~ old floor cost
+*** and poorer regions (GDP_region << GDP_max, i.e. GDP_max/GDP_region >> 1) get floor cost -> 0.5 * old floor cost
+    pm_data(regi,"floorcost",teLearn(te))$(p_maxPPP2050 ne 0 AND p_gdppcap2050_PPP(regi) ne 0) =
+      p_oldFloorCostdata(regi,te) * (1.5 - 1 / (1 + exp(-4 * (p_maxPPP2050 / p_gdppcap2050_PPP(regi) - 1))));
+$endif.floorscen
+
 *** In case regionally differentiated investment costs should be used the corresponding entries are revised:
 $ifthen.REG_techcosts not "%cm_techcosts%" == "GLO"   !! cm_techcosts is REG or REG2040
 *** calculate regional floor costs for learning technologies from ratio of global values
