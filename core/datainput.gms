@@ -384,9 +384,9 @@ $endif.floorscen
 ***   - regions with very low GDP have multiplier 0.5
 ***   - regions with very high GDP have multiplier 1.5
 $ifthen.floorscen %cm_floorCostScen% == "gdpBased"
-*** compute GDP MER per capita in 2050 per region and the population-weighted global average
-    p_GDPpCap2050(regi) = pm_gdp("2050",regi) / pm_pop("2050",regi);
-    p_GDPpCap2050_world = sum(regi, pm_gdp("2050",regi)) / sum(regi, pm_pop("2050",regi));
+*** compute GDP MER per capita in 2050 per region and the population-weighted global average [$/capita]
+    p_GDPpCap2050(regi) = pm_gdp("2050",regi) / pm_pop("2050",regi) * 1000;
+    p_GDPpCap2050_world = sum(regi, pm_gdp("2050",regi)) / sum(regi, pm_pop("2050",regi)) * 1000;
 *** apply sigmoid function (see shape on https://www.desmos.com/calculator/rbcjeoulgk):
 *** floor cost = standard floor cost * (1.5 - 1/(1+exp(-4*(GDP_avg/GDP_region - 1))))
     pm_data(regi,"floorcost",teLearn(te)) =
