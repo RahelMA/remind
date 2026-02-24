@@ -459,35 +459,35 @@ $macro macro_capCum(t,regi,teLearn) (sum(regi2, vm_capCum(t,regi2,teLearn)) + pm
 $macro macro_costRegi(t,regi,teLearn) (pm_data(regi,"floorcost",teLearn) + pm_data(regi,"learnMult_wFC",teLearn) * macro_capCum(t,regi,teLearn) ** pm_data(regi,"learnExp_wFC",teLearn))
 $macro macro_costGlob(t,regi,teLearn) (fm_dataglob("floorcost",teLearn) + fm_dataglob("learnMult_wFC",teLearn) * macro_capCum(t,regi,teLearn) ** fm_dataglob("learnExp_wFC",teLearn))
 
-q_costTeCapital(t,regi,teLearn) $(not (pm_data(regi,"tech_stat",teLearn) = 4 and t.val <= 2020)) ..
+q_costTeCapital(t,regi,teLearn) $ (not (pm_data(regi,"tech_stat",teLearn) = 4 and t.val <= 2020)) ..
   vm_costTeCapital(t,regi,teLearn)
   =e=
 *** until 2005: using global estimates better matches historic values
-  + macro_costGlob(t,regi,teLearn) $(t.val <= 2005)
+  + macro_costGlob(t,regi,teLearn) $ (t.val <= 2005)
     
 *** 2005 to 2020: linear transition from global 2005 to regional 2020
 *** to phase-in the observed 2020 regional variation from input-data
   + ( (2020 - t.val) / (2020-2005) * macro_costGlob(t,regi,teLearn)
     + (t.val - 2005) / (2020-2005) * macro_costRegi(t,regi,teLearn)
-  ) $(t.val > 2005 and t.val <= 2020)
+  ) $ (t.val > 2005 and t.val <= 2020)
 
 $ifthen.floorscen %cm_floorCostScen% == "default"
 *** from 2020 to c_LearnTeConvStartYear: use regional values
-  + macro_costRegi(t,regi,teLearn) $(t.val > 2020 and t.val < c_LearnTeConvStartYear)
+  + macro_costRegi(t,regi,teLearn) $ (t.val > 2020 and t.val < c_LearnTeConvStartYear)
 
 *** c_LearnTeConvStartYear to c_LearnTeConvEndYear: assuming linear convergence of regional learning curves to global values
   + ( (pm_ttot_val(t) - c_LearnTeConvStartYear) / (c_LearnTeConvEndYear-c_LearnTeConvStartYear) * macro_costGlob(t,regi,teLearn)
     + (c_LearnTeConvEndYear - pm_ttot_val(t)) / (c_LearnTeConvEndYear-c_LearnTeConvStartYear) * macro_costRegi(t,regi,teLearn)
-  ) $(t.val >= c_LearnTeConvStartYear and t.val <= c_LearnTeConvEndYear)
+  ) $ (t.val >= c_LearnTeConvStartYear and t.val <= c_LearnTeConvEndYear)
 $endif.floorscen
 
 $ifthenE.floorscen (sameas("%cm_floorCostScen%","pricestruc"))or(sameas("%cm_floorCostScen%","gdpBased"))
-  + macro_costRegi(t,regi,teLearn) $(t.val >= 2020 and t.val <= 2100)
+  + macro_costRegi(t,regi,teLearn) $ (t.val >= 2020 and t.val <= 2100)
 $endif.floorscen
 
 $ifthen.floorscen %cm_floorCostScen% == "default"
 *** after c_LearnTeConvEndYear: globally harmonized costs
-  + macro_costGlob(t,regi,teLearn) $(t.val > c_LearnTeConvEndYear)
+  + macro_costGlob(t,regi,teLearn) $ (t.val > c_LearnTeConvEndYear)
 $endif.floorscen
 ;
 *' @stop

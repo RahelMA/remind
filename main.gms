@@ -1607,7 +1607,7 @@ $setglobal cm_techcosts  REG       !! def = REG  !! regexp = REG|REG2040|GLO
 *** cm_floorCostScen regionally differentiated floor cost scenarios
 *** (default) uniform floor cost (almost no regional differentiation)
 *** (pricestruc) regionally differentiated floor costs, the differentiated costs have the same ratio between regions as the ratio between 2020 tech cost values
-*** (gdpBased) regionally differentiated floor costs based on GDP per capita in 2050 relative to global average: floor cost = old floor cost * (1.5 - 1/(1+exp(-4*(GDP_avg/GDP_region - 1)))), so regions above global average GDP get floor cost multiplier above 1, regions below get multiplier below 1 (down to ~0.5)
+*** (gdpBased) regionally differentiated floor costs based on GDP per capita in 2050: regions with above-average GDP get higher floor costs (up to 1.5x), regions with below-average GDP get lower floor costs (down to 0.5x)
 $setglobal cm_floorCostScen default       !! def = default  !! regexp = default|pricestruc|gdpBased
 *** cfg$gms$cm_EDGEtr_scen  "the EDGE-T scenario"  # def <- "Mix1". For calibration runs: Mix1. Mix2, Mix3, Mix4 also available - numbers after the "mix" denote policy strength, with 1 corresponding roughly to Baseline/NPI, 2= NDC, 3= Budg1500, 4 = Budg800
 ***  The following descriptions are based on scenario results for EUR in 2050 unless specified otherwise.
