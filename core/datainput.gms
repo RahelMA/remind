@@ -1608,10 +1608,16 @@ $endif.scaleDemand
 *** Scale FE demand in building sectors
 $ifthen.scaleDemandBuildTable not "%cm_scaleDemandBuildTable%" == "off"
 
+*** File should have the following format:
+*** 2025,USA,1.00
+*** 2030,USA,0.9
+*** 2035,USA,0.8
+
+
 Parameter f_scaleDemandBuildTable(ttot,all_regi) "Rescaling factor on industry final energy and usable energy demand, read-in from a table"
 /
 $ondelim
-$include "./core/input/f_fedemand_build_scaleDemand.cs4r"
+$include "./core/input/%cm_scaleDemandBuildTable%.cs4r"
 $offdelim
 /;
 
@@ -1628,10 +1634,15 @@ $endif.scaleDemandBuildTable
 *** Scale FE demand in industry sectors
 $ifthen.scaleDemandIndTable not "%c_scaleDemandIndTable%" == "off"
 
+*** File should have the following format:
+*** 2025,USA,1.00
+*** 2030,USA,0.9
+*** 2035,USA,0.8
+
 Parameter f_scaleDemandIndTable(ttot,all_regi) "Rescaling factor on industry final energy and usable energy demand, read-in from a table"
 /
 $ondelim
-$include "./core/input/f_fedemand_ind_scaleDemand.cs4r"
+$include "./core/input/%c_scaleDemandIndTable%.cs4r"
 $offdelim
 /;
 
