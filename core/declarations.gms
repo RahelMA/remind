@@ -210,6 +210,8 @@ p_maxRegTechCost2015(all_te)                         "highest historical regiona
 p_maxRegTechCost2020(all_te)                         "highest historical regional investment cost in 2020, used to calculate regionally-differentiated floor costs of learning technologies"
 p_gdppcap2050_PPP(all_regi)                          "regional GDP PPP per capita in 2050 [thousand $/capita]"
 p_maxPPP2050                                         "maximum income GDP PPP among regions in 2050 [T$]"
+p_gdppcap2050_MER(all_regi)                          "regional GDP MER per capita in 2050 [thousand $/capita]"
+p_avgMER2050                                         "global average GDP MER per capita in 2050 [thousand $/capita]"
 p_maxSpvCost                                         "maximum spv investment cost among regions [T$/TW]" 
 p_oldFloorCostdata(all_regi,all_te)                  "print old floor cost data [T$/TW]"
 

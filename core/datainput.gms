@@ -389,16 +389,17 @@ $ifthen.floorscen %cm_floorCostScen% == "techtrans"
 $endif.floorscen
 
 
-*** calculate floor costs for learning technologies based on GDP per capita PPP in 2050
+*** calculate floor costs for learning technologies based on GDP MER per capita in 2050
 $ifthen.floorscen %cm_floorCostScen% == "gdpScen"
-*** compute GDP PPP per capita in 2050 per region and the maximum among regions
-    p_gdppcap2050_PPP(regi) = pm_gdp("2050",regi) / pm_shPPPMER(regi) / pm_pop("2050",regi);
-    p_maxPPP2050 = SMax(regi, p_gdppcap2050_PPP(regi));
-*** apply sigmoid function: floor cost = old floor cost * (1.5 - 1/(1+exp(-4*(GDP_max/GDP_region - 1))))
-*** so that richer regions (GDP_region -> GDP_max, i.e. GDP_max/GDP_region -> 1) get floor cost ~ old floor cost
-*** and poorer regions (GDP_region << GDP_max, i.e. GDP_max/GDP_region >> 1) get floor cost -> 0.5 * old floor cost
-    pm_data(regi,"floorcost",teLearn(te))$(p_maxPPP2050 ne 0 AND p_gdppcap2050_PPP(regi) ne 0) =
-      p_oldFloorCostdata(regi,te) * (1.5 - 1 / (1 + exp(-4 * (p_maxPPP2050 / p_gdppcap2050_PPP(regi) - 1))));
+*** compute GDP MER per capita in 2050 per region and the population-weighted global average
+*** see https://www.desmos.com/calculator/rbcjeoulgk for the shape of the sigmoid function
+    p_gdppcap2050_MER(regi) = pm_gdp("2050",regi) / pm_shPPPMER(regi) / pm_pop("2050",regi);
+    p_avgMER2050 = sum(regi, pm_gdp("2050",regi) / pm_shPPPMER(regi)) / sum(regi, pm_pop("2050",regi));
+*** apply sigmoid function: floor cost = old floor cost * (1.5 - 1/(1+exp(-4*(GDP_avg/GDP_region - 1))))
+*** so that regions with GDP MER per capita above global average get a floor cost multiplier above 1
+*** and regions with GDP MER per capita below global average get a floor cost multiplier below 1 (~0.5 at the low end)
+    pm_data(regi,"floorcost",teLearn(te))$(p_avgMER2050 ne 0 AND p_gdppcap2050_MER(regi) ne 0) =
+      p_oldFloorCostdata(regi,te) * (1.5 - 1 / (1 + exp(-4 * (p_avgMER2050 / p_gdppcap2050_MER(regi) - 1))));
 $endif.floorscen
 
 *** In case regionally differentiated investment costs should be used the corresponding entries are revised:
