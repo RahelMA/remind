@@ -1503,6 +1503,14 @@ $setGlobal cm_emiMktTarget_tolerance  GLO 0.01    !! def = GLO 0.01
 ***   Example on how to use:
 ***     cm_scaleDemand = '2020.2040.(EUR,NEU,USA,JPN,CAZ) 0.75' applies a 25% demand reduction on those regions progressively between 2020 (100% demand) and 2040 (75% demand).
 $setGlobal cm_scaleDemand  off    !! def = off
+*** cm_scaleDemandBuildTable - Rescaling factor on buildings final energy and usable energy demand, with values coming from an input table.
+*** Requires re-calibration in order to work.
+*** One needs to name the cs4r-file with the multipliers in the scenario_config, and the file needs to be copied by hand to core/input
+$setGlobal cm_scaleDemandBuildTable  off    !! def = off
+*** c_scaleDemandIndTable - Rescaling factor on industry final energy and usable energy demand, with values coming from an input table.
+*** Requires re-calibration in order to work.
+*** One needs to name the cs4r-file with the multipliers in the scenario_config, and the file needs to be copied by hand to core/input
+$setGlobal c_scaleDemandIndTable  off    !! def = off
 *** cm_quantity_regiCO2target "emissions quantity upper bound from specific year for region group."
 ***   Example on how to use:
 ***     '2050.EUR_regi.netGHG 0.000001, obliges European GHG emissions to be approximately zero from 2050 onward"
