@@ -1123,7 +1123,7 @@ parameter
   cm_carbonprice_temperatureLimit       = 1.8;   !! def = 1.8
 *'
 parameter
-  cm_frac_CCS          "tax on carbon transport & storage (ccsinjeon) to reflect risk of leakage, formulated as fraction of ccsinjeon O&M costs"
+  cm_frac_CCS          "tax on carbon transport & storage (teccsinje) to reflect risk of leakage, formulated as fraction of O&M costs"
 ;
   cm_frac_CCS          = 10;   !! def = 10
 *'
