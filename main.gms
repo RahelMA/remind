@@ -1505,11 +1505,11 @@ $setGlobal cm_emiMktTarget_tolerance  GLO 0.01    !! def = GLO 0.01
 $setGlobal cm_scaleDemand  off    !! def = off
 *** cm_scaleDemandBuildTable - Rescaling factor on buildings final energy and usable energy demand, with values coming from an input table.
 *** Requires re-calibration in order to work.
-*** When turned to "on", requires an input table f_fedemand_build_scaleDemand.cs4r to be added to core/input
+*** One needs to name the cs4r-file with the multipliers in the scenario_config, and the file needs to be copied by hand to core/input
 $setGlobal cm_scaleDemandBuildTable  off    !! def = off
 *** c_scaleDemandIndTable - Rescaling factor on industry final energy and usable energy demand, with values coming from an input table.
 *** Requires re-calibration in order to work.
-*** When turned to "on", requires an input table f_fedemand_ind_scaleDemand.cs4r to be added to core/input
+*** One needs to name the cs4r-file with the multipliers in the scenario_config, and the file needs to be copied by hand to core/input
 $setGlobal c_scaleDemandIndTable  off    !! def = off
 *** cm_quantity_regiCO2target "emissions quantity upper bound from specific year for region group."
 ***   Example on how to use:
