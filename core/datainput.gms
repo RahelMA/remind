@@ -1180,7 +1180,7 @@ elseif (c_geoStorPotScen eq 2),
   pm_dataccs(all_regi, "quan", "ccsinjeoff") = f_geoStorPot(all_regi, "potLimOff");
 elseif (c_geoStorPotScen eq 3),
   pm_dataccs(all_regi, "quan", "ccsinjeon")  = f_geoStorPot(all_regi, "mixedOld");
-  pm_dataccs(all_regi, "quan", "ccsinjeoff") = 0;
+  pm_dataccs(all_regi, "quan", "ccsinjeoff") = 0.00001;
 );
 
 ***-----------------------------------------------------------------------------
