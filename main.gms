@@ -907,7 +907,7 @@ parameter
 Parameter c_geoStorPotScen "select the amount of geological storage potential for CO2 offshore and onshore"
 ;
 
-c_geoStorPotScen = 1;    !! def = 1  !! regexp = [1-3]
+c_geoStorPotScen = 3;    !! def = 3  !! regexp = [1-3]
 
 *' This switch determines the upper bound of the total geological storage potential for CO2 (onshore + offshore).
 *' *   (1) high: technical potential without any exclusion layers applied
