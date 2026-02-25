@@ -161,7 +161,7 @@ fm_dataglob("learn", te)$(sameAs(te, "biopyronly") OR sameAs(te, "biopyrhe") OR
 $ifthen.c_techAssumptScen "%c_techAssumptScen%" == "SSP1"
 *** hampers technologies with CCS or FT
 *** TODO: add industry ccs technologies bfcc and idrcc
-    loop(te $ (teCCS(te) or teFischerTropsch(te) or sameas(te,"ccsinje")),
+    loop(te $ (teCCS(te) or teFischerTropsch(te) or teccsinje(te)),  !! DKX: assumptions correct?
         fm_dataglob("inco0",te) =        1.3 * fm_dataglob("inco0",te);
     );
 *** hampers nuclear a lot
@@ -212,7 +212,7 @@ $elseif.c_techAssumptScen "%c_techAssumptScen%" == "SSP3"
 
 $elseif.c_techAssumptScen "%c_techAssumptScen%" == "SSP5"
 *** favours technologies with CCS or FT
-    loop(te $ (teCCS(te) or teFischerTropsch(te) or sameas(te,"ccsinje")),
+    loop(te $ (teCCS(te) or teFischerTropsch(te) or teccsinje(te)), !! DKX: assumptions correct?
         fm_dataglob("inco0",te) =        0.9 * fm_dataglob("inco0",te);
     );
 *** hampers nuclear
@@ -240,12 +240,16 @@ $endif.c_techAssumptScen
 ***---------------------------------------------------------------------------
 *** cm_ccsinjeCost cost scenarios
 *** Warning: it applies absolute values; only use it in combination with default c_techAssumptScen SSP2. 
-*** low estimate: ccsinje cost prior to 03/2024; i.e. ~11 USD/tCO2 in 2025, decreasing to ~7.5USD/tCO2 as of 2035
-$if "%cm_ccsinjeCost%" == "low" fm_dataglob("tech_stat","ccsinje") = 2;
-$if "%cm_ccsinjeCost%" == "low" fm_dataglob("inco0","ccsinje") = 220;
-$if "%cm_ccsinjeCost%" == "low" fm_dataglob("constrTme","ccsinje") = 0;
+*** low estimate: ccsinjeon cost prior to 03/2024; i.e. ~11 USD/tCO2 in 2025, decreasing to ~7.5USD/tCO2 as of 2035
+$if "%cm_ccsinjeCost%" == "low" fm_dataglob("tech_stat","ccsinjeon") = 2;
+$if "%cm_ccsinjeCost%" == "low" fm_dataglob("inco0","ccsinjeon") = 220;  
+$if "%cm_ccsinjeCost%" == "low" fm_dataglob("constrTme","ccsinjeon") = 0;
+$if "%cm_ccsinjeCost%" == "low" fm_dataglob("tech_stat","ccsinjeoff") = 2;      !! DKX: assumptions
+$if "%cm_ccsinjeCost%" == "low" fm_dataglob("inco0","ccsinjeoff") = 330;        !! DKX: assumptions
+$if "%cm_ccsinjeCost%" == "low" fm_dataglob("constrTme","ccsinjeoff") = 0;      !! DKX: assumptions
 *** high estimate: ~20USD/tCO2 (constant), assuming upper end of storage cost and long transport distances
-$if "%cm_ccsinjeCost%" == "high" fm_dataglob("inco0","ccsinje") = 550;
+$if "%cm_ccsinjeCost%" == "high" fm_dataglob("inco0","ccsinjeon")  = 550;
+$if "%cm_ccsinjeCost%" == "high" fm_dataglob("inco0","ccsinjeoff") = 825;       !! DKX: assumptions
 
 
 *** cm_VRE_supply_assumptions: Modify learning and floor costs for electricity storage and production of VRE
@@ -1160,12 +1164,24 @@ loop(te,
 teEtaConst(te) = not teEtaIncr(te);
 display teEtaIncr;
 
-*** import regionalized CCS constraints:
-table pm_dataccs(all_regi,char,rlf)                       "maximum CO2 storage capacity using CCS technology. Unit: GtC"
+*** import regionalized storage potential:
+table f_geoStorPot(all_regi,char)                       "different categories of geological storage potential for CO2. Unit: GtC"
 $ondelim
-$include "./core/input/pm_dataccs.cs3r"
+$include "./core/input/f_geoStorPot.cs3r"
 $offdelim
 ;
+
+*** set onshore (rlf "1") and offshore (rlf "2") storage potential according to c_geoStorPotScen
+if (c_geoStorPotScen eq 1,
+  pm_dataccs(all_regi, "quan", "ccsinjeon")  = f_geoStorPot(all_regi, "potTechOn");
+  pm_dataccs(all_regi, "quan", "ccsinjeoff") = f_geoStorPot(all_regi, "potTechOff");
+elseif (c_geoStorPotScen eq 2),
+  pm_dataccs(all_regi, "quan", "ccsinjeon")  = f_geoStorPot(all_regi, "potLimOn");
+  pm_dataccs(all_regi, "quan", "ccsinjeoff") = f_geoStorPot(all_regi, "potLimOff");
+elseif (c_geoStorPotScen eq 3),
+  pm_dataccs(all_regi, "quan", "ccsinjeon")  = f_geoStorPot(all_regi, "mixedOld");
+  pm_dataccs(all_regi, "quan", "ccsinjeoff") = 0.00001;
+);
 
 ***-----------------------------------------------------------------------------
 *** adjustment cost parameter
@@ -1263,7 +1279,7 @@ $endif.cm_subsec_model_steel
   p_adj_coeff(ttot,regi,"MeOH")         = 0.5;
   p_adj_coeff(ttot,regi,"h22ch4")       = 0.5;
 *** CO2 storage and CDR technologies
-  p_adj_coeff(ttot,regi,"ccsinje")      = 1.0;
+  p_adj_coeff(ttot,regi,teccsinje)      = 1.0;
   p_adj_coeff(ttot,regi,"biopyronly")   = 0.55; !! like biochp and bioigcc;
   p_adj_coeff(ttot,regi,"biopyrhe")     = 0.55; !! like biochp and bioigcc;
   p_adj_coeff(ttot,regi,"biopyrchp")    = 0.55; !! like biochp and bioigcc;
