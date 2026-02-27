@@ -1171,7 +1171,7 @@ $include "./core/input/f_geoStorPot.cs3r"
 $offdelim
 ;
 
-*** set onshore (rlf "1") and offshore (rlf "2") storage potential according to c_geoStorPotScen
+*** set onshore and offshore storage potential according to c_geoStorPotScen
 if (c_geoStorPotScen eq 1,
   pm_dataccs(all_regi, "quan", "ccsinjeon")  = f_geoStorPot(all_regi, "potTechOn");
   pm_dataccs(all_regi, "quan", "ccsinjeoff") = f_geoStorPot(all_regi, "potTechOff");
