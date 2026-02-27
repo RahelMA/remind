@@ -306,7 +306,7 @@ vm_cap.fx("2020",regi,te,rlf) $ (teBio(te) and teCCS(te)) = 0;
 
 *' switch to deactivate carbon sequestration
 if(c_ccsinjecratescen = 0,
-  vm_co2CCS.fx(t,regi_capturescen,"cco2","ico2",teCCS2rlf(te,rlf)) = 0;
+  vm_co2CCS.fx(t,regi_capturescen,"cco2","ico2",te,rlf) $ teCCS2rlf(te,rlf) = 0;
 );
 
 *' bound on maximum annual carbon storage by region
@@ -343,7 +343,7 @@ if(cm_emiscen = 1,
 
 if(cm_ccapturescen = 2, !! no carbon capture at all
   vm_cap.fx(t,regi_capturescen,teCCS,rlf) = 0;
-  vm_cap.fx(t,regi_capturescen,teCCS2rlf(te,rlf)) = 0;
+  vm_cap.fx(t,regi_capturescen,te,rlf) $ teCCS2rlf(te,rlf) = 0;
 elseif(cm_ccapturescen = 3), !! no bio carbon capture:
   vm_cap.fx(t,regi_capturescen,te,rlf) $ (teCCS(te) and teBio(te)) = 0;
 elseif(cm_ccapturescen = 4), !! no carbon capture in the electricity sector
