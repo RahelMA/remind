@@ -12,8 +12,8 @@
 *' *  (1): full permit trade (no restrictions)
 *' *  (2): no permit trade (only domestic mitigation)
 *' *  (3): limited trade (certain percentage of regional allowances)
-*'         for limited trade use cm_pemittradefinalyr   to set the final year until permit trading is allowed
-*'         with cm_pemittraderatio set the percentage of allowed trade
+*'         for limited trade use cm_permitTradeFinalYr   to set the final year until permit trading is allowed
+*'         with cm_permitTradeRatio set the percentage of allowed trade
 
 
 *####################### R SECTION START (PHASES) ##############################

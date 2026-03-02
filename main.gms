@@ -812,21 +812,21 @@ parameter
 *' *  (3): all GHG excl CO2 emissions from LULUCF
 *'
 parameter
-  cm_permittradescen        "scenario on permit trade"
+  cm_permittradescen        "Scenario on permit trade, not used in the TradingOnRef realisation"
 ;
   cm_permittradescen  = 1;         !! def = 1  !! regexp = [1-3]
 *' *  (1): full permit trade (no restrictions)
 *' *  (2): no permit trade (only domestic mitigation)
 *' *  (3): limited trade (certain percentage of permits)
 *'
+
 parameter
-  cm_permitTradeFinalYr        "Year until permit trading is allowed"
+  cm_permitTradeFinalYr        "[TradingOnRef] Year until permit trading is allowed"
 ;
   cm_permitTradeFinalYr  = 2100;         !! def = 2100
 *'  
-
 parameter
-  cm_permitTradeRatio        "Percentage of restricted permit trading"
+  cm_permitTradeRatio        "[TradingOnRef] Share of emissions allowed for permit trading between 0 and 1"
 ;
   cm_permitTradeRatio  = 0.2;         !! def = 0.2  
 *'
