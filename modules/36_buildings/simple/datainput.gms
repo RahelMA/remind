@@ -75,6 +75,15 @@ $ifthen.scaleDemand not "%cm_scaleDemand%" == "off"
   );
 $endif.scaleDemand
 
+*** Scale UE demand and floor space in the building sector
+$ifthen.scaleDemandBuildTable not "%cm_scaleDemandBuildTable%" == "off"
+  loop( (t,regi),
+      p36_uedemand_build(t,regi,in)     = p36_uedemand_build(t,regi,in)     * pm_scaleDemandBuildTable(t,regi) ;
+*RH*  We assume that the reduction in final energy demand is only partially driven by floor space reduction (exponent 0.3).
+      p36_floorspace(t,regi,secBuild36) = p36_floorspace(t,regi,secBuild36) * pm_scaleDemandBuildTable(t,regi)**0.3 ;
+  );
+$endif.scaleDemandBuildTable
+
 
 ***-----------------------------------------------------------------------------
 * FE Share Bounds

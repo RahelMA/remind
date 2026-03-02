@@ -1625,6 +1625,56 @@ $ifthen.scaleDemand not "%cm_scaleDemand%" == "off"
   );
 $endif.scaleDemand
 
+*** Scale FE demand in building sectors
+$ifthen.scaleDemandBuildTable not "%cm_scaleDemandBuildTable%" == "off"
+
+*** File should have the following format:
+*** 2025,USA,1.00
+*** 2030,USA,0.9
+*** 2035,USA,0.8
+
+
+Parameter f_scaleDemandBuildTable(ttot,all_regi) "Rescaling factor on industry final energy and usable energy demand, read-in from a table"
+/
+$ondelim
+$include "./core/input/%cm_scaleDemandBuildTable%.cs4r"
+$offdelim
+/;
+
+pm_scaleDemandBuildTable(t,regi) = f_scaleDemandBuildTable(t,regi);
+pm_scaleDemandBuildTable(t,regi) $ (t.val < 2030 ) = 1;  !! ensure that historic data is not changed
+pm_scaleDemandBuildTable(t,regi) $ ( pm_scaleDemandBuildTable(t,regi) le 0) = 1;  !! If no multiplier was entered or a negative value was entered, override by 1. (FE values <0 are not possible)
+pm_scaleDemandBuildTable(t,regi) $ (t.val > 2100 ) = pm_scaleDemandBuildTable("2100",regi); !! continue 2100 multiplier until end of time
+
+  loop( (t,regi,in) $ in_buildings_dyn36(in) ,
+    pm_fedemand(t,regi,in) = pm_fedemand(t,regi,in) * pm_scaleDemandBuildTable(t,regi)
+  );
+$endif.scaleDemandBuildTable
+
+*** Scale FE demand in industry sectors
+$ifthen.scaleDemandIndTable not "%c_scaleDemandIndTable%" == "off"
+
+*** File should have the following format:
+*** 2025,USA,1.00
+*** 2030,USA,0.9
+*** 2035,USA,0.8
+
+Parameter f_scaleDemandIndTable(ttot,all_regi) "Rescaling factor on industry final energy and usable energy demand, read-in from a table"
+/
+$ondelim
+$include "./core/input/%c_scaleDemandIndTable%.cs4r"
+$offdelim
+/;
+
+p_scaleDemandIndTable(t,regi) $ (t.val > 2025 ) = f_scaleDemandIndTable(t,regi);
+p_scaleDemandIndTable(t,regi) $ (t.val < 2030 ) = 1;  !! ensure that historic data is not changed
+p_scaleDemandIndTable(t,regi) $ ( p_scaleDemandIndTable(t,regi) le 0) = 1;  !! If no multiplier was entered or a negative value was entered, override by 1. (FE values <0 are not possible)
+p_scaleDemandIndTable(t,regi) $ (t.val > 2100 ) = p_scaleDemandIndTable("2100",regi); !! continue 2100 multiplier until end of time
+
+  loop( (t,regi,in) $ in_industry_dyn37(in) ,
+    pm_fedemand(t,regi,in) = pm_fedemand(t,regi,in) * p_scaleDemandIndTable(t,regi)
+  );
+$endif.scaleDemandIndTable
 
 *** initialize absolute deviation of global cumulated CO2 emissions budget from target budget
 sm_globalBudget_absDev = 0;
