@@ -1378,7 +1378,7 @@ $setglobal cm_netZeroScen  NGFS_v4     !! def = "NGFS_v4"  !! regexp = NGFS_v4|N
 *' *  c_regi_earlyreti_rate  "maximum percentage of capital stock that can be retired early (before reaching their expected lifetimes) in one year in specified regions, if they are not economically viable. It is applied to all techs unless otherwise specified in c_tech_earlyreti_rate."
 *' *  Default value used in NPi runs: EUR_regi 0.06, USA_regi 0.04, CHA_regi 0.04, CAZ_regi 0.04, JPN_regi 0.04, GLO 0.03 (0.06 means 6% of capacity can be retired early per year at maximum, i.e. full retirement after 16.7 years, 40% standing capacity after 10 years)
 *' *  In target scenarios with ambition level beyond the NPi, we assume slightly higher early retirement rates outside the EU.
-*' *  Target scenario maximum retirement rates: EUR_regi 0.06, USA_regi 0.06, CHA_regi 0.06, CAZ_regi 0.06,  JPN_regi 0.06, GLO 0.05
+*' *  Target scenario maximum retirement rates: EUR_regi 0.08, USA_regi 0.07, CHA_regi 0.07, CAZ_regi 0.07,  JPN_regi 0.07, GLO 0.06
 *' *  This reflects that the current aversion to shut down plants before end of their lifetime linked to political economy dynamics can be overcome to speed up the energy transition.
 *' *  Finally, note that these maximum early retirement rates are further differentiated by technology. Coal power has 20% higher rates, for instance, while CHP plants have 30% lower rates than the default value (see core/datainput.gms).
 $setglobal c_regi_earlyreti_rate  EUR_regi 0.06, USA_regi 0.04, CHA_regi 0.04, CAZ_regi 0.04, JPN_regi 0.04, GLO 0.03      !! def = EUR_regi 0.08, USA_regi 0.04, CHA_regi 0.04, CAZ_regi 0.04, JPN_regi 0.04, GLO 0.03
