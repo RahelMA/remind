@@ -401,7 +401,7 @@ $endif.tech_earlyreti
 *** restrict early retirement to time frame between 2015 and 2100 where it is relevant
 vm_capEarlyReti.up(ttot,regi,te) $ (ttot.val < 2010 or ttot.val > 2110) = 0;
 
-*** for all regions except US and EUR do not allow early retirement until 2035
+*** only US and EUR allow early retirement before 2035
 loop(regi$(NOT(regi_group("USA_regi",regi) or regi_group("EUR_regi",regi))),
   vm_capEarlyReti.up(t,regi,te) $ (t.val <= 2030) = 0;
 );
