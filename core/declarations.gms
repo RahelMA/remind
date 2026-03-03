@@ -317,6 +317,16 @@ $ifthen.scaleDemand not "%cm_scaleDemand%" == "off"
   pm_scaleDemand(tall,tall,all_regi)                 "Rescaling factor on final energy and usable energy demand, for selected regions and over a phase-in window." / %cm_scaleDemand% /
 $endif.scaleDemand
 
+$ifthen.scaleDemandBuildTable not "%cm_scaleDemandBuildTable%" == "off"
+*** FE demand rescaling parameters
+  pm_scaleDemandBuildTable(ttot, all_regi)                 "Rescaling factor on buildings final energy and usable energy demand, read-in from a table" 
+$endif.scaleDemandBuildTable
+
+$ifthen.scaleDemandIndTable not "%c_scaleDemandIndTable%" == "off"
+*** FE demand rescaling parameters
+  p_scaleDemandIndTable(ttot, all_regi)                 "Rescaling factor on industry final energy and usable energy demand, read-in from a table" 
+$endif.scaleDemandIndTable
+
 *** energy prices
 pm_FEPrice(ttot,all_regi,all_enty,sector,emiMkt)     "parameter to capture all FE prices across sectors and markets [tr$2005/TWa]"
 pm_FEPrice_iter(iteration,ttot,all_regi,all_enty,sector,emiMkt) "parameter to capture all FE prices across sectors and markets [tr$2005/TWa] across iterations"
