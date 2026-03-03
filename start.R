@@ -332,8 +332,7 @@ if (any(c("--reprepare", "--restart") %in% flags)) {
       cfg$gms$optimization <- "testOneRegi"
       cfg$output           <- NA
       cfg$results_folder   <- paste0("output/", cfg$title)
-      # delete existing Results directory
-      cfg$force_replace    <- TRUE
+      cfg$force_replace    <- TRUE # delete existing Results directory
       if (testOneRegi_region != "") cfg$gms$c_testOneRegi_region <- testOneRegi_region
     }
     if ("--quick" %in% flags) {
@@ -394,9 +393,7 @@ if (any(c("--reprepare", "--restart") %in% flags)) {
 
         # List available gdx files
         gdxFiles <- list.files(gdxFolder, pattern = "\\.gdx$", full.names = TRUE)
-        if (length(gdxFiles) == 0) {
-          nonStoppingError(abortText)
-        } else {
+        if (length(gdxFiles) > 0) { # length is zero when input data has not been collected yet and copying gdx is impossible
           # Prompt user to choose an existing gdx file
           gdxClosest <- gdxFiles[which.min(adist(basename(gdxConfig), basename(gdxFiles)))] # existing file with the closest name
           abortOption <- paste0(crayon::red("ABORT"), ": you will then need to copy the gdx of your choice manually")
@@ -582,8 +579,9 @@ if (any(c("--reprepare", "--restart") %in% flags)) {
         caldir <- "calibration_results/"
         if (cfg$gms$CES_parameters == "calibrate" && !dir.exists(caldir)) {
           if (0 == system("./scripts/utils/set-local-calibration.sh")) {
-            cfg$repositories <- append(cfg$repositories, setNames(list(NULL), normalizePath(caldir)))
             message("   Folder ", caldir, " has been automatically set up.")
+            cfg$repositories <- append(cfg$repositories, setNames(list(NULL), normalizePath(caldir)))
+            source(file.path(caldir, .Rprofile_calibration_results))
           } else {
             warning("   Could not set up ", caldir, " automatically. Please run 'make set-local-calibration' manually.")
           }
