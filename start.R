@@ -581,7 +581,7 @@ if (any(c("--reprepare", "--restart") %in% flags)) {
           if (0 == system("./scripts/utils/set-local-calibration.sh")) {
             message("   Folder ", caldir, " has been automatically set up.")
             cfg$repositories <- append(cfg$repositories, setNames(list(NULL), normalizePath(caldir)))
-            source(file.path(caldir, .Rprofile_calibration_results))
+            source(file.path(caldir, ".Rprofile_calibration_results"))
           } else {
             warning("   Could not set up ", caldir, " automatically. Please run 'make set-local-calibration' manually.")
           }
