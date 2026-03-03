@@ -1257,26 +1257,26 @@ $endif.cm_subsec_model_steel
 
 teEarlyReti(all_te)    "technologies for which early retirement of existing capacities is allowed (i.e. before end of technical lifetime)."
 /
-ngcc
-ngt
-gastr
-gaschp
-gashp
-gash2
-gasftrec
-refliq
-igcc
-pc
-coalchp
-coalhp
-coaltr
-coalgas
-coalftrec
-coalh2
-biochp
-biohp
-bioigcc
-tnrs
+    ngcc
+    ngt
+    gastr
+    gaschp
+    gashp
+    gash2
+    gasftrec
+    refliq
+    igcc
+    pc
+    coalchp
+    coalhp
+    coaltr
+    coalgas
+    coalftrec
+    coalh2
+    biochp
+    biohp
+    bioigcc
+    tnrs
 /
 
 *** Note: technologies without endogenous learning can also have decreasing (or increasing) capital cost over time, due to for example convergence to global value
