@@ -820,13 +820,13 @@ parameter
 *' *  (3): limited trade (certain percentage of permits)
 *'
 parameter
-  cm_permitTradeFinalYr        "Year until permit trading is allowed"
+  cm_permitTradeFinalYr        "[TradingOnRef] Year until permit trading is allowed"
 ;
   cm_permitTradeFinalYr  = 2100;         !! def = 2100
 *'  
 
 parameter
-  cm_permitTradeRatio        "Percentage of restricted permit trading"
+  cm_permitTradeRatio        "[TradingOnRef] Share of emissions allowed for permit trading between 0 and 1"
 ;
   cm_permitTradeRatio  = 0.2;         !! def = 0.2  
 *'
