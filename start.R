@@ -579,11 +579,13 @@ if (any(c("--reprepare", "--restart") %in% flags)) {
       errorsfound <- errorsfound + ! gcresult
     } else if (start_now) {
       if (errorsfound == 0) {
-        if (cfg$gms$CES_parameters == "calibrate" && !dir.exists("calibration_results")) {
+        caldir <- "calibration_results/"
+        if (cfg$gms$CES_parameters == "calibrate" && !dir.exists(caldir)) {
           if (0 == system("./scripts/utils/set-local-calibration.sh")) {
-            message("Folder calibration_results/ has been automatically set up.")
+            cfg$repositories <- append(cfg$repositories, setNames(list(NULL), normalizePath(caldir)))
+            message("   Folder ", caldir, " has been automatically set up.")
           } else {
-            warning("Could not set up calibration_results/ automatically. Please run 'make set-local-calibration' manually.")
+            warning("   Could not set up ", caldir, " automatically. Please run 'make set-local-calibration' manually.")
           }
         }
         submit(cfg)
