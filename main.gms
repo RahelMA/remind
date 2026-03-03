@@ -1409,11 +1409,17 @@ $setglobal cm_NPi_version  2025_cond    !! def = "2025_cond"  !! regexp = 2025_(
 *'  (ELEVATE2p3):     settings used for ELEVATE2p3 LTS and NDC-LTS scenario
 $setglobal cm_netZeroScen  NGFS_v4     !! def = "NGFS_v4"  !! regexp = NGFS_v4|NGFS_v4_20pc|ELEVATE2p3
 *' *  c_regi_earlyreti_rate  "maximum percentage of capital stock that can be retired early (before reaching their expected lifetimes) in one year in specified regions, if they are not economically viable. It is applied to all techs unless otherwise specified in c_tech_earlyreti_rate."
-*' *  GLO 0.09, EUR_regi 0.15: default value. (0.09 means full retirement after 11 years, 10% standing after 10 years)
-$setglobal c_regi_earlyreti_rate  GLO 0.09, EUR_regi 0.15      !! def = GLO 0.09, EUR_regi 0.15
+*' *  Default value used in NPi runs: EUR_regi 0.06, USA_regi 0.04, CHA_regi 0.04, CAZ_regi 0.04, JPN_regi 0.04, GLO 0.03 (0.06 means 6% of capacity can be retired early per year at maximum, i.e. full retirement after 16.7 years, 40% standing capacity after 10 years)
+*' *  In target scenarios with ambition level beyond the NPi, we assume slightly higher early retirement rates outside the EU.
+*' *  Target scenario maximum retirement rates: EUR_regi 0.08, USA_regi 0.07, CHA_regi 0.07, CAZ_regi 0.07,  JPN_regi 0.07, GLO 0.06
+*' *  This reflects that the current aversion to shut down plants before end of their lifetime linked to political economy dynamics can be overcome to speed up the energy transition.
+*' *  Finally, note that these maximum early retirement rates are further differentiated by technology. Coal power has 20% higher rates, for instance, while CHP plants have 30% lower rates than the default value (see core/datainput.gms).
+$setglobal c_regi_earlyreti_rate  EUR_regi 0.06, USA_regi 0.04, CHA_regi 0.04, CAZ_regi 0.04, JPN_regi 0.04, GLO 0.03      !! def = EUR_regi 0.06, USA_regi 0.04, CHA_regi 0.04, CAZ_regi 0.04, JPN_regi 0.04, GLO 0.03
 *' *  c_tech_earlyreti_rate  "maximum percentage of capital stock of specific technologies that can be retired early in one year in specified regions. This switch overrides c_regi_earlyreti_rate to allow for fine-tuning of phase-out schedules, e.g. for implementation of certain policies or anticipated trends."
-*' *  USA_regi.pc 0.13, REF_regi.pc 0.13, CHA_regi.pc 0.13: default value, including retirement of 1st gen biofuels, higher rate of coal phase-out for USA, REF and CHA
-$setglobal c_tech_earlyreti_rate  USA_regi.pc 0.13, REF_regi.pc 0.13, CHA_regi.pc 0.13 !! def = USA_regi.pc 0.13, REF_regi.pc 0.13, CHA_regi.pc 0.13
+*' *  Example use: USA_regi.pc 0.1, CHA_regi.pc 0.1: Change max retirement rates for coal power in US and China to 10%/yr.
+*' *  Keep value "off" if not needed.
+*' *  This switch only changes the retirement rates strictly before the year specified in c_earlyRetiValidYr (default 2035).
+$setglobal c_tech_earlyreti_rate  off !! def = off
 *** cm_LU_emi_scen   "choose emission baseline for CO2, CH4, and N2O land use emissions from MAgPIE"
 ***  (SSP1): emissions (from SSP1 scenario in MAgPIE)
 ***  (SSP2): emissions (from SSP2 scenario in MAgPIE)
