@@ -768,16 +768,36 @@ pm_cf(ttot,regi,"tdh2i") = pm_cf(ttot,regi,"tdh2s");
 loop(ext_regi$pm_extRegiEarlyRetiRate(ext_regi),
   pm_regiEarlyRetiRate(t,regi,te)$(regi_group(ext_regi,regi)) = pm_extRegiEarlyRetiRate(ext_regi);
 );
-***Tech-specific*
-*RP*: reduce early retirement for technologies with additional characteristics that are difficult to represent in REMIND, eg. industries built around heating/CHP plants, or flexibility from ngt plants
+
+
+*** for runs with all EU subregions (regionmapping21_EU21), increase early retirement rates for the EU regions
+*** because the higher regional resolution already introduces more intertia to the phase-out dynamics
+*** check whether DEU, FRA, ENC, ESC, ESW, ECS all contained in regi set
+if(       (sum(regi$sameas(regi,"DEU"),1) > 0)
+      and (sum(regi$sameas(regi,"FRA"),1) > 0)
+      and (sum(regi$sameas(regi,"ENC"),1) > 0)
+      and (sum(regi$sameas(regi,"ESC"),1) > 0)
+      and (sum(regi$sameas(regi,"ESW"),1) > 0)
+      and (sum(regi$sameas(regi,"ECS"),1) > 0),
+*** increase default early retirement rates by 2%/yr for EU subregions
+  loop(regi$regi_group("EUR_regi",regi),
+    pm_regiEarlyRetiRate(t,regi,te) = pm_regiEarlyRetiRate(t,regi,te) + 0.02
+  );
+);
+
+
+*** Technology-specific adaptations of maximum allowed annual early retirement rates
+*** increase early retirement for technologies that are old and should be phased out faster
+pm_regiEarlyRetiRate(t,regi,"pc")      = 1.2 * pm_regiEarlyRetiRate(t,regi,"pc");       !! standard coal power plants, pc, are a relatively old technology that should be allowed to retire faster
+*** reduce early retirement for technologies with additional characteristics that are difficult to represent in REMIND, eg. industries built around heating/CHP plants, or flexibility from ngt plants
 pm_regiEarlyRetiRate(t,regi,"ngt")     = 0.3 * pm_regiEarlyRetiRate(t,regi,"ngt");      !! ngt should only be phased out very slowly, as they provide flexibility - which REMIND is not too good at capturing endogeneously
-pm_regiEarlyRetiRate(t,regi,"gaschp")  = 0.5 * pm_regiEarlyRetiRate(t,regi,"gaschp");   !! chp should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
-pm_regiEarlyRetiRate(t,regi,"coalchp") = 0.5 * pm_regiEarlyRetiRate(t,regi,"coalchp");  !! chp should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
-pm_regiEarlyRetiRate(t,regi,"gashp")   = 0.5 * pm_regiEarlyRetiRate(t,regi,"gashp");    !! chp should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
-pm_regiEarlyRetiRate(t,regi,"coalhp")  = 0.5 * pm_regiEarlyRetiRate(t,regi,"coalhp");   !! chp should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
-pm_regiEarlyRetiRate(t,regi,"biohp")   = 0.25 * pm_regiEarlyRetiRate(t,regi,"biohp");   !! chp should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
-pm_regiEarlyRetiRate(t,regi,"biochp")  = 0.25 * pm_regiEarlyRetiRate(t,regi,"biochp");  !! chp should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
-pm_regiEarlyRetiRate(t,regi,"bioigcc") = 0.25 * pm_regiEarlyRetiRate(t,regi,"bioigcc"); !! reduce bio early retirement rate
+pm_regiEarlyRetiRate(t,regi,"gaschp")  = 0.7 * pm_regiEarlyRetiRate(t,regi,"gaschp");   !! chp should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
+pm_regiEarlyRetiRate(t,regi,"coalchp") = 0.7 * pm_regiEarlyRetiRate(t,regi,"coalchp");  !! chp should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
+pm_regiEarlyRetiRate(t,regi,"gashp")   = 0.5 * pm_regiEarlyRetiRate(t,regi,"gashp");    !! district heating plants should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
+pm_regiEarlyRetiRate(t,regi,"coalhp")  = 0.5 * pm_regiEarlyRetiRate(t,regi,"coalhp");   !! district heating plants should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
+pm_regiEarlyRetiRate(t,regi,"biohp")   = 0.25 * pm_regiEarlyRetiRate(t,regi,"biohp");   !! biomass technologies should only be phased-out slowly, case for their early retirement is shifting the allocation of biomass across technologies to optimize biogenic carbon capture/use
+pm_regiEarlyRetiRate(t,regi,"biochp")  = 0.25 * pm_regiEarlyRetiRate(t,regi,"biochp");  !! biomass technologies should only be phased-out slowly, case for their early retirement is shifting the allocation of biomass across technologies to optimize biogenic carbon capture/use
+pm_regiEarlyRetiRate(t,regi,"bioigcc") = 0.25 * pm_regiEarlyRetiRate(t,regi,"bioigcc"); !! biomass technologies should only be phased-out slowly, case for their early retirement is shifting the allocation of biomass across technologies to optimize biogenic carbon capture/use
 
 $ifthen.tech_earlyreti not "%c_tech_earlyreti_rate%" == "off"
 loop((ext_regi,te)$p_techEarlyRetiRate(ext_regi,te),
@@ -1222,7 +1242,7 @@ loop(ttot$(ttot.val ge 2005),
   p_adj_seed_te(ttot,regi,"geohdr")     = 0.1;
   p_adj_seed_te(ttot,regi,"hydro")      = 0.25;
   p_adj_seed_te(ttot,regi,"windoff")    = 0.5;
-  p_adj_seed_te(ttot,regi,"spv")        = 2.00;
+  p_adj_seed_te(ttot,regi,"spv")        = 1.5;
   p_adj_seed_te(ttot,regi,"csp")        = 0.25;
   p_adj_seed_te(ttot,regi,"tnrs")       = 0.25;
 *** green hydrogen and synthetic fuels
@@ -1269,7 +1289,7 @@ $endif.cm_subsec_model_steel
   p_adj_coeff(ttot,regi,"hydro")        = 1.0;
   p_adj_coeff(ttot,regi,"windon")       = 0.25;
   p_adj_coeff(ttot,regi,"windoff")      = 0.35;
-  p_adj_coeff(ttot,regi,"spv")          = 0.15;
+  p_adj_coeff(ttot,regi,"spv")          = 0.18;
   p_adj_coeff(ttot,regi,"tnrs")         = 1.0;
 *** VRE storage and grid
   p_adj_coeff(ttot,regi,teGrid)         = 0.3;

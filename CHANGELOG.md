@@ -36,6 +36,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     [#2249](https://github.com/remindmodel/remind/pull/2249)
 - **45_carbonprice** update NDC realization to run 2030+2035 NDC emissions targets by default and clean up and extend on switches for NDC variants
     [[#2289](https://github.com/remindmodel/remind/pull/2289)]
+- **core** Adapt maximum early retirement rates and differentiate between NPi and policy runs 
+    [[#2300](https://github.com/remindmodel/remind/pull/2300)]
 
 ### removed
 - **21_tax** remove input files with upper bounds on subsidies for final energy, as it is directly applied as part of input data generation
