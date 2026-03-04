@@ -361,8 +361,20 @@ p_inco0(ttot,regi,teRegTechCosts)  = (1 + p_tkpremused(regi,teRegTechCosts) ) * 
 fm_dataglob("inco0",te)      = (1 + sum(regi, p_tkpremused(regi,te)) / card(regi)) * fm_dataglob("inco0",te);
 fm_dataglob("floorcost",te)  = (1 + sum(regi, p_tkpremused(regi,te)) / card(regi)) * fm_dataglob("floorcost",te);
 
+*** In case regionally differentiated investment costs should be used the corresponding entries are revised:
+$ifthen.REG_techcosts not "%cm_techcosts%" == "GLO"   !! cm_techcosts is REG or REG2040
+*** calculate regional floor costs for learning technologies from ratio of global values
+*** take the ratio of the global floorcost to global initial cost, and multiply with the new regional cost to get new floorcost that should create reasonable learning paths around 2020
+    pm_data(regi,"floorcost",teLearn(te))$(teRegTechCosts(te) ) = p_inco0("2015",regi,te) * fm_dataglob("floorcost",te) / fm_dataglob("inco0",te);
+    pm_data(regi,"floorcost","spv") = p_inco0("2020",regi,"spv") * fm_dataglob("floorcost","spv") / fm_dataglob("inco0","spv") ; !! 2020 values are available for PV
+
+    pm_data(regi,"inco0",teRegTechCosts) = p_inco0("2015",regi,teRegTechCosts);
+    pm_data(regi,"inco0","spv")          = p_inco0("2020",regi,"spv");
+$endif.REG_techcosts
+
 *** ====================== floor cost scenarios ===========================
 *** report old floor costs pre manipulation in non-default scenario
+*** (placed after REG_techcosts block so multipliers are applied on top of regionalized base costs)
 $ifthen.floorscen not %cm_floorCostScen% == "default"
     p_oldFloorCostdata(regi,teLearn(te)) = pm_data(regi,"floorcost",te);
 $endif.floorscen
@@ -392,17 +404,6 @@ $ifthen.floorscen %cm_floorCostScen% == "gdpBased"
     pm_data(regi,"floorcost",teLearn(te)) =
          p_oldFloorCostdata(regi,te) * (1.5 - 1 / (1 + exp(-4 * (p_GDPpCap2050_world  / (p_GDPpCap2050(regi) + sm_eps) - 1))));
 $endif.floorscen
-
-*** In case regionally differentiated investment costs should be used the corresponding entries are revised:
-$ifthen.REG_techcosts not "%cm_techcosts%" == "GLO"   !! cm_techcosts is REG or REG2040
-*** calculate regional floor costs for learning technologies from ratio of global values
-*** take the ratio of the global floorcost to global initial cost, and multiply with the new regional cost to get new floorcost that should create reasonable learning paths around 2020
-    pm_data(regi,"floorcost",teLearn(te))$(teRegTechCosts(te) ) = p_inco0("2015",regi,te) * fm_dataglob("floorcost",te) / fm_dataglob("inco0",te);
-    pm_data(regi,"floorcost","spv") = p_inco0("2020",regi,"spv") * fm_dataglob("floorcost","spv") / fm_dataglob("inco0","spv") ; !! 2020 values are available for PV
-
-    pm_data(regi,"inco0",teRegTechCosts) = p_inco0("2015",regi,teRegTechCosts);
-    pm_data(regi,"inco0","spv")          = p_inco0("2020",regi,"spv");
-$endif.REG_techcosts
 
 *** -------------------------------------------------------------------------------
 *** Calculate learning parameters
