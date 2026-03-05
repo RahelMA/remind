@@ -43,7 +43,7 @@ pm_taxCO2eq_anchor_iterationdiff(ttot)               "difference in global ancho
 pm_cesdata(tall,all_regi,all_in,cesParameter)        "parameters of the CES function: efficiency parameters (xi, eff, effgr) [unitless], target quantities of CES calibration (quantity) [unit of CES node, see set all_in], CES prices resulting from calibration (price) [T$/unit of CES node]"
 f_pop(tall,all_regi,all_GDPpopScen)                  "population data for all possible scenarios [million people]"
 pm_pop(tall,all_regi)                                "population data [bn people]"
-pm_gdp(tall,all_regi)                                "GDP data [trn US$ 2005]"
+pm_gdp(tall,all_regi)                                "GDP MER data [trn US$ 2005]"
 p_developmentState(tall,all_regi)                    "level of development based on GDP per capita, 0 is low income, 1 is high income"
 f_lab(tall,all_regi,all_GDPpopScen)                  "labour data for all possible scenarios [million people]"
 pm_lab(tall,all_regi)                                "data for labour [bn people]"
@@ -217,8 +217,8 @@ p_oldFloorCostdata(all_regi,all_te)                  "print old floor cost data 
 pm_tsu2opTimeYr(ttot,opTimeYr)                       "auxiliary parameter to map time steps to past time steps: counts the number of model timesteps between years ttot-opTimeYr and ttot, used for q_transPe2se and q_cap equations [unitless]" 
 
 *** parameters used for endogenous technology learning implementation
-pm_capCum0(tall,all_regi,all_te)                     "Total cumulated capacity of learning technologies from last iteration used for learning curves based on vm_capCum[TW]"
-p_capCum(tall, all_regi,all_te)                      "Total cumulated capacity of learning technologies from input.gdx used for learning curves based on vm_capCum[TW]"
+pm_capCum0(tall,all_regi,all_te)                     "Total cumulated capacity of learning technologies from last iteration used for learning curves based on vm_capCum [TW]"
+p_capCum(tall, all_regi,all_te)                      "Total cumulated capacity of learning technologies from input.gdx used for learning curves based on vm_capCum [TW]"
 pm_capCumForeign(ttot,all_regi,all_te)               "Total cumulated capacity of learning technologies of all other regions except regi [TW]"
 
 *** early retirement parameters
@@ -624,7 +624,7 @@ sm_trillion_2_non            "trillion to non"                         /1e+12/,
 
 *** energy units
 pm_conv_TWa_EJ               "conversion from TWa to EJ"                          /31.536/,
-s_zj_2_twa                   "zeta joule to tw year"                              /31.7098/,
+s_ZJ_2_TWa                   "multiplicative factor to convert from ZJ to TWa"    /31.71/,
 sm_EJ_2_TWa                  "multiplicative factor to convert from EJ to TWa"    /31.71e-03/,
 sm_GJ_2_TWa                  "multiplicative factor to convert from GJ to TWa"    /31.71e-12/,
 sm_TWa_2_TWh                 "tera Watt year to Tera Watt hour"                    /8.76e+3/,
@@ -702,5 +702,13 @@ $endif
 *** calculate further conversion factors for emissions
 sm_tgn_2_pgc = (44/28) * s_gwpN2O * (12/44) * 0.001;
 sm_tgch4_2_pgc = s_gwpCH4 * (12/44) * 0.001;
+
+
+*** ------------ Macro functions ---------------
+*** Define macros that can be used as functions throughout the model code.
+*** This is especially useful for more complex expressions that are used in multiple places, to avoid code duplication and to ensure consistency.
+
+*** Linear interpolation between two values x0 and x1 at time points t0 and t1 for an intermediate time point t
+$macro macro_interpolate(t,t0,t1,x0,x1) ( ((t1) - (t)) / ((t1) - (t0)) * (x0) + ((t) - (t0)) / ((t1) - (t0)) * (x1) )
 
 *** EOF ./core/declarations.gms
