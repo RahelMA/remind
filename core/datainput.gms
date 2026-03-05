@@ -486,7 +486,7 @@ $ifthen.REG_techcosts "%cm_techcosts%" == "REG"   !! cm_techcosts REG
 
 *** re-insert effect of costMarkupAdvTech for IGCC in the regionalized cost
 *** data, as the IEA numbers have unrealistically low IGCC costs in 2005-2020
-  loop(s_statusTe $ (s_statusTe.val = pm_data(regi,"tech_stat","igcc")),
+  loop((regi,s_statusTe) $ (s_statusTe.val = pm_data(regi,"tech_stat","igcc")),
     pm_inco0_t(ttot,regi,"igcc") $ (ttot.val >= 2005 and ttot.val <= 2030)
       = p_costMarkupAdvTech(s_statusTe,ttot) * pm_inco0_t(ttot,regi,"igcc");
   );
