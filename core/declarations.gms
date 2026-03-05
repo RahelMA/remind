@@ -623,19 +623,18 @@ sm_giga_2_non                "giga to non"                             /1e+9/,
 sm_trillion_2_non            "trillion to non"                         /1e+12/,
 
 *** energy units
-pm_conv_TWa_EJ               "conversion from TWa to EJ"                          /31.536/,
-s_ZJ_2_TWa                   "multiplicative factor to convert from ZJ to TWa"    /31.71/,
-sm_EJ_2_TWa                  "multiplicative factor to convert from EJ to TWa"    /31.71e-03/,
-sm_GJ_2_TWa                  "multiplicative factor to convert from GJ to TWa"    /31.71e-12/,
+s_ZJ_2_TWa                   "multiplicative factor to convert from ZJ to TWa"     /31.71/,
+sm_EJ_2_TWa                  "multiplicative factor to convert from EJ to TWa"     /31.71e-03/,
+sm_GJ_2_TWa                  "multiplicative factor to convert from GJ to TWa"     /31.71e-12/,
+sm_TWa_2_EJ                  "multiplicative factor to convert from TWa to EJ"     /31.54/,
 sm_TWa_2_TWh                 "tera Watt year to Tera Watt hour"                    /8.76e+3/,
 sm_TWa_2_MWh                 "tera Watt year to Mega Watt hour"                    /8.76e+9/,
 sm_TWa_2_kWh                 "tera Watt year to kilo Watt hour"                    /8.76e+12/,
 sm_h2kg_2_h2kWh              "convert kilogramme of hydrogen to kwh energy value." /32.5/,
-sm_DptCO2_2_TDpGtC           "Conversion multiplier to go from $/tCO2 to T$/GtC: 44/12/1000"     /0.00366667/,
-sm_tBC_2_TWa                  "t biochar to TWa biochar (28700 [MJ/tBC]*10^-12[EJ/MJ]/31.536[EJ/TWa])" /9.101e-10/,
+sm_tBC_2_TWa                 "t biochar to TWa biochar (28700 [MJ/tBC]*10^-12[EJ/MJ]/31.536[EJ/TWa])" /9.101e-10/,
 
 *** emissions units
-sm_c_2_co2                   "conversion from c to co2"                /3.666666666667/,
+sm_c_2_co2                   "conversion from c to co2"                /3.66667/,
 s_NO2_2_N                    "convert NO2 to N [14 / (14 + 2 * 16)]"   / .304 /
 sm_tgn_2_pgc                 "conversion factor 100-yr GWP from TgN to PgCeq"
 sm_tgch4_2_pgc               "conversion factor 100-yr GWP from TgCH4 to PgCeq"
@@ -647,11 +646,12 @@ s_gwpCH4_AR4                 "Global Warming Potentials of CH4 as in the AR4, us
 s_gwpN2O_AR4                 "Global Warming Potentials of N2O as in the AR4, used in the MACCs"     /298/
 
 *** monetary units
+sm_DptCO2_2_TDpGtC           "Convert from $/tCO2 to T$/GtC: 44/12/1000" /0.00366667/,
 s_DpKWa_2_TDpTWa             "convert Dollar per kWa to TeraDollar per TeraWattYear"       /0.001/
 s_DpKW_2_TDpTW               "convert Dollar per kW to TeraDollar per TeraWatt"            /0.001/
 sm_DpGJ_2_TDpTWa             "multipl. factor to convert (Dollar per GJoule) to (TerraDollar per TWyear)"    / 31.54e-03/
 s_D2010_2_D2017              "Convert US$2010 to US$2017"      /1.1491/
-sm_D2015_2_D2017              "Convert US$2015 to US$2017"      /1.0292/
+sm_D2015_2_D2017             "Convert US$2015 to US$2017"      /1.0292/
 sm_D2005_2_D2017             "Convert US$2005 to US$2017"      /1.231/
 sm_D2020_2_D2017             "Convert US$2020 to US$2017"      /0.9469/
 sm_EURO2023_2_D2017          "Convert EURO 2023 to US$2017"    /0.8915/
