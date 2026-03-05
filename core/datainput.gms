@@ -381,7 +381,7 @@ $endif.floorscen
 $ifthen.floorscen %cm_floorCostScen% == "pricestruc"
 *** Floor costs based on current price structure: for selected technologie, floor cost follows the historical price structure across regions.
 *** Between two regions, the ratio of their floor costs will match the ratio of their most recent available historical costs:
-  pm_data(regi,"floorcost",te) $ (te(teRegTechCosts) and te(teLearn)) = fm_dataglob("floorcost",te) * p_inco0("2015",regi,te) / fm_dataglob("inco0",te);
+  pm_data(regi,"floorcost",te) $ (teRegTechCosts(te) and teLearn(te)) = fm_dataglob("floorcost",te) * p_inco0("2015",regi,te) / fm_dataglob("inco0",te);
   pm_data(regi,"floorcost",te) $ sameAs(te, "spv")                    = fm_dataglob("floorcost",te) * p_inco0("2020",regi,te) / fm_dataglob("inco0",te);
 $endif.floorscen
 
