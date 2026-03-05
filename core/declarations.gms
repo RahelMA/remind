@@ -623,18 +623,20 @@ sm_giga_2_non                "giga to non"                             /1e+9/,
 sm_trillion_2_non            "trillion to non"                         /1e+12/,
 
 *** energy units
-s_ZJ_2_TWa                   "multiplicative factor to convert from ZJ to TWa"     /31.71/,
-sm_EJ_2_TWa                  "multiplicative factor to convert from EJ to TWa"     /31.71e-03/,
-sm_GJ_2_TWa                  "multiplicative factor to convert from GJ to TWa"     /31.71e-12/,
-sm_TWa_2_EJ                  "multiplicative factor to convert from TWa to EJ"     /31.54/,
-sm_TWa_2_TWh                 "tera Watt year to Tera Watt hour"                    /8.76e+3/,
-sm_TWa_2_MWh                 "tera Watt year to Mega Watt hour"                    /8.76e+9/,
-sm_TWa_2_kWh                 "tera Watt year to kilo Watt hour"                    /8.76e+12/,
-sm_h2kg_2_h2kWh              "convert kilogramme of hydrogen to kwh energy value." /32.5/,
+s_ZJ_2_TWa                   "convert from Zeta Joule to Tera Watt annum"   /31.71/,
+sm_EJ_2_TWa                  "convert from Exa Joule to Tera Watt annum"    /31.71e-03/,
+sm_GJ_2_TWa                  "convert from Giga Joule to Tera Watt annum"   /31.71e-12/,
+sm_TWa_2_EJ                  "convert from Tera Watt annum to Exa Joule"    /31.54/,
+sm_DpGJ_2_TDpTWa             "convert $/GJ to T$/TWa"                       /31.54e-03/
+sm_TWa_2_TWh                 "convert Tera Watt annum to Tera Wh"           /8.76e+3/,
+sm_TWa_2_MWh                 "convert Tera Watt annum to Mega Wh"           /8.76e+9/,
+sm_TWa_2_kWh                 "convert Tera Watt annum to kilo Wh"           /8.76e+12/,
+sm_h2kg_2_h2kWh              "convert kg of hydrogen to kWh energy value"   /32.5/,
 sm_tBC_2_TWa                 "t biochar to TWa biochar (28700 [MJ/tBC]*10^-12[EJ/MJ]/31.536[EJ/TWa])" /9.101e-10/,
 
 *** emissions units
-sm_c_2_co2                   "conversion from c to co2"                /3.66667/,
+sm_c_2_co2                   "convert mass from carbon to CO2 (44/12)" /3.66667/,
+sm_DptCO2_2_TDpGtC           "convert $/tCO2 to T$/GtC: 44/12/1000"    /0.00366667/,
 s_NO2_2_N                    "convert NO2 to N [14 / (14 + 2 * 16)]"   / .304 /
 sm_tgn_2_pgc                 "conversion factor 100-yr GWP from TgN to PgCeq"
 sm_tgch4_2_pgc               "conversion factor 100-yr GWP from TgCH4 to PgCeq"
@@ -646,10 +648,8 @@ s_gwpCH4_AR4                 "Global Warming Potentials of CH4 as in the AR4, us
 s_gwpN2O_AR4                 "Global Warming Potentials of N2O as in the AR4, used in the MACCs"     /298/
 
 *** monetary units
-sm_DptCO2_2_TDpGtC           "Convert from $/tCO2 to T$/GtC: 44/12/1000" /0.00366667/,
-s_DpKWa_2_TDpTWa             "convert Dollar per kWa to TeraDollar per TeraWattYear"       /0.001/
-s_DpKW_2_TDpTW               "convert Dollar per kW to TeraDollar per TeraWatt"            /0.001/
-sm_DpGJ_2_TDpTWa             "multipl. factor to convert (Dollar per GJoule) to (TerraDollar per TWyear)"    / 31.54e-03/
+s_DpKWa_2_TDpTWa             "convert Dollar per kWa to Tera Dollar per TWa" /0.001/
+s_DpKW_2_TDpTW               "convert Dollar per kW to Tera Dollar per TW"   /0.001/
 s_D2010_2_D2017              "Convert US$2010 to US$2017"      /1.1491/
 sm_D2015_2_D2017             "Convert US$2015 to US$2017"      /1.0292/
 sm_D2005_2_D2017             "Convert US$2005 to US$2017"      /1.231/
