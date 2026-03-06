@@ -8,6 +8,10 @@
 prepare <- function() {
 
   timePrepareStart <- Sys.time()
+  # Record the time when the preparation starts in runtime.log
+  # The content of this file will be added to runstatistics.rda at the end.
+  cat("Saving timePrepareStart to runtime.log\n")
+  write(paste(Sys.time(), "prepare", 0, sep = ","), file = "runtime.log")
 
   # Load libraries
   #require(lucode, quietly = TRUE,warn.conflicts =FALSE)
@@ -105,17 +109,6 @@ prepare <- function() {
     create_input_for_50_damage_exogenous(as.character(cfg$files2export$start["input_damage.gdx"]))
   }
 
-  # If a path to a MAgPIE report is supplied use it as REMIND input (used for REMIND-MAgPIE coupling)
-  # ATTENTION: modifying gms files
-  if (!is.null(cfg$pathToMagpieReport)) {
-    getReportData(
-      path_to_report = cfg$pathToMagpieReport,
-      inputpath_mag  = cfg$gms$biomass,
-      inputpath_acc  = cfg$gms$agCosts,
-      var_luc        = cfg$var_luc
-    )
-  }
-
   # Update module paths in GAMS code
   update_modules_embedding()
 
@@ -189,13 +182,16 @@ prepare <- function() {
   replace_in_file('core/sets.gms',content,"MODULES",comment="***")
   ### ADD MODULE INFO IN SETS  ############# END #########
 
-  # copy right gdx file to the output folder
-  gdx_name <- paste0("config/gdx-files/",cfg$gms$cm_CES_configuration,".gdx")
-  if (0 != system(paste('cp', gdx_name,
-			file.path(cfg$results_folder, 'input.gdx')))) {
-    stop('Could not copy gdx file ', gdx_name)
-  } else {
-    message('Copied ', gdx_name, ' to input.gdx')
+  # Retrieve appropriate gdx file
+  gdxConfig <- paste0("config/gdx-files/", cfg$gms$cm_CES_configuration, ".gdx")
+  gdxInput <- file.path(cfg$results_folder, "input.gdx")
+  if (file.copy(gdxConfig, gdxInput)) {
+    message("Copied: ", gdxConfig, "\n    to: ", gdxInput)
+  } else  {
+    stop(ifelse (cfg$gms$CES_parameters == "calibrate",
+        "Calibration requires a starting gdx; please copy the gdx file with the closest configuration and paste it to:",
+        "Could not find gdx file:"),
+      "\n    ", gdxConfig, "\n\n")
   }
 
   # choose which conopt files to copy

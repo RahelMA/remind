@@ -161,7 +161,7 @@ fm_dataglob("learn", te)$(sameAs(te, "biopyronly") OR sameAs(te, "biopyrhe") OR
 $ifthen.c_techAssumptScen "%c_techAssumptScen%" == "SSP1"
 *** hampers technologies with CCS or FT
 *** TODO: add industry ccs technologies bfcc and idrcc
-    loop(te $ (teCCS(te) or teFischerTropsch(te) or sameas(te,"ccsinje")),
+    loop(te $ (teCCS(te) or teFischerTropsch(te) or teccsinje(te)),  !! DKX: assumptions correct?
         fm_dataglob("inco0",te) =        1.3 * fm_dataglob("inco0",te);
     );
 *** hampers nuclear a lot
@@ -212,7 +212,7 @@ $elseif.c_techAssumptScen "%c_techAssumptScen%" == "SSP3"
 
 $elseif.c_techAssumptScen "%c_techAssumptScen%" == "SSP5"
 *** favours technologies with CCS or FT
-    loop(te $ (teCCS(te) or teFischerTropsch(te) or sameas(te,"ccsinje")),
+    loop(te $ (teCCS(te) or teFischerTropsch(te) or teccsinje(te)), !! DKX: assumptions correct?
         fm_dataglob("inco0",te) =        0.9 * fm_dataglob("inco0",te);
     );
 *** hampers nuclear
@@ -240,12 +240,16 @@ $endif.c_techAssumptScen
 ***---------------------------------------------------------------------------
 *** cm_ccsinjeCost cost scenarios
 *** Warning: it applies absolute values; only use it in combination with default c_techAssumptScen SSP2. 
-*** low estimate: ccsinje cost prior to 03/2024; i.e. ~11 USD/tCO2 in 2025, decreasing to ~7.5USD/tCO2 as of 2035
-$if "%cm_ccsinjeCost%" == "low" fm_dataglob("tech_stat","ccsinje") = 2;
-$if "%cm_ccsinjeCost%" == "low" fm_dataglob("inco0","ccsinje") = 220;
-$if "%cm_ccsinjeCost%" == "low" fm_dataglob("constrTme","ccsinje") = 0;
+*** low estimate: ccsinjeon cost prior to 03/2024; i.e. ~11 USD/tCO2 in 2025, decreasing to ~7.5USD/tCO2 as of 2035
+$if "%cm_ccsinjeCost%" == "low" fm_dataglob("tech_stat","ccsinjeon") = 2;
+$if "%cm_ccsinjeCost%" == "low" fm_dataglob("inco0","ccsinjeon") = 220;  
+$if "%cm_ccsinjeCost%" == "low" fm_dataglob("constrTme","ccsinjeon") = 0;
+$if "%cm_ccsinjeCost%" == "low" fm_dataglob("tech_stat","ccsinjeoff") = 2;      !! DKX: assumptions
+$if "%cm_ccsinjeCost%" == "low" fm_dataglob("inco0","ccsinjeoff") = 330;        !! DKX: assumptions
+$if "%cm_ccsinjeCost%" == "low" fm_dataglob("constrTme","ccsinjeoff") = 0;      !! DKX: assumptions
 *** high estimate: ~20USD/tCO2 (constant), assuming upper end of storage cost and long transport distances
-$if "%cm_ccsinjeCost%" == "high" fm_dataglob("inco0","ccsinje") = 550;
+$if "%cm_ccsinjeCost%" == "high" fm_dataglob("inco0","ccsinjeon")  = 550;
+$if "%cm_ccsinjeCost%" == "high" fm_dataglob("inco0","ccsinjeoff") = 825;       !! DKX: assumptions
 
 
 *** cm_VRE_supply_assumptions: Modify learning and floor costs for electricity storage and production of VRE
@@ -764,16 +768,36 @@ pm_cf(ttot,regi,"tdh2i") = pm_cf(ttot,regi,"tdh2s");
 loop(ext_regi$pm_extRegiEarlyRetiRate(ext_regi),
   pm_regiEarlyRetiRate(t,regi,te)$(regi_group(ext_regi,regi)) = pm_extRegiEarlyRetiRate(ext_regi);
 );
-***Tech-specific*
-*RP*: reduce early retirement for technologies with additional characteristics that are difficult to represent in REMIND, eg. industries built around heating/CHP plants, or flexibility from ngt plants
+
+
+*** for runs with all EU subregions (regionmapping21_EU21), increase early retirement rates for the EU regions
+*** because the higher regional resolution already introduces more intertia to the phase-out dynamics
+*** check whether DEU, FRA, ENC, ESC, ESW, ECS all contained in regi set
+if(       (sum(regi$sameas(regi,"DEU"),1) > 0)
+      and (sum(regi$sameas(regi,"FRA"),1) > 0)
+      and (sum(regi$sameas(regi,"ENC"),1) > 0)
+      and (sum(regi$sameas(regi,"ESC"),1) > 0)
+      and (sum(regi$sameas(regi,"ESW"),1) > 0)
+      and (sum(regi$sameas(regi,"ECS"),1) > 0),
+*** increase default early retirement rates by 2%/yr for EU subregions
+  loop(regi$regi_group("EUR_regi",regi),
+    pm_regiEarlyRetiRate(t,regi,te) = pm_regiEarlyRetiRate(t,regi,te) + 0.02
+  );
+);
+
+
+*** Technology-specific adaptations of maximum allowed annual early retirement rates
+*** increase early retirement for technologies that are old and should be phased out faster
+pm_regiEarlyRetiRate(t,regi,"pc")      = 1.2 * pm_regiEarlyRetiRate(t,regi,"pc");       !! standard coal power plants, pc, are a relatively old technology that should be allowed to retire faster
+*** reduce early retirement for technologies with additional characteristics that are difficult to represent in REMIND, eg. industries built around heating/CHP plants, or flexibility from ngt plants
 pm_regiEarlyRetiRate(t,regi,"ngt")     = 0.3 * pm_regiEarlyRetiRate(t,regi,"ngt");      !! ngt should only be phased out very slowly, as they provide flexibility - which REMIND is not too good at capturing endogeneously
-pm_regiEarlyRetiRate(t,regi,"gaschp")  = 0.5 * pm_regiEarlyRetiRate(t,regi,"gaschp");   !! chp should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
-pm_regiEarlyRetiRate(t,regi,"coalchp") = 0.5 * pm_regiEarlyRetiRate(t,regi,"coalchp");  !! chp should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
-pm_regiEarlyRetiRate(t,regi,"gashp")   = 0.5 * pm_regiEarlyRetiRate(t,regi,"gashp");    !! chp should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
-pm_regiEarlyRetiRate(t,regi,"coalhp")  = 0.5 * pm_regiEarlyRetiRate(t,regi,"coalhp");   !! chp should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
-pm_regiEarlyRetiRate(t,regi,"biohp")   = 0.25 * pm_regiEarlyRetiRate(t,regi,"biohp");   !! chp should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
-pm_regiEarlyRetiRate(t,regi,"biochp")  = 0.25 * pm_regiEarlyRetiRate(t,regi,"biochp");  !! chp should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
-pm_regiEarlyRetiRate(t,regi,"bioigcc") = 0.25 * pm_regiEarlyRetiRate(t,regi,"bioigcc"); !! reduce bio early retirement rate
+pm_regiEarlyRetiRate(t,regi,"gaschp")  = 0.7 * pm_regiEarlyRetiRate(t,regi,"gaschp");   !! chp should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
+pm_regiEarlyRetiRate(t,regi,"coalchp") = 0.7 * pm_regiEarlyRetiRate(t,regi,"coalchp");  !! chp should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
+pm_regiEarlyRetiRate(t,regi,"gashp")   = 0.5 * pm_regiEarlyRetiRate(t,regi,"gashp");    !! district heating plants should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
+pm_regiEarlyRetiRate(t,regi,"coalhp")  = 0.5 * pm_regiEarlyRetiRate(t,regi,"coalhp");   !! district heating plants should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
+pm_regiEarlyRetiRate(t,regi,"biohp")   = 0.25 * pm_regiEarlyRetiRate(t,regi,"biohp");   !! biomass technologies should only be phased-out slowly, case for their early retirement is shifting the allocation of biomass across technologies to optimize biogenic carbon capture/use
+pm_regiEarlyRetiRate(t,regi,"biochp")  = 0.25 * pm_regiEarlyRetiRate(t,regi,"biochp");  !! biomass technologies should only be phased-out slowly, case for their early retirement is shifting the allocation of biomass across technologies to optimize biogenic carbon capture/use
+pm_regiEarlyRetiRate(t,regi,"bioigcc") = 0.25 * pm_regiEarlyRetiRate(t,regi,"bioigcc"); !! biomass technologies should only be phased-out slowly, case for their early retirement is shifting the allocation of biomass across technologies to optimize biogenic carbon capture/use
 
 $ifthen.tech_earlyreti not "%c_tech_earlyreti_rate%" == "off"
 loop((ext_regi,te)$p_techEarlyRetiRate(ext_regi,te),
@@ -994,10 +1018,8 @@ $if %cm_LU_emi_scen% == "SSP3"   p_efFossilFuelExtr(regi,"pebiolc","n2obio") = 0
 $if %cm_LU_emi_scen% == "SSP5"   p_efFossilFuelExtr(regi,"pebiolc","n2obio") = 0.0066/sm_EJ_2_TWa;
 $if %cm_LU_emi_scen% == "SDP"    p_efFossilFuelExtr(regi,"pebiolc","n2obio") = 0.0047/sm_EJ_2_TWa;
 
-*DK* In case REMIND is coupled to MAgPIE emissions are obtained from the MAgPIE reporting. Thus, emission factors are set to zero
-$if %cm_MAgPIE_coupling% == "on" p_efFossilFuelExtr(regi,"pebiolc","n2obio") = 0.0;
-
-display p_efFossilFuelExtr;
+*** In case REMIND is coupled to MAgPIE emissions are obtained from the MAgPIE reporting. 
+*** Thus, emission factors are set to zero in core/presolve.gms after MAgPIE has run at least one.
 
 *** capacity factors (nur) are 1 by default
 pm_dataren(regi,"nur",rlf,te)     = 1;
@@ -1162,12 +1184,24 @@ loop(te,
 teEtaConst(te) = not teEtaIncr(te);
 display teEtaIncr;
 
-*** import regionalized CCS constraints:
-table pm_dataccs(all_regi,char,rlf)                       "maximum CO2 storage capacity using CCS technology. Unit: GtC"
+*** import regionalized storage potential:
+table f_geoStorPot(all_regi,char)                       "different categories of geological storage potential for CO2. Unit: GtC"
 $ondelim
-$include "./core/input/pm_dataccs.cs3r"
+$include "./core/input/f_geoStorPot.cs3r"
 $offdelim
 ;
+
+*** set onshore and offshore storage potential according to c_geoStorPotScen
+if (c_geoStorPotScen eq 1,
+  pm_dataccs(all_regi, "quan", "ccsinjeon")  = f_geoStorPot(all_regi, "potTechOn");
+  pm_dataccs(all_regi, "quan", "ccsinjeoff") = f_geoStorPot(all_regi, "potTechOff");
+elseif (c_geoStorPotScen eq 2),
+  pm_dataccs(all_regi, "quan", "ccsinjeon")  = f_geoStorPot(all_regi, "potLimOn");
+  pm_dataccs(all_regi, "quan", "ccsinjeoff") = f_geoStorPot(all_regi, "potLimOff");
+elseif (c_geoStorPotScen eq 3),
+  pm_dataccs(all_regi, "quan", "ccsinjeon")  = f_geoStorPot(all_regi, "mixedOld");
+  pm_dataccs(all_regi, "quan", "ccsinjeoff") = 0.00001;
+);
 
 ***-----------------------------------------------------------------------------
 *** adjustment cost parameter
@@ -1208,7 +1242,7 @@ loop(ttot$(ttot.val ge 2005),
   p_adj_seed_te(ttot,regi,"geohdr")     = 0.1;
   p_adj_seed_te(ttot,regi,"hydro")      = 0.25;
   p_adj_seed_te(ttot,regi,"windoff")    = 0.5;
-  p_adj_seed_te(ttot,regi,"spv")        = 2.00;
+  p_adj_seed_te(ttot,regi,"spv")        = 1.5;
   p_adj_seed_te(ttot,regi,"csp")        = 0.25;
   p_adj_seed_te(ttot,regi,"tnrs")       = 0.25;
 *** green hydrogen and synthetic fuels
@@ -1255,7 +1289,7 @@ $endif.cm_subsec_model_steel
   p_adj_coeff(ttot,regi,"hydro")        = 1.0;
   p_adj_coeff(ttot,regi,"windon")       = 0.25;
   p_adj_coeff(ttot,regi,"windoff")      = 0.35;
-  p_adj_coeff(ttot,regi,"spv")          = 0.15;
+  p_adj_coeff(ttot,regi,"spv")          = 0.18;
   p_adj_coeff(ttot,regi,"tnrs")         = 1.0;
 *** VRE storage and grid
   p_adj_coeff(ttot,regi,teGrid)         = 0.3;
@@ -1265,7 +1299,7 @@ $endif.cm_subsec_model_steel
   p_adj_coeff(ttot,regi,"MeOH")         = 0.5;
   p_adj_coeff(ttot,regi,"h22ch4")       = 0.5;
 *** CO2 storage and CDR technologies
-  p_adj_coeff(ttot,regi,"ccsinje")      = 1.0;
+  p_adj_coeff(ttot,regi,teccsinje)      = 1.0;
   p_adj_coeff(ttot,regi,"biopyronly")   = 0.55; !! like biochp and bioigcc;
   p_adj_coeff(ttot,regi,"biopyrhe")     = 0.55; !! like biochp and bioigcc;
   p_adj_coeff(ttot,regi,"biopyrchp")    = 0.55; !! like biochp and bioigcc;
@@ -1394,23 +1428,14 @@ $offdelim
 /;
 pm_taxCO2eq(ttot,regi)$(ttot.val le 2020) = fm_taxCO2eqHist(ttot,regi) * sm_DptCO2_2_TDpGtC;
 
-*DK* LU emissions are abated in MAgPIE in coupling mode
-*** An alternative to the approach below could be to introduce a new value for c_macswitch that only deactivates the LU MACs
-$if %cm_MAgPIE_coupling% == "on"  pm_macSwitch(ttot,regi,enty)$emiMacMagpie(enty) = 0;
 *** As long as there is hardly any CO2 LUC reduction in MAgPIE we dont need MACs in REMIND
-$if %cm_MAgPIE_coupling% == "off"  pm_macSwitch(ttot,regi,"co2luc") = 0;
+pm_macSwitch(ttot,regi,"co2luc") = 0;
 *** The tiny fraction n2ofertsom of total land use n2o can get slightly negative in some cases. Ignore MAC for n2ofertsom by default.
-$if %cm_MAgPIE_coupling% == "off"  pm_macSwitch(ttot,regi,"n2ofertsom") = 0;
+pm_macSwitch(ttot,regi,"n2ofertsom") = 0;
+
 
 * GA: Deactivate MAC abatement for historical periods, assuming no abatement happens until 2030
 pm_macSwitch(ttot,regi,emiMacSector)$(ttot.val le 2025) = 0;
-
-* GA: Use long term (2050) pm_macSwitch to set p_macCostSwitch, as some MACCs
-* are turned off in the short term 
-p_macCostSwitch(enty)=pm_macSwitch("2050","USA",enty);
-pm_macSwitch(ttot,regi,"co2cement_process") =0 ;
-p_macCostSwitch("co2cement_process") =0 ;
-
 
 *** load econometric emission data
 *** read in p3 and p4
@@ -1463,19 +1488,18 @@ $offdelim
 /;
 p_macBaseExo(ttot,regi,emiMacExo(enty))$(ttot.val ge 2005) = f_macBaseExo(ttot,regi,emiMacExo,"%cm_LU_emi_scen%");
 
-$if %cm_MAgPIE_coupling% == "off" parameter f_macBaseMagpie(tall,all_regi,all_enty,all_LU_emi_scen,all_rcp_scen)    "baseline emissions of N2O and CH4 from landuse based on data from Magpie"
-$if %cm_MAgPIE_coupling% == "on"  parameter f_macBaseMagpie_coupling(tall,all_regi,all_enty)                        "baseline emissions of N2O and CH4 from landuse based on data from Magpie"
+
+parameter f_macBaseMagpie(tall,all_regi,all_enty,all_LU_emi_scen,all_rcp_scen)    "baseline emissions of N2O and CH4 from landuse based on data from Magpie"
 /
 $ondelim
-$if %cm_MAgPIE_coupling% == "off" $include "./core/input/f_macBaseMagpie.cs4r"
-$if %cm_MAgPIE_coupling% == "on"  $include "./core/input/f_macBaseMagpie_coupling.cs4r"
+$include "./core/input/f_macBaseMagpie.cs4r"
 $offdelim
 /;
-$if %cm_MAgPIE_coupling% == "off" pm_macBaseMagpie(ttot,regi,emiMacMagpie(enty))$(ttot.val ge 2005) = f_macBaseMagpie(ttot,regi,emiMacMagpie,"%cm_LU_emi_scen%","%cm_rcp_scen%");
-$if %cm_MAgPIE_coupling% == "on"  pm_macBaseMagpie(ttot,regi,emiMacMagpie(enty))$(ttot.val ge 2005) = f_macBaseMagpie_coupling(ttot,regi,emiMacMagpie);
+pm_macBaseMagpie(ttot,regi,emiMacMagpie(enty))$(ttot.val ge 2005) = f_macBaseMagpie(ttot,regi,emiMacMagpie,"%cm_LU_emi_scen%","%cm_rcp_scen%");
 
-$if %cm_MAgPIE_coupling% == "off" p_co2lucSub(ttot,regi,emiMacMagpieCO2Sub(all_enty))$(ttot.val ge 2005) = f_macBaseMagpie(ttot,regi,emiMacMagpieCO2Sub,"%cm_LU_emi_scen%","%cm_rcp_scen%");
-$if %cm_MAgPIE_coupling% == "on"  p_co2lucSub(ttot,regi,emiMacMagpieCO2Sub(all_enty))$(ttot.val ge 2005) = f_macBaseMagpie_coupling(ttot,regi,emiMacMagpieCO2Sub);
+*** pm_macBaseMagpie gets updated in core/presolve.gms when coupling to MAgPIE is active
+
+p_co2lucSub(ttot,regi,emiMacMagpieCO2Sub(all_enty))$(ttot.val ge 2005) = f_macBaseMagpie(ttot,regi,emiMacMagpieCO2Sub,"%cm_LU_emi_scen%","%cm_rcp_scen%");
 
 *** p_macPolCO2luc defines the lower limit for abatement of CO2 landuse change emissions in REMIND
 *** The values are derived from MAgPIE runs with very strong mitigation
@@ -1617,6 +1641,56 @@ $ifthen.scaleDemand not "%cm_scaleDemand%" == "off"
   );
 $endif.scaleDemand
 
+*** Scale FE demand in building sectors
+$ifthen.scaleDemandBuildTable not "%cm_scaleDemandBuildTable%" == "off"
+
+*** File should have the following format:
+*** 2025,USA,1.00
+*** 2030,USA,0.9
+*** 2035,USA,0.8
+
+
+Parameter f_scaleDemandBuildTable(ttot,all_regi) "Rescaling factor on industry final energy and usable energy demand, read-in from a table"
+/
+$ondelim
+$include "./core/input/%cm_scaleDemandBuildTable%.cs4r"
+$offdelim
+/;
+
+pm_scaleDemandBuildTable(t,regi) = f_scaleDemandBuildTable(t,regi);
+pm_scaleDemandBuildTable(t,regi) $ (t.val < 2030 ) = 1;  !! ensure that historic data is not changed
+pm_scaleDemandBuildTable(t,regi) $ ( pm_scaleDemandBuildTable(t,regi) le 0) = 1;  !! If no multiplier was entered or a negative value was entered, override by 1. (FE values <0 are not possible)
+pm_scaleDemandBuildTable(t,regi) $ (t.val > 2100 ) = pm_scaleDemandBuildTable("2100",regi); !! continue 2100 multiplier until end of time
+
+  loop( (t,regi,in) $ in_buildings_dyn36(in) ,
+    pm_fedemand(t,regi,in) = pm_fedemand(t,regi,in) * pm_scaleDemandBuildTable(t,regi)
+  );
+$endif.scaleDemandBuildTable
+
+*** Scale FE demand in industry sectors
+$ifthen.scaleDemandIndTable not "%c_scaleDemandIndTable%" == "off"
+
+*** File should have the following format:
+*** 2025,USA,1.00
+*** 2030,USA,0.9
+*** 2035,USA,0.8
+
+Parameter f_scaleDemandIndTable(ttot,all_regi) "Rescaling factor on industry final energy and usable energy demand, read-in from a table"
+/
+$ondelim
+$include "./core/input/%c_scaleDemandIndTable%.cs4r"
+$offdelim
+/;
+
+p_scaleDemandIndTable(t,regi) $ (t.val > 2025 ) = f_scaleDemandIndTable(t,regi);
+p_scaleDemandIndTable(t,regi) $ (t.val < 2030 ) = 1;  !! ensure that historic data is not changed
+p_scaleDemandIndTable(t,regi) $ ( p_scaleDemandIndTable(t,regi) le 0) = 1;  !! If no multiplier was entered or a negative value was entered, override by 1. (FE values <0 are not possible)
+p_scaleDemandIndTable(t,regi) $ (t.val > 2100 ) = p_scaleDemandIndTable("2100",regi); !! continue 2100 multiplier until end of time
+
+  loop( (t,regi,in) $ in_industry_dyn37(in) ,
+    pm_fedemand(t,regi,in) = pm_fedemand(t,regi,in) * p_scaleDemandIndTable(t,regi)
+  );
+$endif.scaleDemandIndTable
 
 *** initialize absolute deviation of global cumulated CO2 emissions budget from target budget
 sm_globalBudget_absDev = 0;

@@ -78,6 +78,7 @@ pm_co2eq0(tall,all_regi)                             "Total greenhouse gas emiss
 
 *** parameters used for MAC curves
 pm_macBaseMagpie(tall,all_regi,all_enty)             "baseline emissions from MAgPIE (type emiMacMagpie) [GtC, Mt CH4, Mt N]"
+f_macBaseMagpie_coupling(tall,all_regi,all_enty)     "baseline emissions from MAgPIE (type emiMacMagpie) read from magpie.gdx in coupling [GtC, Mt CH4, Mt N]"
 p_macBaseMagpieNegCo2(tall,all_regi)                 "net negative CO2 emissions from land-use change [GtC]"
 p_macBaseExo(tall,all_regi,all_enty)                 "exogenous baseline emissions (type emiMacExo) [Mt CH4, Mt N]"
 p_co2lucSub(tall,all_regi,all_enty)                  "subtypes of CO2 land use change emissions, add up to total land use change emissions, coming from MAgPIE, passed through REMIND for reporting, not used anywhere, remain unchanged [GtC]"
@@ -152,7 +153,7 @@ vm_emiAllMkt(tall,all_regi,all_enty,all_emiMkt)      "total emissions per emissi
 *** ------------- Emissions Positive Variables --------------------------------
 positive variables
 
-v_co2capture(ttot,all_regi,all_enty,all_enty,all_te,rlf)    "total captured CO2 [GtC/year]"
+v_co2capture(ttot,all_regi)                                 "total captured CO2 [GtC/year]"
 vm_co2CCS(ttot,all_regi,all_enty,all_enty,all_te,rlf)       "total CO2 injected into geological storage [GtC/a]"
 v_co2capturevalve(ttot,all_regi)                            "total CO2 emitted right after capture [GtC/a], note: used in q_balCCUvsCCS to account for different lifetimes of capture and CCU/CCS te and capacities [GtC/year]"
 v_ccsShare(ttot,all_regi)                                    "fraction of captured CO2 that is stored geologically [share]"
@@ -180,7 +181,7 @@ q_emiTeMkt(ttot,all_regi,all_enty,all_emiMkt)        "total energy-emissions per
 q_emiEnFuelEx(ttot,all_regi,all_enty)                "energy emissions from fuel extraction"
 q_emiAllMkt(ttot,all_regi,all_enty,all_emiMkt)       "total regional emissions for each emission market"
 q_emiCdrAll(ttot,all_regi)                           "summing over all CDR emissions"
-q_balcapture(ttot,all_regi,all_enty,all_enty,all_te) "balance equation for carbon capture"
+q_balcapture(ttot,all_regi)                          "balance equation for carbon capture"
 q_balCCUvsCCS(ttot,all_regi)                         "balance equation for captured carbon to CCU or CCS or valve"
 q_ccsShare(ttot,all_regi)                            "calculate the share of captured CO2 that is stored geologically"
 ;
@@ -315,6 +316,16 @@ $ifthen.scaleDemand not "%cm_scaleDemand%" == "off"
 *** FE demand rescaling parameters
   pm_scaleDemand(tall,tall,all_regi)                 "Rescaling factor on final energy and usable energy demand, for selected regions and over a phase-in window." / %cm_scaleDemand% /
 $endif.scaleDemand
+
+$ifthen.scaleDemandBuildTable not "%cm_scaleDemandBuildTable%" == "off"
+*** FE demand rescaling parameters
+  pm_scaleDemandBuildTable(ttot, all_regi)                 "Rescaling factor on buildings final energy and usable energy demand, read-in from a table" 
+$endif.scaleDemandBuildTable
+
+$ifthen.scaleDemandIndTable not "%c_scaleDemandIndTable%" == "off"
+*** FE demand rescaling parameters
+  p_scaleDemandIndTable(ttot, all_regi)                 "Rescaling factor on industry final energy and usable energy demand, read-in from a table" 
+$endif.scaleDemandIndTable
 
 *** energy prices
 pm_FEPrice(ttot,all_regi,all_enty,sector,emiMkt)     "parameter to capture all FE prices across sectors and markets [tr$2005/TWa]"
@@ -545,7 +556,7 @@ $ifthen.tech_CO2capturerate not "%c_tech_CO2capturerate%" == "off"
 p_tech_co2capturerate(all_te)                        "Technology specific CO2 capture rate, fraction of carbon from input fuel that is captured [share]" / %c_tech_CO2capturerate% /
 p_PECarriers_CarbonContent(all_enty)                 "Carbon content of PE carriers [GtC/TWa]"
 $endif.tech_CO2capturerate
-pm_dataccs(all_regi,char,rlf)                        "maximum CO2 storage capacity using CCS technology. [GtC]"
+pm_dataccs(all_regi,char,all_te)                     "maximum CO2 storage capacity using CCS technology. [GtC]"
 pm_ccsinjecrate(all_regi)                            "Regional CCS injection rate factor. [1/year]."
 p_extRegiccsinjecrateRegi(ext_regi)                  "Regional CCS injection rate factor. [1/year]. (extended regions)"
 ;
@@ -572,6 +583,8 @@ parameters
 pm_budgetCO2eq(all_regi)                             "budget for regional energy-emissions in period 1 [GtC]"
 pm_actualbudgetco2(ttot)                             "actual level of cumulated emissions starting from 2020 [GtCO2]"
 p_actualbudgetco2_iter(iteration,ttot)               "track actual level of cumulated emissions starting from 2020 over iterations [GtCO2]"
+pm_actualbudgetco2Regi(ttot,all_regi)                "Regional- actual level of cumulated emissions starting from 2020 [GtCO2]"
+p_actualbudgetco2Regi_iter(iteration,ttot,all_regi)  "Regional- track actual level of cumulated emissions starting from 2020 over iterations [GtCO2]"
 
 *** iteration parameters
 pm_SolNonInfes(all_regi)                             "model status from last iteration. 1 means status 2 or 7, 0 for all other status codes"
@@ -594,6 +607,14 @@ o_negitr_cumulative_CO2_emieng_seq(iteration)        "estimated sequestered CO2 
 o_negitr_disc_cons_dr5_reg(iteration,all_regi)       "estimated discounted consumption 2005-2100 with discount rate 5%. 'estimated' because of different times step lengths around 2100 [T$]"
 o_negitr_disc_cons_drInt_reg(iteration,all_regi)     "estimated discounted consumption 2005-2100 with internal discount rate. 'estimated' because of different times step lengths around 2100 [T$]"
 o_negitr_total_forc(iteration)                       "total forcing in 2100"
+o_pm_pebiolc_demandmag(iteration,ttot,all_regi)      "track pm_pebiolc_demandmag across Nash iterations"
+o_pm_macBaseMagpie(iteration,ttot,all_regi,all_enty) "track pm_macBaseMagpie across Nash iterations"
+o_pm_macSwitch(iteration,ttot,all_regi,all_enty)     "track pm_macSwitch across Nash iterations"
+o_p_efFossilFuelExtr_n2obio(iteration,all_regi)      "track p_efFossilFuelExtr for n2obio across Nash iterations"
+o_vm_fuExtr_pebiolc(iteration,ttot,all_regi)         "track vm_fuExtr for pebiolc across Nash iterations"
+o_vm_pebiolc_price(iteration,ttot,all_regi)          "track vm_pebiolc_price across Nash iterations"
+o_PEDem_Bio_ECrops(iteration,ttot,all_regi)          "track pebiolc demand across Nash iterations"
+o_vm_emiMacSector_co2luc(iteration,ttot,all_regi)    "track co2luc across Nash iterations"
 ;
 
 *** ------------- Scalars ----------------------------
@@ -671,8 +692,12 @@ sm_globalBudget_absDev       "absolute deviation of global cumulated CO2 emissio
 sm_eps                       "small number: 1e-9 "  /1e-9/
 
 sm_CES_calibration_iteration "current calibration iteration number, loaded from environment variable cm_CES_calibration_iteration"  /0/
+sm_magpieIter                "Count the number of MAgPIE iterations, starting with zero" /0/
+sm_magpieIterEnd             "Number of MAgPIE iterations that have to be performed. Equals the number of elements defined in the set magpieIter"
+sm_updateMagpieData          "Boolean defined in core/presolve indicating if MAgPIE is running in the current Nash iteration (1) or not (0)" /0/
 ;
 
+sm_magpieIterEnd = card(magpieIter);
 * GA sm_dmac changes depending on the choice of MACs in c_nonco2_macc_version
 $ifthen %c_nonco2_macc_version% == "PBL_2007"
 * PBL_2007 MACs are discretized in steps of 5 $2005/tCeq

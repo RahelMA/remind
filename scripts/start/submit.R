@@ -48,7 +48,7 @@ submit <- function(cfg, restart = FALSE, stopOnFolderCreateError = TRUE) {
     } else {
       # we only want to run renv checks/updates in the first run in a cascade:
       # cfg$UseThisRenvLock is only NULL for the first run in a cascade.
-      # For a subsequent run it has been set by the parent run in run.R (standalone) or start_coupled.R (coupled).
+      # For a subsequent run it has been set by the parent run in run.R
       firstRunInCascade <- is.null(cfg$UseThisRenvLock)
       if (firstRunInCascade) {
         if (getOption("autoRenvUpdates", FALSE)) {
