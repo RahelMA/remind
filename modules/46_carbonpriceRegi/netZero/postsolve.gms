@@ -140,9 +140,15 @@ p46_factorRescaleCO2TaxRegi(nz_reg2080) = max(1-0.75*1.01**(-iteration.val),((p4
 
 p46_factorRescaleCO2TaxLtd_iter(iteration,nz_reg) = p46_factorRescaleCO2TaxRegi(nz_reg);
 
-***calculate new mark-up:
-pm_taxCO2eqRegi(t,nz_reg)=pm_taxCO2eqRegi(t,nz_reg)*p46_factorRescaleCO2TaxRegi(nz_reg);
+***calculate new mark-up (default start of rescaling is 2040 to first meet 2035 NDC targets, only if cm_intermediateNDC == "off" directly reach nez-zero):
+$ifthen.p46_startScale "%cm_intermediateNDC%" == "on"
+  p46_startYear = 2040;
+$else.p46_startScale
+  p46_startYear = 2035;
+$endif.p46_startScale
 
+pm_taxCO2eqRegi(t,nz_reg)$(t.val gt p46_startYear)
+  = pm_taxCO2eqRegi(t,nz_reg) * p46_factorRescaleCO2TaxRegi(nz_reg);
 
 
 );!! ord(iteration) > p46_startInIteration

@@ -1408,6 +1408,10 @@ $setglobal cm_NPi_version  2025_cond    !! def = "2025_cond"  !! regexp = 2025_(
 *'  (NGFS_v4_20pc):   settings used for NGFS v4, 2023, with still 20% of 2020 emissions in netZero year
 *'  (ELEVATE6p3):     settings used for ELEVATE6p3 LTS and NDC-LTS scenario
 $setglobal cm_netZeroScen  NGFS_v4     !! def = "NGFS_v4"  !! regexp = NGFS_v4|NGFS_v4_20pc|ELEVATE6p3
+*' cm_intermediateNDC                  "choose when rescaling of net-zero targets starts"
+*' *  (on):                            rescaling of carbon prices starts in 2040 after reaching the NDC targets
+*' *  (off):                           rescaling of carbon prices startes already in 2035, allowing carbon price increase beyond the NDC restrictions 
+$setglobal cm_intermediateNDC  on      !! def = "on"  !! regexp = on|off
 *' *  c_regi_earlyreti_rate  "maximum percentage of capital stock that can be retired early (before reaching their expected lifetimes) in one year in specified regions, if they are not economically viable. It is applied to all techs unless otherwise specified in c_tech_earlyreti_rate."
 *' *  Default value used in NPi runs: EUR_regi 0.06, USA_regi 0.04, CHA_regi 0.04, CAZ_regi 0.04, JPN_regi 0.04, GLO 0.03 (0.06 means 6% of capacity can be retired early per year at maximum, i.e. full retirement after 16.7 years, 40% standing capacity after 10 years)
 *' *  In target scenarios with ambition level beyond the NPi, we assume slightly higher early retirement rates outside the EU.
