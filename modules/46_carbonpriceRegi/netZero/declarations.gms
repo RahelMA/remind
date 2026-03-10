@@ -26,7 +26,6 @@ pm_taxCO2eqSum(ttot,all_regi)                       "sum of pm_taxCO2eq, pm_taxC
 Scalar  
 p46_zeroYear                                       "between the netZero goal and this scalar, pm_taxCO2eqRegi linearly drops to zero [year]"
 p46_startInIteration                               "first iteration to start adapting pm_taxCO2eqRegi [1]" / 10 /
-p46_startYear                                      "start year of rescaling carbon price to meet net-zero target" 
 ;
 
 *** EOF ./modules/46_carbonpriceRegi/netZero/declarations.gms

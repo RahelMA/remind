@@ -22,6 +22,8 @@ $ifthen.offsets "%cm_netZeroScen%" == "ELEVATE6p3"
 *** Coverage shares are calculated using PBL's Net-Zero Calculator based on https://zerotracker.net/
 *** (methodology and more information at https://zerotracker.net/methodology) and further
 *** adaptations based on Climate Action Tracker information, literature or expert opinion.
+*** Net-zero claculator "ELEVATE T6.3 Scenario Protocol NDC and LTS information v3.xlsx"
+*** The current protocol includes policies until March 2025 (see https://github.com/NewClimateInstitute/policy-modelling/issues/6#event-22523859766)
   p46_offset(nz_reg)$(sameas(nz_reg, "LAM")) = (1 - 0.83) * p46_ref_co2eq("2050", nz_reg) * sm_c_2_co2 * 1000;
   p46_offset(nz_reg)$(sameas(nz_reg, "MEA")) = (1 - 0.41) * p46_ref_co2eq("2055", nz_reg) * sm_c_2_co2 * 1000;
   p46_offset(nz_reg)$(sameas(nz_reg, "NEU")) = (1 - 0.80) * p46_ref_co2eq("2055", nz_reg) * sm_c_2_co2 * 1000;
@@ -140,16 +142,10 @@ p46_factorRescaleCO2TaxRegi(nz_reg2080) = max(1-0.75*1.01**(-iteration.val),((p4
 
 p46_factorRescaleCO2TaxLtd_iter(iteration,nz_reg) = p46_factorRescaleCO2TaxRegi(nz_reg);
 
-***calculate new mark-up (default start of rescaling is 2040 to first meet 2035 NDC targets, only if cm_intermediateNDC == "off" directly reach nez-zero):
-$ifthen.p46_startScale "%cm_intermediateNDC%" == "on"
-  p46_startYear = 2040;
-$else.p46_startScale
-  p46_startYear = 2035;
-$endif.p46_startScale
+***calculate new mark-up (default start of rescaling is 2040 (first meet 2035 NDC targets, scenario knows as NDC-LTS), it can also be set to 2035 to directly reach net-zero, scenario known as LTS):
 
-pm_taxCO2eqRegi(t,nz_reg)$(t.val gt p46_startYear)
+pm_taxCO2eqRegi(t,nz_reg)$(t.val gt %cm_LTSstartYr%)
   = pm_taxCO2eqRegi(t,nz_reg) * p46_factorRescaleCO2TaxRegi(nz_reg);
-
 
 );!! ord(iteration) > p46_startInIteration
 
