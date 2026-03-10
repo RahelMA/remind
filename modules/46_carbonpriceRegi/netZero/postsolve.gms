@@ -24,6 +24,8 @@ $ifthen.offsets "%cm_netZeroScen%" == "ELEVATE6p3"
 *** adaptations based on Climate Action Tracker information, literature or expert opinion.
 *** Net-zero claculator "ELEVATE T6.3 Scenario Protocol NDC and LTS information v3.xlsx"
 *** The current protocol includes policies until March 2025 (see https://github.com/NewClimateInstitute/policy-modelling/issues/6#event-22523859766)
+*** "The current CPDB is informed by the annual update cycle for 2025. It contains policies adopted up to and including March 2025." Luka (NCI)
+
   p46_offset(nz_reg)$(sameas(nz_reg, "LAM")) = (1 - 0.83) * p46_ref_co2eq("2050", nz_reg) * sm_c_2_co2 * 1000;
   p46_offset(nz_reg)$(sameas(nz_reg, "MEA")) = (1 - 0.41) * p46_ref_co2eq("2055", nz_reg) * sm_c_2_co2 * 1000;
   p46_offset(nz_reg)$(sameas(nz_reg, "NEU")) = (1 - 0.80) * p46_ref_co2eq("2055", nz_reg) * sm_c_2_co2 * 1000;
