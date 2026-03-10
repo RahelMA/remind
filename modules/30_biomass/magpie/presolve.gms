@@ -48,8 +48,6 @@ Execute_Loadpoint 'magpieData.gdx' p30_pebiolc_pricemag;
 p30_pebiolc_demand_helper_level(ttot,regi) = vm_fuExtr.l(ttot,regi,"pebiolc","1");
 p30_pebiolc_demand_helper_upper(ttot,regi) = vm_fuExtr.up(ttot,regi,"pebiolc","1");
 
-display p30_pebiolc_demand_helper_upper;
-
 vm_fuExtr.fx(ttot,regi,"pebiolc","1") = pm_pebiolc_demandmag(ttot,regi);
 
 *** Eliminate effect of shift and mult for calculating the original emulator price (p30_pebiolc_price_emu_preloop)
@@ -88,7 +86,7 @@ v30_priceshift.fx(ttot,regi) = p30_pebiolc_pricshift(ttot,regi);
 
 s30_switch_shiftcalc = 0; !!! deactivate equations for shift calculation. This is necessary because the main model uses /all/
 
-display p30_pebiolc_pricmult, p30_pebiolc_pricshift;
+***display p30_pebiolc_pricmult, p30_pebiolc_pricshift;
 
 *** Calculate shifted prices
 if (execError > 0,
@@ -99,7 +97,7 @@ if (execError > 0,
 solve model_biopresolve_p using cns; !!! nothing has to be optimized here, just pure calculation
 p30_pebiolc_price_emu_preloop_shifted(ttot,regi) = vm_pebiolc_price.l(ttot,regi); !!! save for reporting
 
-display p30_pebiolc_price_emu_preloop_shifted;
+***display p30_pebiolc_price_emu_preloop_shifted;
 
 
 ***------------ Step 3: calculate bioenergy costs -------------
@@ -116,10 +114,10 @@ solve model_biopresolve_c using cns; !!! nothing has to be optimized here, just 
 
 pm_pebiolc_costs_emu_preloop(t,regi) = v30_pebiolc_costs.l(t,regi);
 
-display pm_pebiolc_costs_emu_preloop;
+***display pm_pebiolc_costs_emu_preloop;
 
 ***------------ Step 4: Release bounds on fuelex -------------
-*** AFTER presolve calculations: prepare for main solve, therefore release bounds on fuelex
+*** AFTER presolve calculations: prepare for main solve, therefore restore bounds on fuelex
 vm_fuExtr.lo(ttot,regi,"pebiolc","1") = 0;
 vm_fuExtr.up(ttot,regi,"pebiolc","1") = p30_pebiolc_demand_helper_upper(ttot,regi);
 
