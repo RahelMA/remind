@@ -343,7 +343,7 @@ $setglobal industry  subsectors   !! def = subsectors
 *'---------------------    39_CCU    ---------------------------------
 *'
 *' * (on): representation of technologies for producing synthetic liquids and synthetic gases based on hydrogen and captured carbon
-*' * (off): no representation of carbon caputre and utilization technologies.
+*' * (off): no representation of carbon capture and utilization technologies.
 $setglobal CCU  on      !! def = on
 *'---------------------    40_techpol  ----------------------------------------
 *'
@@ -466,7 +466,7 @@ $setGlobal optimization  nash         !! def = nash
 *'---------------------    81_codePerformance    -------------------------------
 *'
 *' * (off): nothing happens
-*' * (on):  test code performance: noumerous (30) succesive runs performed in a triangle, tax0, tax30, tax150, all growing exponentially.
+*' * (on):  test code performance: numerous (30) successive runs performed in a triangle, tax0, tax30, tax150, all growing exponentially.
 $setGlobal codePerformance  off       !! def = off
 
 ***-----------------------------------------------------------------------------

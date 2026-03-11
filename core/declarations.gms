@@ -496,9 +496,9 @@ q_balFe(ttot,all_regi,all_enty,all_enty,all_te)      "balance of final energy (f
 q_balFeAfterTax(ttot,all_regi,all_enty,all_enty,emi_sectors,all_emiMkt) "balance of final energy after considering FE sectoral taxes (fe)"
 
 *** energy conversion equations (energy input * conversion efficiency = energy output)
-q_transPe2se(ttot,all_regi,all_enty,all_enty,all_te) "energy tranformation pe to se"
+q_transPe2se(ttot,all_regi,all_enty,all_enty,all_te) "energy transformation pe to se"
 q_transSe2se(ttot,all_regi,all_enty,all_enty,all_te) "energy transformation se to se"
-q_transSe2fe(ttot,all_regi,all_enty,all_enty,all_te) "energy tranformation se to fe"
+q_transSe2fe(ttot,all_regi,all_enty,all_enty,all_te) "energy transformation se to fe"
 
 *** penalty cost implementation for cm_startyear to limit change in policy run relative to reference run
 q_changeProdStartyear(ttot,all_regi,all_te)          "calculating the absolute change of output with respect to the reference run for each technology"
@@ -704,7 +704,7 @@ $ifthen %c_nonco2_macc_version% == "PBL_2007"
 sm_dmac = 5 * sm_D2005_2_D2017;
 $elseif %c_nonco2_macc_version% == "PBL_2022"
 * PBL_2022 MACs are discretized in steps of 20 $2010/tCeq
-sm_dmac = 20 * s_D2010_2_D2017;;
+sm_dmac = 20 * s_D2010_2_D2017;
 $endif
 ;
 
