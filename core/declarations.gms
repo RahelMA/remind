@@ -713,4 +713,13 @@ $endif
 sm_tgn_2_pgc = (44/28) * s_gwpN2O * (12/44) * 0.001;
 sm_tgch4_2_pgc = s_gwpCH4 * (12/44) * 0.001;
 
+
+
+*** ------------ Macro functions ---------------
+*** Define macros that can be used as functions throughout the model code.
+*** This is especially useful for more complex expressions that are used in multiple places, to avoid code duplication and to ensure consistency.
+
+*** Linear interpolation between two values x0 and x1 at time points t0 and t1 for an intermediate time point t
+$macro macro_interpolate(t,t0,t1,x0,x1) ( ((t1) - (t)) / ((t1) - (t0)) * (x0) + ((t) - (t0)) / ((t1) - (t0)) * (x1) )
+
 *** EOF ./core/declarations.gms
