@@ -6,32 +6,26 @@
 *** |  Contact: remind@pik-potsdam.de
 *** SOF ./modules/46_carbonpriceRegi/netZero/sets.gms
 
-$ifthenE.scen (sameas("%cm_netZeroScen%","NGFS_v4"))or(sameas("%cm_netZeroScen%","NGFS_v4_20pc"))
-SETS
-    nz_reg2050(all_regi)    "regions with net-zero 2050 target"   / "CAZ","EUR","JPN","LAM","USA" /
-    nz_reg2055(all_regi)    "regions with net-zero 2055 target"   /  /
-    nz_reg2060(all_regi)    "regions with net-zero 2060 target"   / "CHA","REF" /
-    nz_reg2070(all_regi)    "regions with net-zero 2070 target"   / "IND" /
-    nz_reg2080(all_regi)    "regions with net-zero 2080 target"   /  /
-    nz_reg_CO2(all_regi)    "regions with CO2, not GHG target"    / "CHA","IND" /
-;
-$elseif.scen "%cm_netZeroScen%" == "ELEVATE6p3"
-SETS
-    nz_reg2050(all_regi)    "regions with net-zero 2050 target"   / "CAZ","EUR","JPN","LAM" /
-    nz_reg2055(all_regi)    "regions with net-zero 2055 target"   / "MEA","NEU","OAS", "SSA" /
-    nz_reg2060(all_regi)    "regions with net-zero 2060 target"   / "CHA","REF" /
-    nz_reg2070(all_regi)    "regions with net-zero 2070 target"   / "IND" /
-    nz_reg2080(all_regi)    "regions with net-zero 2080 target"   /  /
-    nz_reg_CO2(all_regi)    "regions with CO2, not GHG target"    / "OAS","NEU","SSA", "LAM","MEA", "REF",  "CHA" /
-;
-$else.scen
-    $error 'In 46_carbonpriceRegi/netZero/sets.gms, no settings for the specified cm_netZeroScen found'
-$endif.scen
+sets
 
-SETS
-    nz_reg(all_regi)        "all regions with a net-zero target"
-;
-nz_reg(all_regi) = nz_reg2050(all_regi) + nz_reg2055(all_regi) + nz_reg2060(all_regi) + nz_reg2070(all_regi) + nz_reg2080(all_regi);
+targetSpecies / CO2_target, GHG_target /
 
-display nz_reg;
+netZeroTargets(all_regi,ttot,targetSpecies) /
+    CAZ . 2050 . GHG_target
+    EUR . 2050 . GHG_target
+    JPN . 2050 . GHG_target
+    LAM . 2050 . CO2_target
+
+    MEA . 2055 . CO2_target
+    NEU . 2055 . CO2_target
+    OAS . 2055 . CO2_target
+    SSA . 2055 . CO2_target
+
+    CHA . 2060 . CO2_target
+    REF . 2060 . CO2_target
+
+    IND . 2070 . GHG_target
+/
+;
+
 *** EOF ./modules/46_carbonpriceRegi/netZero/sets.gms
