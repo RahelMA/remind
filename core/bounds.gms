@@ -189,16 +189,33 @@ if(cm_startyear <= 2015,
   vm_cap.up("2015",regi,"tnrs","1") = 1.1 * p_CapFixFromRWfix("2015",regi,"tnrs");
 );
 
+if(cm_startyear <= 2020,
+  p_CapFixFromRWfix("2020",regi,"tnrs") = max( pm_aux_capLowerLimit("tnrs",regi,"2020") , pm_NuclearConstraint("2020",regi,"tnrs") );
+  p_deltaCapFromRWfix("2020",regi,"tnrs") = ( p_CapFixFromRWfix("2020",regi,"tnrs") - pm_aux_capLowerLimit("tnrs",regi,"2020") )
+                                    / 7.5;  !! this parameter is currently only for display and not further used to fix anything
+*** keep nuclear power capacity in +-10% range of historic data for 2020, choose range to allow for some flexibility for the model
+  vm_cap.lo("2020",regi,"tnrs","1") = 0.9 * p_CapFixFromRWfix("2020",regi,"tnrs");
+  vm_cap.up("2020",regi,"tnrs","1") = 1.1 * p_CapFixFromRWfix("2020",regi,"tnrs");
+);
 
-if(cm_startyear <= 2020, !! require the realization of at least 70% of the plants that are currently under construction and thus might be finished until 2020 - should be updated with real-world 2020 numbers
-   vm_deltaCap.lo("2020",regi,"tnrs","1") = 0.70 * pm_NuclearConstraint("2020",regi,"tnrs") / 5;
-   vm_deltaCap.up("2020",regi,"tnrs","1") = pm_NuclearConstraint("2020",regi,"tnrs") / 5;
+if(cm_startyear <= 2025,
+  p_CapFixFromRWfix("2025",regi,"tnrs") = max( pm_aux_capLowerLimit("tnrs",regi,"2025") , pm_NuclearConstraint("2025",regi,"tnrs") );
+  p_deltaCapFromRWfix("2025",regi,"tnrs") = ( p_CapFixFromRWfix("2025",regi,"tnrs") - pm_aux_capLowerLimit("tnrs",regi,"2025") )
+                                    / 7.5;  !! this parameter is currently only for display and not further used to fix anything
+*** keep nuclear power capacity in +-10% range of historic data for 2025, choose range to allow for some flexibility for the model
+  vm_cap.lo("2025",regi,"tnrs","1") = 0.9 * p_CapFixFromRWfix("2025",regi,"tnrs");
+  vm_cap.up("2025",regi,"tnrs","1") = 1.1 * p_CapFixFromRWfix("2025",regi,"tnrs");
 );
-if(cm_startyear <= 2025, !! upper bound calculated in mrremind/R/calcCapacityNuclear.R: 50% of planned and 30% of proposed plants, plus extra for lifetime extension and newcomers
-   vm_deltaCap.up("2025",regi,"tnrs","1") = pm_NuclearConstraint("2025",regi,"tnrs") / 5;
-);
-if(cm_startyear <= 2030, !! upper bound calculated in mrremind/R/calcCapacityNuclear.R: 50% of planned and 70% of proposed plants, plus extra for lifetime extension and newcomers
+
+if(cm_startyear <= 2030, !! require the realization of at least 50% of the max additions until 2030 (estimated at 80% of plants currently under construction) 
+   vm_deltaCap.lo("2030",regi,"tnrs","1") = 0.50 * pm_NuclearConstraint("2030",regi,"tnrs") / 5;
    vm_deltaCap.up("2030",regi,"tnrs","1") = pm_NuclearConstraint("2030",regi,"tnrs") / 5;
+);
+if(cm_startyear <= 2035, !! upper bound calculated in mrremind/R/calcCapacityNuclear.R: 50% of planned and 30% of proposed plants, plus extra for lifetime extension and newcomers
+   vm_deltaCap.up("2035",regi,"tnrs","1") = pm_NuclearConstraint("2035",regi,"tnrs") / 5;
+);
+if(cm_startyear <= 2040, !! upper bound calculated in mrremind/R/calcCapacityNuclear.R: 50% of planned and 70% of proposed plants, plus extra for lifetime extension and newcomers
+   vm_deltaCap.up("2040",regi,"tnrs","1") = pm_NuclearConstraint("2040",regi,"tnrs") / 5;
 );
 
 display p_CapFixFromRWfix, p_deltaCapFromRWfix;
