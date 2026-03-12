@@ -14,7 +14,7 @@ if(ord(iteration) > p46_startInIteration, !! start only after 10 iterations when
 *** EMISSIONS CALCULATION  
 *** ---------------------------------------------------------------------------
 *' Define baseline emissions:
-p46_emi_refYr(regi) = vm_co2eq.l("2025",regi) / s_MtCO2_2_GtC;
+p46_emi_refYr(regi) = vm_co2eq.l("2025",regi) / sm_MtCO2_2_GtC;
 
 
 *' Define emission offset [MtCO2eq/yr], which is the allowed emissions in the net-zero year.
@@ -23,7 +23,7 @@ $ifthen "%cm_netZeroScen%" == "ELEVATE6p3"
 *** Offset the emissions that non-covered countries have in the reference run
   Execute_Loadpoint 'input_bau' p46_emi_refRun = vm_co2eq.l;
   loop(netZeroTargets(regi,t,targetSpecies),
-    p46_emi_offset(regi) = (1 - p46_targetCoverage(regi)) * p46_emi_refRun(t,regi) / s_MtCO2_2_GtC;
+    p46_emi_offset(regi) = (1 - p46_targetCoverage(regi)) * p46_emi_refRun(t,regi) / sm_MtCO2_2_GtC;
   );
 
   p46_emi_offset(regi) $ (sameAs(regi, "EUR")) = 100; !! 100 MtCO2eq margin for EUR at the net-zero year
@@ -31,7 +31,7 @@ $ifthen "%cm_netZeroScen%" == "ELEVATE6p3"
 $else
   Execute_Loadpoint 'input_ref' p46_emi_refRun = vm_co2eq.l;
   loop(netZeroTargets(regi,t,targetSpecies),
-    p46_emi_offset(regi) = (1 - p46_targetCoverage(regi)) * p46_emi_refRun(t,regi) / s_MtCO2_2_GtC;
+    p46_emi_offset(regi) = (1 - p46_targetCoverage(regi)) * p46_emi_refRun(t,regi) / sm_MtCO2_2_GtC;
   );
 $endif
 
@@ -46,12 +46,12 @@ display p46_emi_offset;
 loop(netZeroTargets(regi,t,targetSpecies),
   p46_emi_targetYr(regi) =
 *** for GHG targets
-    (vm_co2eq.l(t,regi) / s_MtCO2_2_GtC + vm_emiFgas.l(t,regi,"emiFgasTotal")) $ sameAs(targetSpecies,"GHG_target")
+    (vm_co2eq.l(t,regi) / sm_MtCO2_2_GtC + vm_emiFgas.l(t,regi,"emiFgasTotal")) $ sameAs(targetSpecies,"GHG_target")
 *** for CO2 targets
-  + ((vm_emiTe.l(t,regi,"co2") + vm_emiMac.l(t,regi,"co2") + vm_emiCdr.l(t,regi,"co2")) / s_MtCO2_2_GtC) $ sameAs(targetSpecies,"CO2_target")
+  + ((vm_emiTe.l(t,regi,"co2") + vm_emiMac.l(t,regi,"co2") + vm_emiCdr.l(t,regi,"co2")) / sm_MtCO2_2_GtC) $ sameAs(targetSpecies,"CO2_target")
 *** subtract bunker emissions
   - sum(se2fe(enty,enty2,te),
-      pm_emifac(t,regi,enty,enty2,te,"co2") * vm_demFeSector.l(t,regi,enty,enty2,"trans","other")) / s_MtCO2_2_GtC;
+      pm_emifac(t,regi,enty,enty2,te,"co2") * vm_demFeSector.l(t,regi,enty,enty2,"trans","other")) / sm_MtCO2_2_GtC;
 
 *** ---------------------------------------------------------------------------  
 *** ADAPTIVE LEARNING ALGORITHM  

@@ -8,9 +8,10 @@
 
 sets
 
-targetSpecies / CO2_target, GHG_target /
+targetSpecies "Gases included in national net-zero targets" / CO2_target, GHG_target /
 
-netZeroTargets(all_regi,ttot,targetSpecies) /
+netZeroTargets(all_regi,ttot,targetSpecies) "Region, year, and gases of net-zero targets"
+/
     CAZ . 2050 . GHG_target
     EUR . 2050 . GHG_target
     JPN . 2050 . GHG_target

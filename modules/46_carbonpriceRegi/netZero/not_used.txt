@@ -6,3 +6,4 @@
 # |  Contact: remind@pik-potsdam.de
 name,type,reason
 cm_startyear,switch,not needed
+sm_c_2_co2,scalar,not needed

@@ -14,3 +14,4 @@ pm_emifac,input,questionnaire
 vm_emiTe,input,questionnaire
 vm_emiCdr,input,questionnaire
 vm_emiMac,input,questionnaire
+sm_MtCO2_2_GtC,input,not needed
