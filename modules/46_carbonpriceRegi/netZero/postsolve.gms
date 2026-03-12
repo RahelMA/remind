@@ -19,22 +19,14 @@ p46_emi_refYr(regi) = vm_co2eq.l("2025",regi) / sm_MtCO2_2_GtC;
 
 *' Define emission offset [MtCO2eq/yr], which is the allowed emissions in the net-zero year.
 *' Offset may represent a tolerance for net zero or the fact that not all countries of the region have net-zero targets.
-$ifthen "%cm_netZeroScen%" == "ELEVATE6p3"
-*** Offset the emissions that non-covered countries have in the reference run
-  Execute_Loadpoint 'input_bau' p46_emi_refRun = vm_co2eq.l;
-  loop(netZeroTargets(regi,t,targetSpecies),
-    p46_emi_offset(regi) = (1 - p46_targetCoverage(regi)) * p46_emi_refRun(t,regi) / sm_MtCO2_2_GtC;
-  );
+Execute_Loadpoint 'input_bau' p46_emi_refRun = vm_co2eq.l; !! read from path_gdx_bau
 
-$else
-  Execute_Loadpoint 'input_ref' p46_emi_refRun = vm_co2eq.l;
-  loop(netZeroTargets(regi,t,targetSpecies),
-    p46_emi_offset(regi) = (1 - p46_targetCoverage(regi)) * p46_emi_refRun(t,regi) / sm_MtCO2_2_GtC;
-  );
-$endif
-
-*** Countries covered by net-zero targets fail to meet them and keep 20% of their 2025 emissions
-$if "%cm_netZeroScen%" == "NGFS6_20pc" p46_emi_offset(regi) = p46_emi_offset(regi) + p46_targetCoverage(regi) * p46_emi_refYr(regi) * 0.2;
+loop(netZeroTargets(regi,t,targetSpecies),
+  p46_emi_offset(regi) =
+      (1 - p46_targetCoverage(regi)) * p46_emi_refRun(t,regi) / sm_MtCO2_2_GtC !! offset countries that are not covered
+    + p46_targetCoverage(regi) * p46_emi_refYr(regi) * cm_netZeroPercent !! allow covered countries to keep a certain % of their 2025 emissions
+    + pm_emiLULUCF_GrassiShift("2020",regi) / sm_MtCO2_2_GtC; !! ensure that the land-use C02 emissions are in line with national accounting
+);
 
 display p46_emi_offset;
 

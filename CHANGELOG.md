@@ -36,7 +36,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     [[#2237](https://github.com/remindmodel/remind/pull/2207)]
 - **37_industry** replaced `execute_load` with `execute_loadpoint` in `37_industry/subsectors/datainput.gms` 
     [[#2237](https://github.com/remindmodel/remind/pull/2207)]
-- **46_carbonpriceRegi** Refactor netZero realisation
+- **46_carbonpriceRegi** Refactor netZero realisation and ensure that targets are aligned with national accounting
     [#2307](https://github.com/remindmodel/remind/pull/2307)
 
 ### added
