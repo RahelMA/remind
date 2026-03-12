@@ -8,15 +8,15 @@
 
 p46_zeroYear = 2200;
 
-*** Define the maximale added carbon price at net zero, depending on the target year [$/tCO2 converted to T$/GtC]
+*** Define the maximal added carbon price at net zero, depending on the target year [$/tCO2 converted to T$/GtC]
 p46_taxCO2eqRegiMax("2050") = 20 * sm_DptCO2_2_TDpGtC; 
 p46_taxCO2eqRegiMax("2055") = 24 * sm_DptCO2_2_TDpGtC; 
 p46_taxCO2eqRegiMax("2060") = 28 * sm_DptCO2_2_TDpGtC; 
 p46_taxCO2eqRegiMax("2070") = 29 * sm_DptCO2_2_TDpGtC;
 
 loop(netZeroTargets(regi,t,targetSpecies),
-  pm_taxCO2eqRegi(t2,regi) $ (2030 < t2.val and t2.val <= t.val) = macro_interpolate(t2,2030,t,0,p46_taxCO2eqRegiMax(t));
-  pm_taxCO2eqRegi(t2,regi) $ (t.val < t2.val) = macro_interpolate(t2,t,p46_zeroYear,p46_taxCO2eqRegiMax(t),0);
+  pm_taxCO2eqRegi(t2,regi) $ (2030 < t2.val and t2.val <= t.val) = macro_interpolate(t2.val, 2030, t.val, 0, p46_taxCO2eqRegiMax(t));
+  pm_taxCO2eqRegi(t2,regi) $ (t.val < t2.val) = macro_interpolate(t2.val, t.val, p46_zeroYear, p46_taxCO2eqRegiMax(t), 0);
 );
 
 *** Coverage shares are calculated using PBL's Net-Zero Calculator based on https://zerotracker.net/

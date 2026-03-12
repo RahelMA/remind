@@ -65,7 +65,7 @@ if (not sameas("%cm_NDC_version%","2018_uncond"),
 p46_factorTargetyear(t,regi)$(sameas(regi,"CHA") AND sameas(t,"2060")) = 0;
 p46_2015shareTarget(t,regi)$(sameas(regi,"CHA") AND sameas(t,"2060")) = 1;
 
-$ifthen.p46_netZero "%cm_netZeroScen%" == "NGFS_v4_20pc"
+$ifthen.p46_netZero "%cm_netZeroScen%" == "NGFS6_20pc"
   p46_factorTargetyear(t,regi)$(sameas(regi,"CAZ") AND sameas(t,"2050")) = 0;
    p46_2015shareTarget(t,regi)$(sameas(regi,"CAZ") AND sameas(t,"2050")) = 0.8;
   p46_factorTargetyear(t,regi)$(sameas(regi,"EUR") AND sameas(t,"2050")) = 0;
