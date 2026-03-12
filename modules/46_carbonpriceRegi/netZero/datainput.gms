@@ -6,72 +6,37 @@
 *** |  Contact: remind@pik-potsdam.de
 *** SOF ./modules/46_carbonpriceRegi/netZero/datainput.gms
 
-p46_zeroYear = 2100;
-$ifthen.p46_zeroYear "%cm_netZeroScen%" == "ELEVATE6p3"
-  p46_zeroYear = 2200;
-$endif.p46_zeroYear
+p46_zeroYear = 2200;
 
-$ifthen.p46_zeroYear "%cm_netZeroScen%" == "NGFS_v4_20pc"
-  p46_zeroYear = 2200;
-$endif.p46_zeroYear
-$ifthen.p46_zeroYear "%cm_netZeroScen%" == "NGFS_v4"
-  p46_zeroYear = 2200;
-$endif.p46_zeroYear
+*** Define the maximale added carbon price at net zero, depending on the target year [$/tCO2 converted to T$/GtC]
+p46_taxCO2eqRegiMax("2050") = 20 * sm_DptCO2_2_TDpGtC; 
+p46_taxCO2eqRegiMax("2055") = 24 * sm_DptCO2_2_TDpGtC; 
+p46_taxCO2eqRegiMax("2060") = 28 * sm_DptCO2_2_TDpGtC; 
+p46_taxCO2eqRegiMax("2070") = 29 * sm_DptCO2_2_TDpGtC;
 
-***profile for countries with 2050 target
-pm_taxCO2eqRegi(t,nz_reg2050)$sameas(t,"2035")=5;
-pm_taxCO2eqRegi(t,nz_reg2050)$sameas(t,"2040")=10;
-pm_taxCO2eqRegi(t,nz_reg2050)$sameas(t,"2045")=15;
-pm_taxCO2eqRegi(t,nz_reg2050)$sameas(t,"2050")=20;
-pm_taxCO2eqRegi(t,nz_reg2050)$(t.val > 2050) = max(0, pm_taxCO2eqRegi("2050", nz_reg2050) * (t.val - p46_zeroYear) / (2050 - p46_zeroYear));
+loop(netZeroTargets(regi,t,targetSpecies),
+  pm_taxCO2eqRegi(t2,regi) $ (2030 < t2.val and t2.val <= t.val) = macro_interpolate(t2,2030,t,0,p46_taxCO2eqRegiMax(t));
+  pm_taxCO2eqRegi(t2,regi) $ (t.val < t2.val) = macro_interpolate(t2,t,p46_zeroYear,p46_taxCO2eqRegiMax(t),0);
+);
 
-*** profile for countries with 2055 CO2 target
-pm_taxCO2eqRegi(t,nz_reg2055)$sameas(t,"2035")=3;
-pm_taxCO2eqRegi(t,nz_reg2055)$sameas(t,"2040")=6;
-pm_taxCO2eqRegi(t,nz_reg2055)$sameas(t,"2045")=10;
-pm_taxCO2eqRegi(t,nz_reg2055)$sameas(t,"2050")=16;
-pm_taxCO2eqRegi(t,nz_reg2055)$sameas(t,"2055")=24;
-pm_taxCO2eqRegi(t,nz_reg2055)$(t.val > 2055) = max(0, pm_taxCO2eqRegi("2055", nz_reg2055) * (t.val - p46_zeroYear) / (2055 - p46_zeroYear));
+*** Coverage shares are calculated using PBL's Net-Zero Calculator based on https://zerotracker.net/
+*** (methodology and more information at https://zerotracker.net/methodology) and further
+*** adaptations based on Climate Action Tracker information, literature or expert opinion.
+*** Net-zero claculator "ELEVATE T6.3 Scenario Protocol NDC and LTS information v3.xlsx"
+*** The current protocol includes policies until March 2025 (see https://github.com/NewClimateInstitute/policy-modelling/issues/6#event-22523859766)
+*** "The current CPDB is informed by the annual update cycle for 2025. It contains policies adopted up to and including March 2025." Luka (NCI)
+p46_targetCoverage(regi) = 1;
+p46_targetCoverage(regi) $ (sameAs(regi, "LAM")) = 0.83;
+p46_targetCoverage(regi) $ (sameAs(regi, "MEA")) = 0.41;
+p46_targetCoverage(regi) $ (sameAs(regi, "NEU")) = 0.80;
+p46_targetCoverage(regi) $ (sameAs(regi, "OAS")) = 0.86;
+p46_targetCoverage(regi) $ (sameAs(regi, "SSA")) = 0.56;
+p46_targetCoverage(regi) $ (sameAs(regi, "REF")) = 0.87;
 
-*** profile for countries with 2060 target
-pm_taxCO2eqRegi(t,nz_reg2060)$sameas(t,"2035")=2;
-pm_taxCO2eqRegi(t,nz_reg2060)$sameas(t,"2040")=5;
-pm_taxCO2eqRegi(t,nz_reg2060)$sameas(t,"2045")=9;
-pm_taxCO2eqRegi(t,nz_reg2060)$sameas(t,"2050")=14;
-pm_taxCO2eqRegi(t,nz_reg2060)$sameas(t,"2055")=20;
-pm_taxCO2eqRegi(t,nz_reg2060)$sameas(t,"2060")=28;
-pm_taxCO2eqRegi(t,nz_reg2060)$(t.val > 2060) = max(0, pm_taxCO2eqRegi("2060", nz_reg2060) * (t.val - p46_zeroYear) / (2060 - p46_zeroYear));
 
-*** profile for countries with 2070 target
-pm_taxCO2eqRegi(t,nz_reg2070)$sameas(t,"2035")=2;
-pm_taxCO2eqRegi(t,nz_reg2070)$sameas(t,"2040")=5;
-pm_taxCO2eqRegi(t,nz_reg2070)$sameas(t,"2045")=9;
-pm_taxCO2eqRegi(t,nz_reg2070)$sameas(t,"2050")=13;
-pm_taxCO2eqRegi(t,nz_reg2070)$sameas(t,"2055")=17;
-pm_taxCO2eqRegi(t,nz_reg2070)$sameas(t,"2060")=21;
-pm_taxCO2eqRegi(t,nz_reg2070)$sameas(t,"2065")=25;
-pm_taxCO2eqRegi(t,nz_reg2070)$sameas(t,"2070")=29;
-pm_taxCO2eqRegi(t,nz_reg2070)$(t.val > 2070) = max(0, pm_taxCO2eqRegi("2070", nz_reg2070) * (t.val - p46_zeroYear) / (2070 - p46_zeroYear));
-
-*** profile for countries with 2080 target
-pm_taxCO2eqRegi(t,nz_reg2080)$sameas(t,"2035")=2;
-pm_taxCO2eqRegi(t,nz_reg2080)$sameas(t,"2040")=4;
-pm_taxCO2eqRegi(t,nz_reg2080)$sameas(t,"2045")=7;
-pm_taxCO2eqRegi(t,nz_reg2080)$sameas(t,"2050")=10;
-pm_taxCO2eqRegi(t,nz_reg2080)$sameas(t,"2055")=13;
-pm_taxCO2eqRegi(t,nz_reg2080)$sameas(t,"2060")=16;
-pm_taxCO2eqRegi(t,nz_reg2080)$sameas(t,"2065")=19;
-pm_taxCO2eqRegi(t,nz_reg2080)$sameas(t,"2070")=22;
-pm_taxCO2eqRegi(t,nz_reg2080)$sameas(t,"2075")=25;
-pm_taxCO2eqRegi(t,nz_reg2080)$sameas(t,"2080")=28;
-pm_taxCO2eqRegi(t,nz_reg2080)$(t.val > 2080) = max(0, pm_taxCO2eqRegi("2080", nz_reg2080) * (t.val - p46_zeroYear) / (2080 - p46_zeroYear));
-
-***rescale
-pm_taxCO2eqRegi(t,regi) = sm_DptCO2_2_TDpGtC * pm_taxCO2eqRegi(t,regi);
-
-***initialize parameter
-p46_taxCO2eqRegiLast(t,regi) = 0;
-p46_taxCO2eqLast(t,regi)     = 0;
+*** Parameter initialisation
+p46_taxCO2eqRegiLast(t,regi)  = 0;
+p46_taxCO2eqTotalLast(t,regi) = 0;
 
 *** EOF ./modules/46_carbonpriceRegi/netZero/datainput.gms
 
