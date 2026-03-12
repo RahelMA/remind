@@ -1402,12 +1402,12 @@ $setglobal cm_NDC_TargetCheckConv  off      !! def = "off"  !! regexp = on|off
 *' *  (2024_cond):   minimum technology targets are included from NewClimate latest policy modeling protocol in 2025
 *' *  (2024_uncond): maximal technology targets are included from NewClimate latest policy modeling protocol in 2025
 $setglobal cm_NPi_version  2025_cond    !! def = "2025_cond"  !! regexp = 2025_(un)?cond
-*' cm_netZeroScen     "choose scenario of net zero targets of netZero realization of module 46_carbonpriceRegi"
 *'
-*'  (NGFS_v4):        settings used for NGFS v4, 2023
-*'  (NGFS_v4_20pc):   settings used for NGFS v4, 2023, with still 20% of 2020 emissions in netZero year
-*'  (ELEVATE6p3):     settings used for ELEVATE6p3 LTS and NDC-LTS scenario
-$setglobal cm_netZeroScen  NGFS_v4     !! def = "NGFS_v4"  !! regexp = NGFS_v4|NGFS_v4_20pc|ELEVATE6p3
+*' cm_netZeroScen   Choose scenario of net zero targets of netZero realization of module 46_carbonpriceRegi
+*'  (NGFS6):        settings used for NGFS phase 6 (2026)
+*'  (NGFS6_20pc):   settings used for NGFS phase 6 (2026), with still 20% of 2025 emissions in netZero year
+*'  (ELEVATE6p3):   settings used for ELEVATE6p3 LTS and NDC-LTS scenario
+$setglobal cm_netZeroScen  NGFS6     !! def = "NGFS6"  !! regexp = NGFS6|NGFS6_20pc|ELEVATE6p3
 *' cm_LTSstartYr   choose when rescaling of net-zero targets starts in 46_carbonpriceRegi netZero realisation
 *' *  (2040):      default start of rescaling is 2040, which allows meeting 2035 NDC targets (scenario known as NDC-LTS)
 *' *  (2035):      rescaling starts in 2035 to directly reach net-zero, which may overshoot NDC targets (scenario known as LTS)
