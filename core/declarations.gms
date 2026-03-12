@@ -718,8 +718,23 @@ sm_tgch4_2_pgc = s_gwpCH4 * (12/44) * 0.001;
 *** ------------ Macro functions ---------------
 *** Define macros that can be used as functions throughout the model code.
 *** This is especially useful for more complex expressions that are used in multiple places, to avoid code duplication and to ensure consistency.
+*** Parameters of a macro are replaced directly by the chosen value at compile time: they have nothing to do with the model parameters or sets.
+*** Because the replacement is automatic, please pay attention to brackets.
 
-*** Linear interpolation between two values x0 and x1 at time points t0 and t1 for an intermediate time point t
+*** macro_interpolate: Linear interpolation between two values x0 and x1 at time points t0 and t1 for an intermediate time point t
+*** Example 1:
+***   Suppose we use two different data sources for historical and projected population.
+***   To avoid a sudden jump, we may interpolate between the two curves over the period 2005-2025:
+***   pm_pop(t,regi) = macro_interpolate(t.val, 2005, 2025, p_popHistorical(t,regi), p_popProjection(t,regi));
+*** Example 2:
+***   Suppose we have a subsidy that we want to phase out with a different date for each region.
+***   p_subsidy(t,regi) = macro_interpolate(t.val, cm_startyear, p_subsidyEndYr(regi), p_subsidy(cm_startyear,regi), 0);
 $macro macro_interpolate(t,t0,t1,x0,x1) ( ((t1) - (t)) / ((t1) - (t0)) * (x0) + ((t) - (t0)) / ((t1) - (t0)) * (x1) )
+
+*** Average the value x over set S
+*** Example:
+***   Suppose we want the average spv capacity per region that had more than 1 billion people in 2020.
+***   macro_average(regi $ (pm_pop("2020",regi) > 1), vm_cap(t,regi,"spv","1"))
+$macro macro_average(S, x) ( sum(S, x) / card(S) )
 
 *** EOF ./core/declarations.gms
