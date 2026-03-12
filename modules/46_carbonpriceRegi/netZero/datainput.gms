@@ -6,6 +6,10 @@
 *** |  Contact: remind@pik-potsdam.de
 *** SOF ./modules/46_carbonpriceRegi/netZero/datainput.gms
 
+if(not (cm_multigasscen = 2),
+  abort "Error: module 46 netZero requires cm_multigasscen = 2, because all pledges include all GHG emissions including LULUCF";
+);
+
 p46_zeroYear = 2200;
 
 *' Define initial values for the regional carbon price markup designed to reach net-zero targets.
