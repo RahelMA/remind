@@ -8,7 +8,9 @@
 
 p46_zeroYear = 2200;
 
-*** Define the maximal added carbon price at net zero, depending on the target year [$/tCO2 converted to T$/GtC]
+*' Define initial values for the regional carbon price markup designed to reach net-zero targets.
+*' pm_taxCO2eqRegi grows linearly from zero in 2030 to p46_taxCO2eqRegiMax in the date of net zero.
+*' p46_taxCO2eqRegiMax depends on the target year [$/tCO2 converted to T$/GtC]:
 p46_taxCO2eqRegiMax("2050") = 20 * sm_DptCO2_2_TDpGtC; 
 p46_taxCO2eqRegiMax("2055") = 24 * sm_DptCO2_2_TDpGtC; 
 p46_taxCO2eqRegiMax("2060") = 28 * sm_DptCO2_2_TDpGtC; 
@@ -19,19 +21,19 @@ loop(netZeroTargets(regi,t,targetSpecies),
   pm_taxCO2eqRegi(t2,regi) $ (t.val < t2.val) = macro_interpolate(t2.val, t.val, p46_zeroYear, p46_taxCO2eqRegiMax(t), 0);
 );
 
-*** Coverage shares are calculated using PBL's Net-Zero Calculator based on https://zerotracker.net/
-*** (methodology and more information at https://zerotracker.net/methodology) and further
-*** adaptations based on Climate Action Tracker information, literature or expert opinion.
-*** Net-zero claculator "ELEVATE T6.3 Scenario Protocol NDC and LTS information v3.xlsx"
+*' Coverage shares are calculated using PBL's Net-Zero Calculator based on https://zerotracker.net/
+*' (methodology and more information at https://zerotracker.net/methodology) and further
+*' adaptations based on Climate Action Tracker information, literature or expert opinion.
+*' Net-zero claculator "ELEVATE T6.3 Scenario Protocol NDC and LTS information v3.xlsx"
+*' "The current CPDB is informed by the annual update cycle for 2025. It contains policies adopted up to and including March 2025." Luka (NCI)
 *** The current protocol includes policies until March 2025 (see https://github.com/NewClimateInstitute/policy-modelling/issues/6#event-22523859766)
-*** "The current CPDB is informed by the annual update cycle for 2025. It contains policies adopted up to and including March 2025." Luka (NCI)
 p46_targetCoverage(regi) = 1;
-p46_targetCoverage(regi) $ (sameAs(regi, "LAM")) = 0.83;
-p46_targetCoverage(regi) $ (sameAs(regi, "MEA")) = 0.41;
-p46_targetCoverage(regi) $ (sameAs(regi, "NEU")) = 0.80;
-p46_targetCoverage(regi) $ (sameAs(regi, "OAS")) = 0.86;
-p46_targetCoverage(regi) $ (sameAs(regi, "SSA")) = 0.56;
-p46_targetCoverage(regi) $ (sameAs(regi, "REF")) = 0.87;
+p46_targetCoverage(regi) $ sameAs(regi, "LAM") = 0.83;
+p46_targetCoverage(regi) $ sameAs(regi, "MEA") = 0.41;
+p46_targetCoverage(regi) $ sameAs(regi, "NEU") = 0.80;
+p46_targetCoverage(regi) $ sameAs(regi, "OAS") = 0.86;
+p46_targetCoverage(regi) $ sameAs(regi, "SSA") = 0.56;
+p46_targetCoverage(regi) $ sameAs(regi, "REF") = 0.87;
 
 
 *** Parameter initialisation

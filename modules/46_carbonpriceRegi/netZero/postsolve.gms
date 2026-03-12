@@ -26,7 +26,7 @@ $ifthen "%cm_netZeroScen%" == "ELEVATE6p3"
     p46_emi_offset(regi) = (1 - p46_targetCoverage(regi)) * p46_emi_refRun(t,regi) / sm_MtCO2_2_GtC;
   );
 
-  p46_emi_offset(regi) $ (sameAs(regi, "EUR")) = 100; !! 100 MtCO2eq margin for EUR at the net-zero year
+  p46_emi_offset(regi) $ sameAs(regi, "EUR") = 100; !! 100 MtCO2eq margin for EUR at the net-zero year
 
 $else
   Execute_Loadpoint 'input_ref' p46_emi_refRun = vm_co2eq.l;
@@ -35,7 +35,7 @@ $else
   );
 $endif
 
-*** Countries with net-zero targets fail to meet them and keep 20% of their 2025 emissions
+*** Countries covered by net-zero targets fail to meet them and keep 20% of their 2025 emissions
 $if "%cm_netZeroScen%" == "NGFS6_20pc" p46_emi_offset(regi) = p46_emi_offset(regi) + p46_targetCoverage(regi) * p46_emi_refYr(regi) * 0.2;
 
 display p46_emi_offset;
