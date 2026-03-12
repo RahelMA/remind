@@ -26,8 +26,6 @@ $ifthen "%cm_netZeroScen%" == "ELEVATE6p3"
     p46_emi_offset(regi) = (1 - p46_targetCoverage(regi)) * p46_emi_refRun(t,regi) / sm_MtCO2_2_GtC;
   );
 
-  p46_emi_offset(regi) $ sameAs(regi, "EUR") = 100; !! 100 MtCO2eq margin for EUR at the net-zero year
-
 $else
   Execute_Loadpoint 'input_ref' p46_emi_refRun = vm_co2eq.l;
   loop(netZeroTargets(regi,t,targetSpecies),
