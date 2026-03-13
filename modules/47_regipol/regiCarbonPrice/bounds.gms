@@ -203,12 +203,12 @@ $IFTHEN.NucRegiPol not "%cm_NucRegiPol%" == "off"
 *' ESC -> no new Nuclear capacity (Italy had a plebiscite for this and Greece should not have any new capacity)
     vm_deltaCap.up(t,regi,"tnrs","1")$((t.val ge 2020) and (t.val ge cm_startyear) and (sameas(regi,"ESC"))) = 0;
 *' Neither France, ENC, NEN, ECS, ESW or ECE currently plan to early-retire any of their current fleet until 2050
-    vm_capEarlyReti.up(t,regi,"tnrs") $ ( (t.val ge cm_startyear) AND (t.val le 2050) AND (sameas(regi,"FRA")) ) = 0;
-    vm_capEarlyReti.up(t,regi,"tnrs") $ ( (t.val ge cm_startyear) AND (t.val le 2050) AND (sameas(regi,"ENC")) ) = 0;
-    vm_capEarlyReti.up(t,regi,"tnrs") $ ( (t.val ge cm_startyear) AND (t.val le 2050) AND (sameas(regi,"NEN")) ) = 0;
-    vm_capEarlyReti.up(t,regi,"tnrs") $ ( (t.val ge cm_startyear) AND (t.val le 2050) AND (sameas(regi,"ECS")) ) = 0;
-    vm_capEarlyReti.up(t,regi,"tnrs") $ ( (t.val ge cm_startyear) AND (t.val le 2050) AND (sameas(regi,"ESW")) ) = 0;
-    vm_capEarlyReti.up(t,regi,"tnrs") $ ( (t.val ge cm_startyear) AND (t.val le 2050) AND (sameas(regi,"ECE")) ) = 0;
+    vm_capEarlyReti.up(t,regi,"tnrs") $ ( (t.val ge cm_startyear) AND (t.val le 2050) AND (sameas(regi,"FRA")) ) = 1e-3;
+    vm_capEarlyReti.up(t,regi,"tnrs") $ ( (t.val ge cm_startyear) AND (t.val le 2050) AND (sameas(regi,"ENC")) ) = 1e-3;
+    vm_capEarlyReti.up(t,regi,"tnrs") $ ( (t.val ge cm_startyear) AND (t.val le 2050) AND (sameas(regi,"NEN")) ) = 1e-3;
+    vm_capEarlyReti.up(t,regi,"tnrs") $ ( (t.val ge cm_startyear) AND (t.val le 2050) AND (sameas(regi,"ECS")) ) = 1e-3;
+    vm_capEarlyReti.up(t,regi,"tnrs") $ ( (t.val ge cm_startyear) AND (t.val le 2050) AND (sameas(regi,"ESW")) ) = 1e-3;
+    vm_capEarlyReti.up(t,regi,"tnrs") $ ( (t.val ge cm_startyear) AND (t.val le 2050) AND (sameas(regi,"ECE")) ) = 1e-3;
 $ENDIF.NucRegiPol  
 
 *' Extended nuclear policies:
