@@ -207,7 +207,7 @@ display p_CapFixFromRWfix, p_deltaCapFromRWfix;
 *' switch to prevent new nuclear capacities after 2025, until then all currently planned plants are built
 if(cm_nucscen = 5,
   vm_deltaCap.up(t,regi_nucscen,"tnrs",rlf) $ (t.val > 2025) = 1e-6;
-  vm_cap.lo(t,regi_nucscen,"tnrs",rlf) $ (t.val > 2015) = 0;
+  vm_cap.lo(t,regi_nucscen,"tnrs",rlf) $ (t.val > 2025) = 0;
 );
 
 
