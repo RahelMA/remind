@@ -209,7 +209,7 @@ if(cm_startyear <= 2025,
 
 if(cm_startyear <= 2030, !! require the realization of at least 50% of the max additions until 2030 (estimated at 80% of plants currently under construction) 
    vm_deltaCap.lo("2030",regi,"tnrs","1") = 0.50 * pm_NuclearConstraint("2030",regi,"tnrs") / 5;
-   vm_deltaCap.up("2030",regi,"tnrs","1") = pm_NuclearConstraint("2030",regi,"tnrs") / 5;
+   vm_deltaCap.up("2030",regi,"tnrs","1") = pm_NuclearConstraint("2030",regi,"tnrs") / 5; 
 );
 if(cm_startyear <= 2035, !! upper bound calculated in mrremind/R/calcCapacityNuclear.R: 50% of planned and 30% of proposed plants, plus extra for lifetime extension and newcomers
    vm_deltaCap.up("2035",regi,"tnrs","1") = pm_NuclearConstraint("2035",regi,"tnrs") / 5;
@@ -221,9 +221,9 @@ if(cm_startyear <= 2040, !! upper bound calculated in mrremind/R/calcCapacityNuc
 display p_CapFixFromRWfix, p_deltaCapFromRWfix;
 
 
-*' switch to prevent new nuclear capacities after 2020, until then all currently planned plants are built
+*' switch to prevent new nuclear capacities after 2025, until then all currently planned plants are built
 if(cm_nucscen = 5,
-  vm_deltaCap.up(t,regi_nucscen,"tnrs",rlf) $ (t.val > 2020) = 1e-6;
+  vm_deltaCap.up(t,regi_nucscen,"tnrs",rlf) $ (t.val > 2025) = 1e-6;
   vm_cap.lo(t,regi_nucscen,"tnrs",rlf) $ (t.val > 2015) = 0;
 );
 
