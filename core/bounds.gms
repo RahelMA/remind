@@ -178,33 +178,16 @@ vm_deltaCap.fx(t,regi,te,rlf) $ (t.val <= 2025 and pm_data(regi,"tech_stat",te) 
 *** ------------------------------------------------------------------
 *' ##### Capacity for nuclear energy
 *** TODO: data update ------------------------------------------------
-if(cm_startyear <= 2015,
-  p_CapFixFromRWfix("2015",regi,"tnrs") = max( pm_aux_capLowerLimit("tnrs",regi,"2015") , pm_NuclearConstraint("2015",regi,"tnrs") );
-  p_deltaCapFromRWfix("2015",regi,"tnrs") = ( p_CapFixFromRWfix("2015",regi,"tnrs") - pm_aux_capLowerLimit("tnrs",regi,"2015") )
-                                    / 7.5;  !! this parameter is currently only for display and not further used to fix anything
-  p_deltaCapFromRWfix("2010",regi,"tnrs") = ( p_CapFixFromRWfix("2015",regi,"tnrs") - pm_aux_capLowerLimit("tnrs",regi,"2015") )
-                                    / 7.5; !! this parameter is currently only for display and not further used to fix anything
-*** keep nuclear power capacity in +-10% range of historic data for 2015, choose range to allow for some flexibility for the model
-  vm_cap.lo("2015",regi,"tnrs","1") = 0.9 * p_CapFixFromRWfix("2015",regi,"tnrs");
-  vm_cap.up("2015",regi,"tnrs","1") = 1.1 * p_CapFixFromRWfix("2015",regi,"tnrs");
-);
 
-if(cm_startyear <= 2020,
-  p_CapFixFromRWfix("2020",regi,"tnrs") = max( pm_aux_capLowerLimit("tnrs",regi,"2020") , pm_NuclearConstraint("2020",regi,"tnrs") );
-  p_deltaCapFromRWfix("2020",regi,"tnrs") = ( p_CapFixFromRWfix("2020",regi,"tnrs") - pm_aux_capLowerLimit("tnrs",regi,"2020") )
+loop(t,
+  if( ( t.val > 2010 ) AND ( t.val < 2030 ) AND ( cm_startyear <= t.val ),
+    p_CapFixFromRWfix(t,regi,"tnrs") = max( pm_aux_capLowerLimit("tnrs",regi,t) , pm_NuclearConstraint(t,regi,"tnrs") );
+    p_deltaCapFromRWfix(t,regi,"tnrs") = ( p_CapFixFromRWfix(t,regi,"tnrs") - pm_aux_capLowerLimit("tnrs",regi,t) )
                                     / 7.5;  !! this parameter is currently only for display and not further used to fix anything
-*** keep nuclear power capacity in +-10% range of historic data for 2020, choose range to allow for some flexibility for the model
-  vm_cap.lo("2020",regi,"tnrs","1") = 0.9 * p_CapFixFromRWfix("2020",regi,"tnrs");
-  vm_cap.up("2020",regi,"tnrs","1") = 1.1 * p_CapFixFromRWfix("2020",regi,"tnrs");
-);
-
-if(cm_startyear <= 2025,
-  p_CapFixFromRWfix("2025",regi,"tnrs") = max( pm_aux_capLowerLimit("tnrs",regi,"2025") , pm_NuclearConstraint("2025",regi,"tnrs") );
-  p_deltaCapFromRWfix("2025",regi,"tnrs") = ( p_CapFixFromRWfix("2025",regi,"tnrs") - pm_aux_capLowerLimit("tnrs",regi,"2025") )
-                                    / 7.5;  !! this parameter is currently only for display and not further used to fix anything
-*** keep nuclear power capacity in +-10% range of historic data for 2025, choose range to allow for some flexibility for the model
-  vm_cap.lo("2025",regi,"tnrs","1") = 0.9 * p_CapFixFromRWfix("2025",regi,"tnrs");
-  vm_cap.up("2025",regi,"tnrs","1") = 1.1 * p_CapFixFromRWfix("2025",regi,"tnrs");
+*** keep nuclear power capacity in +-10% range of historic data, choose range to allow for some flexibility for the model
+    vm_cap.lo(t,regi,"tnrs","1") = 0.9 * p_CapFixFromRWfix(t,regi,"tnrs");
+    vm_cap.up(t,regi,"tnrs","1") = 1.1 * p_CapFixFromRWfix(t,regi,"tnrs");
+  );
 );
 
 if(cm_startyear <= 2030, !! require the realization of at least 50% of the max additions until 2030 (estimated at 80% of plants currently under construction) 
