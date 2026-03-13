@@ -199,6 +199,7 @@ vm_cap.up("2020",regi,"pc","1")$((cm_startyear le 2020) and (sameas(regi,"UKI"))
 $IFTHEN.NucRegiPol not "%cm_NucRegiPol%" == "off" 
 *' Germany Nuclear phase-out
     vm_cap.up(t,regi,"tnrs","1")$((t.val ge 2025) and (t.val ge cm_startyear) and (sameas(regi,"DEU"))) = 1E-6;
+    vm_cap.lo(t,regi,"tnrs","1")$((t.val ge 2025) and (t.val ge cm_startyear) and (sameas(regi,"DEU"))) = 1E-6;
 *' ESC -> no new Nuclear capacity (Italy had a plebiscite for this and Greece should not have any new capacity)
     vm_deltaCap.up(t,regi,"tnrs","1")$((t.val ge 2020) and (t.val ge cm_startyear) and (sameas(regi,"ESC"))) = 0;
 $ENDIF.NucRegiPol  
@@ -207,13 +208,13 @@ $ENDIF.NucRegiPol
 $IFTHEN.proNucRegiPol not "%cm_proNucRegiPol%" == "off" 
 *' Pro nuclear countries tend to keep nuclear production by political decision
 *' assuming France would keep at least 80% of its 2015 nuclear capacity in the future.
-vm_cap.lo(t,regi,"tnrs","1")$((t.val ge cm_startyear) and (sameas(regi,"FRA"))) = 0.8*pm_histCap("2015",regi,"tnrs");
+vm_cap.lo(t,regi,"tnrs","1")$((t.val ge cm_startyear) AND (t.val ge 2030) AND (sameas(regi,"FRA"))) = 0.8*pm_histCap("2015",regi,"tnrs");
 *' Assuming Czech Republic would keep at least its 2015 nuclear capacity in the future (CZE corresponds to 61.8% of nuclear capacity of ECE in 2015)
-vm_cap.lo(t,regi,"tnrs","1")$((t.val ge cm_startyear) and (sameas(regi,"ECE"))) = 0.618*pm_histCap("2015",regi,"tnrs");
+vm_cap.lo(t,regi,"tnrs","1")$((t.val ge cm_startyear) AND (t.val ge 2030) AND (sameas(regi,"ECE"))) = 0.618*pm_histCap("2015",regi,"tnrs");
 *' Assuming Finland would keep at least its 2015 nuclear capacity in the future (FIN corresponds to 21.6% of nuclear capacity of ENC in 2015)
-vm_cap.lo(t,regi,"tnrs","1")$((t.val ge cm_startyear) and (sameas(regi,"ENC"))) = 0.216*pm_histCap("2015",regi,"tnrs");
+vm_cap.lo(t,regi,"tnrs","1")$((t.val ge cm_startyear) AND (t.val ge 2030) AND (sameas(regi,"ENC"))) = 0.216*pm_histCap("2015",regi,"tnrs");
 *' Assuming Romania would keep at least its 2015 nuclear capacity in the future (ROU corresponds to 22.1% of nuclear capacity of ECS in 2015)
-vm_cap.lo(t,regi,"tnrs","1")$((t.val ge cm_startyear) and (sameas(regi,"ECS"))) = 0.221*pm_histCap("2015",regi,"tnrs");
+vm_cap.lo(t,regi,"tnrs","1")$((t.val ge cm_startyear) AND (t.val ge 2030) AND (sameas(regi,"ECS"))) = 0.221*pm_histCap("2015",regi,"tnrs");
 $ENDIF.proNucRegiPol 
 
 *' This accounts for different CCS policies that can be chosen for the EU subregions.
