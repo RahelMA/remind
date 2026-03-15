@@ -381,15 +381,14 @@ $ifthen.floorscen %cm_floorCostScen% == "pricestruc"
 *' Floor costs based on current price structure: for selected technologie, floor cost follows the historical price structure across regions.
 *' The rescaling is relative to global average investment costs: if a region has twice higher costs than average at historical time steps
 *' then it will also have a twice higher floor cost.
-  pm_data(regi,"floorcost",te) $ (te(teRegTechCosts) and te(teLearn)) =
+  pm_data(regi,"floorcost",te) $ (teRegTechCosts(te) and teLearn(te)) =
       fm_dataglob("floorcost",te) * p_inco0("2015",regi,te)
     / (sum(regi, p_inco0("2015",regi,te)) / card(regi));
   pm_data(regi,"floorcost",te) $ sameAs(te, "spv") =
       fm_dataglob("floorcost",te) * p_inco0("2020",regi,te)
     / (sum(regi, p_inco0("2020",regi,te)) / card(regi));
-$endif.floorscen
 
-$ifthen.floorscen %cm_floorCostScen% == "gdpBased"
+$elseif.floorscen %cm_floorCostScen% == "gdpBased"
 *' Floor costs for learning technologies based on GDP MER per capita in 2050:
 *'   - regions with average GDP have multiplier 1
 *'   - regions with very low GDP have multiplier 0.5
@@ -428,8 +427,8 @@ $ifthen %cm_techcosts% == "GLO"
 
 $else
 !! cm_techcosts is REG or REG2040
-    pm_data(regi,"learnMult_wFC",te)    = pm_data(regi,"incolearn",te)    / sum(regi2,p_capCum("2015",regi2,te)    ** pm_data(regi,"learnExp_wFC",te));
-    pm_data(regi,"learnMult_wFC","spv") = pm_data(regi,"incolearn","spv") / sum(regi2,p_capCum("2020",regi2,"spv") ** pm_data(regi,"learnExp_wFC","spv"));
+    pm_data(regi,"learnMult_wFC",te)    = pm_data(regi,"incolearn",te)    / sum(regi2,p_capCum("2015",regi2,te))    ** pm_data(regi,"learnExp_wFC",te);
+    pm_data(regi,"learnMult_wFC","spv") = pm_data(regi,"incolearn","spv") / sum(regi2,p_capCum("2020",regi2,"spv")) ** pm_data(regi,"learnExp_wFC","spv");
 $endif
 
 *FS* initialize learning curve for most advanced technologies as defined by tech_stat = 4 in generisdata_tech.prn (with very small real-world capacities in 2020)
@@ -490,7 +489,7 @@ $ifthen.REG_techcosts "%cm_techcosts%" == "REG"   !! cm_techcosts REG
 
 *** re-insert effect of costMarkupAdvTech for IGCC in the regionalized cost
 *** data, as the IEA numbers have unrealistically low IGCC costs in 2005-2020
-  loop(s_statusTe $ (s_statusTe.val = pm_data(regi,"tech_stat","igcc")),
+  loop((regi,s_statusTe) $ (s_statusTe.val = pm_data(regi,"tech_stat","igcc")),
     pm_inco0_t(ttot,regi,"igcc") $ (ttot.val >= 2005 and ttot.val <= 2030)
       = p_costMarkupAdvTech(s_statusTe,ttot) * pm_inco0_t(ttot,regi,"igcc");
   );
