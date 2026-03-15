@@ -374,27 +374,31 @@ fm_dataglob("floorcost",te)  = (1 + sum(regi, p_tkpremused(regi,te)) / card(regi
 *** ====================== floor cost scenarios ===========================
 $ifthen.floorscen not %cm_floorCostScen% == "default"
 *** report old floor costs pre manipulation in non-default scenario
-*** (placed after REG_techcosts block so multipliers are applied on top of regionalized base costs)
   p_oldFloorCostdata(regi,teLearn(te)) = pm_data(regi,"floorcost",te);
 $endif.floorscen
 
 $ifthen.floorscen %cm_floorCostScen% == "pricestruc"
-*** Floor costs based on current price structure: for selected technologie, floor cost follows the historical price structure across regions.
-*** Between two regions, the ratio of their floor costs will match the ratio of their most recent available historical costs:
-  pm_data(regi,"floorcost",te) $ (te(teRegTechCosts) and te(teLearn)) = fm_dataglob("floorcost",te) * p_inco0("2015",regi,te) / fm_dataglob("inco0",te);
-  pm_data(regi,"floorcost",te) $ sameAs(te, "spv")                    = fm_dataglob("floorcost",te) * p_inco0("2020",regi,te) / fm_dataglob("inco0",te);
+*' Floor costs based on current price structure: for selected technologie, floor cost follows the historical price structure across regions.
+*' The rescaling is relative to global average investment costs: if a region has twice higher costs than average at historical time steps
+*' then it will also have a twice higher floor cost.
+  pm_data(regi,"floorcost",te) $ (te(teRegTechCosts) and te(teLearn)) =
+      fm_dataglob("floorcost",te) * p_inco0("2015",regi,te)
+    / (sum(regi, p_inco0("2015",regi,te)) / card(regi));
+  pm_data(regi,"floorcost",te) $ sameAs(te, "spv") =
+      fm_dataglob("floorcost",te) * p_inco0("2020",regi,te)
+    / (sum(regi, p_inco0("2020",regi,te)) / card(regi));
 $endif.floorscen
 
 $ifthen.floorscen %cm_floorCostScen% == "gdpBased"
-*** Floor costs for learning technologies based on GDP MER per capita in 2050:
-***   - regions with average GDP have multiplier 1
-***   - regions with very low GDP have multiplier 0.5
-***   - regions with very high GDP have multiplier 1.5
-*** compute GDP MER per capita in 2050 per region and the population-weighted global average [$/capita]
+*' Floor costs for learning technologies based on GDP MER per capita in 2050:
+*'   - regions with average GDP have multiplier 1
+*'   - regions with very low GDP have multiplier 0.5
+*'   - regions with very high GDP have multiplier 1.5
+*' compute GDP MER per capita in 2050 per region and the population-weighted global average [$/capita]
   p_GDPpCap2050(regi) = pm_gdp("2050",regi) / pm_pop("2050",regi) * 1000;
   p_GDPpCap2050_world = sum(regi, pm_gdp("2050",regi)) / sum(regi, pm_pop("2050",regi)) * 1000;
-*** apply sigmoid function (see shape on https://www.desmos.com/calculator/rbcjeoulgk):
-*** floor cost = standard floor cost * (1.5 - 1 / (1 + exp(-4 * (2050 global GDPpCap / 2050 regional GDPpCap          - 1))))
+*' apply sigmoid function (see shape on https://www.desmos.com/calculator/rbcjeoulgk):
+*' floor cost = standard floor cost * (1.5 - 1 / (1 + exp(-4 * (2050 global GDPpCap / 2050 regional GDPpCap          - 1))))
   pm_data(regi,"floorcost",teLearn(te)) =
         pm_data(regi,"floorcost",te) * (1.5 - 1 / (1 + exp(-4 * (p_GDPpCap2050_world / (p_GDPpCap2050(regi) + sm_eps) - 1))));
 $endif.floorscen

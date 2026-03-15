@@ -456,9 +456,9 @@ q_limitGeopot(t,regi,peReComp(enty),rlf)..
 *' with variations depending on time period and floor cost scenarios.
 
 
-$macro macro_capCum   (sum(regi2, vm_capCum(t,regi2,teLearn)) + pm_capCumForeign(t,regi,teLearn))
-$macro macro_costRegi (pm_data(regi,"floorcost",teLearn) + pm_data(regi,"learnMult_wFC",teLearn) * macro_capCum ** pm_data(regi,"learnExp_wFC",teLearn))
-$macro macro_costGlob (fm_dataglob("floorcost",teLearn) + fm_dataglob("learnMult_wFC",teLearn) * macro_capCum ** fm_dataglob("learnExp_wFC",teLearn))
+$macro macro_capCumGlob (sum(regi2, vm_capCum(t,regi2,teLearn)) + pm_capCumForeign(t,regi,teLearn))
+$macro macro_costRegi   (pm_data(regi,"floorcost",teLearn) + pm_data(regi,"learnMult_wFC",teLearn) * macro_capCumGlob ** pm_data(regi,"learnExp_wFC",teLearn))
+$macro macro_costGlob   (fm_dataglob("floorcost",teLearn) + fm_dataglob("learnMult_wFC",teLearn) * macro_capCumGlob ** fm_dataglob("learnExp_wFC",teLearn))
 
 q_costTeCapital(t,regi,teLearn) $ (pm_data(regi,"tech_stat",teLearn) < 4 or t.val > 2020) ..
   vm_costTeCapital(t,regi,teLearn)
@@ -475,13 +475,13 @@ $if %cm_floorCostScen% == "gdpBased"    + macro_costRegi $ (t.val > 2020)
 
 $ifthen.floorscen %cm_floorCostScen% == "default"
 *** from 2020 to c_teLearnConvStartYr: regional capital costs
-  + macro_costRegi $ (t.val > 2020 and t.val < c_teLearnConvStartYr)
+  + macro_costRegi $ (t.val > 2020 and t.val <= c_teLearnConvStartYr)
 
 *** c_teLearnConvStartYr to c_teLearnConvEndYr: linear convergence from regional costs to global costs
-  + macro_interpolate(t.val, c_teLearnConvStartYr, c_teLearnConvEndYr, macro_costRegi, macro_costGlob) $ (t.val >= c_teLearnConvStartYr and t.val <= c_teLearnConvEndYr)
+  + macro_interpolate(t.val, c_teLearnConvStartYr, c_teLearnConvEndYr, macro_costRegi, macro_costGlob) $ (t.val > c_teLearnConvStartYr and t.val < c_teLearnConvEndYr)
 
 *** after c_teLearnConvEndYr: global capital costs
-  + macro_costGlob $ (t.val > c_teLearnConvEndYr)
+  + macro_costGlob $ (t.val >= c_teLearnConvEndYr)
 $endif.floorscen
 
 ;
