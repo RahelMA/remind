@@ -408,8 +408,7 @@ $setglobal carbonprice  NPi2025           !! def = NPi2025
 *' This module applies a markup pm_taxCO2eqRegi on top of pm_taxCO2eq to achieve additional intermediate targets.
 *'
 *' * (none): no regional carbonprice policies
-*' * (NDC): implements a carbon price markup trajectory consistent with the NDC targets between 2030 and 2070
-*' * (netZero): implements a carbon price markup trajectory consistent with the net zero targets, the region settings can be adjusted with cm_netZeroScen
+*' * (netZero): implements a regional carbon price markup so that regions reach their net-zero targets; for partial targets, use cm_netZeroPercent
 $setglobal carbonpriceRegi  none      !! def = none
 *'---------------------    47_regipol  -----------------------------------------
 *'
@@ -772,6 +771,20 @@ parameter
 *' *  (2015): standard for all policy runs (eq. to fix2010), NDC, NPi and production baselines, especially if various baselines with varying parameters are explored
 *' *  (....): later start for delay policy runs, eg. 2025 for what used to be delay2020
 *'
+
+parameter
+  cm_LTSstartYr "[46_carbonpriceRegi] First year activating a regional carbon price markup to reach net-zero targets (Long-Term Strategy)"
+;
+  cm_LTSstartYr = 2040;        !! def = 2040  !! regexp = 20[2-9](0|5)
+*' *  (2040): NDC-LTS scenario: default start of rescaling is 2040, which allows meeting 2035 NDC targets
+*' *  (2030): LTS scenario: from 2030 onward, regions see a carbon price markup to reach their net-zero targets, so they may overshoot NDC targets
+
+parameter
+  cm_netZeroPercent "[46_carbonpriceRegi] Share of emissions allowed at the target year of a country with a net-zero target [1]"
+;
+  cm_netZeroPercent = 0; !! def = 0
+*' setting 0.2 is in some scenarios of NGFS phase 6 (2026), allowing countries to keep 20% of 2025 emissions in net-zero year
+
 parameter
   c_start_budget            "start of GHG budget limit"
 ;
@@ -803,11 +816,6 @@ parameter
 *' (0): equal per capita redistribution
 *' (1): proportional redistribution
 *'
-parameter
-  cm_netZeroPercent "Share of emissions allowed at the target year of a country with a net-zero target [1]"
-*' setting 0.2 is in some scenarios of NGFS phase 6 (2026), allowing 20% of 2025 emissions in netZero year
-;
-  cm_netZeroPercent = 0; !! def = 0
 
 parameter
   cm_multigasscen           "scenario on GHG portfolio to be included in permit trading scheme"
@@ -1409,10 +1417,6 @@ $setglobal cm_NDC_TargetCheckConv  off      !! def = "off"  !! regexp = on|off
 *' *  (2024_uncond): maximal technology targets are included from NewClimate latest policy modeling protocol in 2025
 $setglobal cm_NPi_version  2025_cond    !! def = "2025_cond"  !! regexp = 2025_(un)?cond
 *'
-*' cm_LTSstartYr   choose when rescaling of net-zero targets starts in 46_carbonpriceRegi netZero realisation
-*' *  (2040):      default start of rescaling is 2040, which allows meeting 2035 NDC targets (scenario known as NDC-LTS)
-*' *  (2035):      rescaling starts in 2035 to directly reach net-zero, which may overshoot NDC targets (scenario known as LTS)
-$setglobal cm_LTSstartYr  2040      !! def = 2040  
 *' *  c_regi_earlyreti_rate  "maximum percentage of capital stock that can be retired early (before reaching their expected lifetimes) in one year in specified regions, if they are not economically viable. It is applied to all techs unless otherwise specified in c_tech_earlyreti_rate."
 *' *  Default value used in NPi runs: EUR_regi 0.06, USA_regi 0.04, CHA_regi 0.04, CAZ_regi 0.04, JPN_regi 0.04, GLO 0.03 (0.06 means 6% of capacity can be retired early per year at maximum, i.e. full retirement after 16.7 years, 40% standing capacity after 10 years)
 *' *  In target scenarios with ambition level beyond the NPi, we assume slightly higher early retirement rates outside the EU.
