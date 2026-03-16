@@ -8,8 +8,8 @@
 
 *** difference between 2020 land-use change emissions from Magpie and UNFCCC 2013-2022 average land-use change emissions [GtC]
 pm_emiLULUCF_GrassiShift(ttot,regi) $ (p47_EmiLULUCFCountryAcc("2020",regi)) =
-    pm_macBaseMagpie("2020",regi,"co2luc") !! GtC
-  - macro_average(tall $ (2013 <= tall.val and tall.val <= 2022), p47_EmiLULUCFCountryAcc(tall,regi)) * sm_MtCO2_2_GtC
+    pm_macBaseMagpie("2020",regi,"co2luc")
+  - sum(tall $ (2012 < tall.val and tall.val <= 2022), p47_EmiLULUCFCountryAcc(tall,regi)) / 10 * sm_MtCO2_2_GtC
 ;
 
 ***--------------------------------------------------
