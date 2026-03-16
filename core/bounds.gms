@@ -181,7 +181,10 @@ vm_deltaCap.fx(t,regi,te,rlf) $ (t.val <= 2025 and pm_data(regi,"tech_stat",te) 
 
 loop(t,
   if( ( t.val > 2010 ) AND ( t.val < 2030 ) AND ( cm_startyear <= t.val ),
-    p_CapFixFromRWfix(t,regi,"tnrs") = max( pm_aux_capLowerLimit("tnrs",regi,t) , pm_NuclearConstraint(t,regi,"tnrs") );
+*' The spin-up capacity from initialcap2 may be larger than historic capacities. For all regions but DEU, we don't want to enforce early retirement, so we calculate the standing capacities 
+*' resulting from 2005 capacities and normal technical depreciation. For DEU, the explicit nuclear phaseout means that capacities are phased down faster than the normal techincal lifetime
+    p_CapFixFromRWfix(t,regi,"tnrs") $ (NOT sameas(regi,"DEU") ) = max( pm_aux_capLowerLimit("tnrs",regi,t) , pm_NuclearConstraint(t,regi,"tnrs") );
+    p_CapFixFromRWfix(t,regi,"tnrs") $ ( sameas(regi,"DEU") ) = pm_NuclearConstraint(t,regi,"tnrs") ;  
     p_deltaCapFromRWfix(t,regi,"tnrs") = ( p_CapFixFromRWfix(t,regi,"tnrs") - pm_aux_capLowerLimit("tnrs",regi,t) )
                                     / 7.5;  !! this parameter is currently only for display and not further used to fix anything
 *** keep nuclear power capacity in +-10% range of historic data, choose range to allow for some flexibility for the model
