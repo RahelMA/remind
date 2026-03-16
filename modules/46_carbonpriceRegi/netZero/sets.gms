@@ -8,25 +8,6 @@
 
 sets
 
-targetSpecies "Gases included in national net-zero targets" / CO2_target, GHG_target /
-
-netZeroTargets(all_regi,ttot,targetSpecies) "Region, year, and gases of net-zero targets"
-/
-    CAZ . 2050 . GHG_target
-    EUR . 2050 . GHG_target
-    JPN . 2050 . GHG_target
-    LAM . 2050 . CO2_target
-
-    MEA . 2055 . CO2_target
-    NEU . 2055 . CO2_target
-    OAS . 2055 . CO2_target
-    SSA . 2055 . CO2_target
-
-    CHA . 2060 . CO2_target
-    REF . 2060 . CO2_target
-
-    IND . 2070 . GHG_target
-/
-;
+targetSpecies "Gases included in national net-zero targets" / CO2_target, GHG_target /;
 
 *** EOF ./modules/46_carbonpriceRegi/netZero/sets.gms
