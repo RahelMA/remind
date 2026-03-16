@@ -5,14 +5,14 @@
 # |  REMIND License Exception, version 1.0 (see LICENSE file).
 # |  Contact: remind@pik-potsdam.de
 name, type, reason
-vm_co2eqGlob, variable, ???
 sm_budgetCO2eqGlob, parameter, ???
 pm_gdp_gdx, parameter, ???
-pm_pop, parameter, ???
 pm_budgetCO2eq, parameter, ???
-cm_emiscen, switch, ???
+vm_co2eqGlob,input,questionnaire
+cm_emiscen,input,questionnaire
+p41_precorrection_reduction, parameter, ???
+p41_correct_factor, parameter, ???
 pm_shPPPMER,input,questionnaire
+pm_pop, parameter, ???
 pm_gdp,input,questionnaire
-cm_permittradescen,input,questionnaire
-cm_permitTradeFinalYr, input, ???
-cm_permitTradeRatio, input, ???
+p41_co2eq_bau, parameter, ???
