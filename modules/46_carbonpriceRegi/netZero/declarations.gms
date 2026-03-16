@@ -18,7 +18,7 @@ p46_refRun_emiTe(ttot,all_regi,all_enty)       "Container for input_bau values o
 p46_refRun_emiMac(ttot,all_regi,all_enty)      "Container for input_bau values of emiMac"
 p46_refRun_emiCdr(ttot,all_regi,all_enty)      "Container for input_bau values of emiCdr"
 
-p46_taxCO2eqRegiInitial                        "Initial value of the additional regional CO2 tax, then rescaled by the algorithm in module 46 [T$/GtC]"
+p46_taxCO2eqRegiPeak(all_regi)                 "Peak value of the additional regional CO2 tax in target year, updated by the algorithm in module 46 [T$/GtC]"
 pm_taxCO2eqRegi(ttot,all_regi)                 "Additional markup carbon in 46_carbonpriceRegi module to reach net-zero targets [T$/GtC]. Multiply by 272 to convert to $/tCO2."
 pm_taxCO2eqSum(ttot,all_regi)                  "Total CO2 price including general trajectory (pm_taxCO2eq), regional markup (pm_taxCO2eqRegi) and social cost of carbon (pm_taxCO2eqSCC) [T$/GtC]. Multiply by 272 to convert to $/tCO2."
 p46_taxCO2eqRegi_iter(iteration,ttot,all_regi) "Track regional CO2eq tax over iterations [T$/GtC]"
@@ -31,7 +31,6 @@ p46_targetCoverage(all_regi)                   "Share of the region that is cove
 ;
 
 Scalar  
-p46_zeroYear                                   "Year at which pm_taxCO2eqRegi drops to zero after having decreased linearly since the net-zero year [year]" / 2200 /
 p46_startInIteration                           "First iteration to start adapting pm_taxCO2eqRegi [1]" / 10 /
 ;
 

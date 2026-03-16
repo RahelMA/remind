@@ -780,6 +780,13 @@ parameter
 *' *  (2030): LTS scenario: from 2030 onward, regions see a carbon price markup to reach their net-zero targets, so they may overshoot NDC targets
 
 parameter
+  cm_LTSendYr "[46_carbonpriceRegi] Year at which pm_taxCO2eqRegi drops to zero after having decreased linearly since the net-zero year"
+;
+  cm_LTSendYr = 0;        !! def = 0  !! regexp = [0-9]+
+*' *  (0): Regional markup carbon price in target year then applies forever
+*' *  (2200): Regional markup carbon price diminishes from target year toward reaching zero in 2200
+
+parameter
   cm_netZeroPercent "[46_carbonpriceRegi] Share of emissions allowed at the target year of a country with a net-zero target [1]"
 ;
   cm_netZeroPercent = 0; !! def = 0

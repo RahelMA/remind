@@ -42,13 +42,6 @@ p46_netZeroTargetCoverage(all_regi,ttot,targetSpecies) "Coverage of emissions in
   IND . 2070 . CO2_target  1 !! CO2 target of India
 /;
 
-
-*' Define initial values for the regional carbon price markup designed to reach net-zero targets.
-*' pm_taxCO2eqRegi grows linearly from zero in cm_LTSstartYr to p46_taxCO2eqRegiInitial in the target year, then back toward zero in 2200.
-p46_taxCO2eqRegiInitial = 100 * sm_DptCO2_2_TDpGtC; !! [$/tCO2 converted to T$/GtC]
-loop((regi,t,targetSpecies) $ p46_netZeroTargetCoverage(regi,t,targetSpecies),
-  pm_taxCO2eqRegi(t2,regi) $ (cm_LTSstartYr <= t2.val and t2.val <= t.val) = macro_interpolate(t2.val, cm_LTSstartYr-5, t.val, 0, p46_taxCO2eqRegiInitial);
-  pm_taxCO2eqRegi(t2,regi) $ (t.val < t2.val) = macro_interpolate(t2.val, t.val, 2200, p46_taxCO2eqRegiInitial, 0);
-);
+pm_taxCO2eqRegi(ttot,regi) = 0;
 
 *** EOF ./modules/46_carbonpriceRegi/netZero/datainput.gms
