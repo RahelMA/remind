@@ -731,10 +731,4 @@ sm_tgch4_2_pgc = s_gwpCH4 * (12/44) * 0.001;
 ***   p_subsidy(t,regi) = macro_interpolate(t.val, cm_startyear, p_subsidyEndYr(regi), p_subsidy(cm_startyear,regi), 0);
 $macro macro_interpolate(t,t0,t1,x0,x1) ( ((t1) - (t)) / ((t1) - (t0)) * (x0) + ((t) - (t0)) / ((t1) - (t0)) * (x1) )
 
-*** Average the value x over set S
-*** Example:
-***   Suppose we want the average spv capacity per region that had more than 1 billion people in 2020.
-***   macro_average(regi $ (pm_pop("2020",regi) > 1), vm_cap(t,regi,"spv","1"))
-$macro macro_average(S, x) ( sum(S, x) / card(S) )
-
 *** EOF ./core/declarations.gms
