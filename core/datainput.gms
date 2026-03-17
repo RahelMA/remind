@@ -780,7 +780,7 @@ pm_cf(ttot,regi,"tdh2i") = pm_cf(ttot,regi,"tdh2s");
 
 *** Region- and tech-specific early retirement rates
 loop(ext_regi$pm_extRegiEarlyRetiRate(ext_regi),
-  pm_regiEarlyRetiRate(t,regi,te)$(regi_group(ext_regi,regi)) = pm_extRegiEarlyRetiRate(ext_regi);
+  pm_regiEarlyRetiRate(t,regi,teEarlyReti)$(regi_group(ext_regi,regi)) = pm_extRegiEarlyRetiRate(ext_regi);
 );
 
 
@@ -795,7 +795,7 @@ if(       (sum(regi$sameas(regi,"DEU"),1) > 0)
       and (sum(regi$sameas(regi,"ECS"),1) > 0),
 *** increase default early retirement rates by 2%/yr for EU subregions
   loop(regi$regi_group("EUR_regi",regi),
-    pm_regiEarlyRetiRate(t,regi,te) = pm_regiEarlyRetiRate(t,regi,te) + 0.02
+    pm_regiEarlyRetiRate(t,regi,teEarlyReti) = pm_regiEarlyRetiRate(t,regi,teEarlyReti) + 0.02
   );
 );
 
