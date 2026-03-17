@@ -913,6 +913,31 @@ if(pm_NuclearConstraint("2020",regi,"tnrs")<0,
 );
 );
 
+*** read project pipeline data of capacities used for setting historical and near-term bounds across technologies
+parameter p_CapacityBounds(ttot,all_regi,all_te,project_status)        "technology capacity for historical and near-term time steps by project status, project status categories are operational, under construction and planned [GW(output) for energy technologies, MtCO2/yr for carbon management technologies]"
+/
+$ondelim
+$include "./core/input/p_CapacityBounds.cs4r"
+$offdelim
+/;
+
+
+*** assumptions on share of completed projects in near-term time steps for projects that are "under construction" or "planned"
+p_ProjectsCompletionShare(ttot,regi,te,project_status) = 0;
+
+*** so far this generic near-term bounds implementation only makes assumptions on the completion of coal power projects (pc)
+$ifthen.ProjectsNearTerm %c_NearTermProjectCompletion% == "conservative"
+*** for coal power assume that 90% of projects under construction will actually be completed in time as well as 50% of currently planned projects
+p_ProjectsCompletionShare(ttot,regi,"pc","construction") = 0.9;
+p_ProjectsCompletionShare(ttot,regi,"pc","planned") = 0.5;
+$elseif.ProjectsNearTerm %c_NearTermProjectCompletion% == "transformative"
+*** for coal power assume that 30%% of projects under construction will actually be completed and no currently planned projects
+p_ProjectsCompletionShare(ttot,regi,"pc","construction") = 0.3;
+$endif.ProjectsNearTerm
+
+
+
+
 *** read in data on CCS capacities and announced projects used as upper and lower bound on vm_co2CCS in 2025 and 2030
 parameter p_boundCapCCS(ttot,all_regi,project_status)        "installed and planned capacity of CCS"
 /

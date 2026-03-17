@@ -2053,6 +2053,13 @@ $setglobal cm_subsec_model_steel  processes  !! def = processes  !! regexp = pro
 *** (off) no bounds for 2025
 *** (on) some generous bounds for 2025 assuming that certain developments are not possible anymore even for fast growing technologies given 2023 data
 $setglobal cm_tech_bounds_2025  on  !! def = on  !! regexp = on|off
+*** c_NearTermProjectCompletion
+*** Choose assumptions on completion rates, i.e. the share of planned capacity additions of technologies in the near-term that will actually be completed and start operation. 
+*** This would effect, for example, the share of planned/under construction coal power projects that will reach completion in the first future time step. 
+*** The implementation serves to set near-term bounds in the model. There are two options:
+*** (conservative) conservative assumptions on completion rates (high completion rates of fossil technologies, low completion rates of clean technologies)
+*** (transformative) transformative assumptions on completion rates (low completion rates of fossil technologies, high completion rates of clean technologies)
+$setglobal c_NearTermProjectCompletion  conservative  !! def = conservative  !! regexp = conservative|transformative
 *** cm_VREminCap_Ger
 *** activate bounds lower bounds for capacities of VRE technologies in Germany by 2030 based on different trend assessment of the current project pipeline
 *** (off) no bounds for 2030

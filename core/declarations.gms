@@ -288,7 +288,7 @@ p_deltaCapFromRWfix(ttot,all_regi,all_te)            "auxiliary parameter with r
 pm_delta_histCap(tall,all_regi,all_te)               "historic capacity additions calculated from historic data [TW/yr]"
 p_histProdSeGrowthRate(tall,all_regi,all_enty,all_te)"historic energy production growth rate [fraction]"
 p_maxhistProdSeGrowthRate(all_regi,all_enty,all_te)  "maximum historic energy production growth rate [fraction]"
-
+p_ProjectsCompletionShare(ttot,all_regi,all_te,project_status) "assumptions on shares of projects completed that are currently under construction or planned derived from project pipeline data; used to set near-term technology bounds [share]"
 
 *** penalty cost implementation for cm_startyear to limit change in policy run relative to reference run
 p_prodSeReference(ttot,all_regi,all_enty,all_enty,all_te) "Secondary Energy output of a technology in the reference run [TWa]"
