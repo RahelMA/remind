@@ -756,6 +756,20 @@ pm_cf(ttot,regi,"ngt")$(ttot.val eq 2030) = 0.8 * pm_cf(ttot,regi,"ngt");
 pm_cf(ttot,regi,"ngt")$(ttot.val eq 2035) = 0.7 * pm_cf(ttot,regi,"ngt");
 pm_cf(ttot,regi,"ngt")$(ttot.val ge 2040) = 0.6 * pm_cf(ttot,regi,"ngt");
 
+
+*** assume that standard coal power plants also go in peak load mode over time as VRE share increases
+pm_cf(ttot,regi,"pc")$(ttot.val eq 2035) = 0.9 * pm_cf(ttot,regi,"pc");
+pm_cf(ttot,regi,"pc")$(ttot.val eq 2040) = 0.8 * pm_cf(ttot,regi,"pc");
+pm_cf(ttot,regi,"pc")$(ttot.val eq 2045) = 0.7 * pm_cf(ttot,regi,"pc");
+pm_cf(ttot,regi,"pc")$(ttot.val ge 2050) = 0.5 * pm_cf(ttot,regi,"pc");
+
+*** modify short-term coal capacity factor for China based on latest 2025 EMBER data 
+*** (https://ember-energy.org/data/yearly-electricity-data/)
+*** and assumption that quite some renewables + coal over-capacity will be built until 2030, so coal power CF goes down
+pm_cf("2025",regi,"pc")$( sameas(regi,"CHA")) = 0.55;
+pm_cf("2030",regi,"pc")$( sameas(regi,"CHA")) = 0.48;
+
+
 *RP* set H2 turbines to the same CF values
 pm_cf(ttot,regi,"h2turb")$(ttot.val ge 2025) = pm_cf(ttot,regi,"ngt");
 pm_cf(ttot,regi,"h2turbVRE")$(ttot.val ge 2025) = pm_cf(ttot,regi,"ngt");
