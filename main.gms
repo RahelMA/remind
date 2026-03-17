@@ -1414,7 +1414,7 @@ $setglobal cm_netZeroScen  NGFS_v4     !! def = "NGFS_v4"  !! regexp = NGFS_v4|N
 *' *  Target scenario maximum retirement rates: EUR_regi 0.08, USA_regi 0.07, CHA_regi 0.07, CAZ_regi 0.07,  JPN_regi 0.07, GLO 0.06
 *' *  This reflects that the current aversion to shut down plants before end of their lifetime linked to political economy dynamics can be overcome to speed up the energy transition.
 *' *  Finally, note that these maximum early retirement rates are further differentiated by technology. Coal power has 20% higher rates, for instance, while CHP plants have 30% lower rates than the default value (see core/datainput.gms).
-$setglobal c_regi_earlyreti_rate  EUR_regi 0.06, USA_regi 0.04, CHA_regi 0.04, CAZ_regi 0.04, JPN_regi 0.04, GLO 0.03      !! def = EUR_regi 0.06, USA_regi 0.04, CHA_regi 0.04, CAZ_regi 0.04, JPN_regi 0.04, GLO 0.03
+$setglobal c_regi_earlyreti_rate  EUR_regi 0.06, USA_regi 0.04, CAZ_regi 0.04, JPN_regi 0.04, GLO 0.02      !! def = EUR_regi 0.06, USA_regi 0.04, CAZ_regi 0.04, JPN_regi 0.04, GLO 0.02
 *' *  c_tech_earlyreti_rate  "maximum percentage of capital stock of specific technologies that can be retired early in one year in specified regions. This switch overrides c_regi_earlyreti_rate to allow for fine-tuning of phase-out schedules, e.g. for implementation of certain policies or anticipated trends."
 *' *  Example use: USA_regi.pc 0.1, CHA_regi.pc 0.1: Change max retirement rates for coal power in US and China to 10%/yr.
 *' *  Keep value "off" if not needed.
