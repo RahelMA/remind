@@ -8,13 +8,13 @@
 sets
 emisForEmiFac11(all_enty)  "types of emissions that are only calculated in a post-processing routine after the optimization"
 /
-        NOx
-        CO
-        VOC
+        nox
+        co
+        voc
         so2
         bc
         oc
-        NH3
+        nh3
 /
 
 all_sectorEmi11 "all sectors with emissions"

@@ -433,10 +433,10 @@ all_enty             "all types of quantities"
     n2obio       "N2O emissions from pebiolc "
     bc           "black carbon from fossil fuel combustion"
     oc           "organic carbon from fossil fuel combustion"
-    NOx          "nitrogen oxide emissions"
-    CO           "carbon monoxide emissions"
-    VOC          "volatile organic compound emissions"
-    NH3          "ammonia emissions"
+    nox          "nitrogen oxide emissions"
+    co           "carbon monoxide emissions"
+    voc          "volatile organic compound emissions"
+    nh3          "ammonia emissions"
 
 *** emissions from industry sub-sectors
     co2cement      "CO2 emissions from clinker and cement production"
@@ -1652,10 +1652,10 @@ enty(all_enty)       "all types of quantities"
     n2obio       "N2O emissions from pebiolc"
     bc           "black carbon from fossil fuel combustion"
     oc           "organic carbon from fossil fuel combustion"
-    NOx
-    CO
-    VOC
-    NH3
+    nox
+    co
+    voc
+    nh3
     cco2         "captured CO2"
 *        pco2         "CCS related parameter during compression of CO2"
 *        tco2         "CCS related parameter during transportation of CO2"
