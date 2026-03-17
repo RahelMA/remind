@@ -36,6 +36,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     [[#2237](https://github.com/remindmodel/remind/pull/2207)]
 - **37_industry** replaced `execute_load` with `execute_loadpoint` in `37_industry/subsectors/datainput.gms` 
     [[#2237](https://github.com/remindmodel/remind/pull/2207)]
+- **35_transport** replaced `cm_startIter_EDGET` with `c_transportIter`
+    [[#2283](https://github.com/remindmodel/remind/pull/2283)]
 
 ### added
 - **40_techpol** implement renewable energy share targets for NPi2025 realization based on NewClimate policy protocol
