@@ -89,7 +89,7 @@ git checkout develop
 Use `start.R` together with a `scenario_config_magpie*.csv` file (formerly known as `scenario_config_coupled.csv`) to activate the MAgPIE coupling, e.g.
 
 ```
-Rscript start.R config/scenario_config_magpie.R
+Rscript start.R config/scenario_config_magpie.csv
 ```
 
 The new coupling is mainly perforemd in `core/presolve.gms`, by calling an external R script, that transfers the data of the latest Nash solution to MAgPIE, runs MAgPIE, and transfers the MAgPIE data to a `magpieData.gdx`, which is then read by GAMS.

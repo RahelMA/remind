@@ -13,7 +13,6 @@ pm_GDPGross,input,questionnaire
 pm_ttot_2_tall,input,questionnaire
 cm_expoLinear_yearStart,input,questionnaire
 cm_carbonprice_temperatureLimit,input,questionnaire
-cm_NDC_divergentScenario,input,questionnaire
 pm_consPC,input,questionnaire
 pm_prtp,input,questionnaire
 vm_demFeSector,input,questionnaire
