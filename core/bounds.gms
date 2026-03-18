@@ -65,8 +65,11 @@ loop(teRe2rlfDetail(te,rlf),
 *** ==================================================================
 *' #### 2. Historical and near-term capacities
 *** ==================================================================
+
+*** ------------------------------------------------------------------
 *' ##### Capacity for fossils and renewables
 *** ------------------------------------------------------------------
+
 loop(t $ (t.val >= 2015 and t.val <= 2025),
 *** fix renewable capacities to real world historical values if available
   vm_cap.lo(t,regi,teVRE(te),"1") $ pm_histCap(t,regi,te) = 0.95 * pm_histCap(t,regi,te);
@@ -98,12 +101,26 @@ loop(regi $ regi_group("EUR_regi",regi),
 
 *** RP: add lower bound on 2020 coal chp and upper bound on gas chp based on IEA data to have a more realistic starting point
 vm_prodSe.lo("2020",regi,"pecoal","seel","coalchp") = 0.8 * pm_IO_output("2020",regi,"pecoal","seel","coalchp") ;
-vm_prodSe.up("2020",regi,"pegas","seel","gaschp") = 1e-4 + 1.3 * pm_IO_output("2020",regi,"pegas","seel","gaschp") ;
+vm_prodSe.up("2020",regi,"pegas","seel","gaschp") = 1e-4 + 1.3 * pm_IO_output("2020",regi,"pegas","seel","gaschp");
+
+
+*** lower bounds on near-term capacity additions based on projects in "under construction" and "planned" category and
+*** the respective assumptions on completion rates (i.e. shares of projects that will actucally be completed and start operation until 2030,
+*** see p_ProjectsCompletionShare assumptions defined in  core/datainput.gms)
+*** generic implementation (other historic and near-term bounds above could be fit into this generic implementation in the future to have less and more structured code)
+vm_deltaCap.lo("2030",regi,te,"1") = sum( project_status,
+*** assumed shares of projects completed until 2030 by project status
+                                      p_ProjectsCompletionShare("2030",regi,te,project_status)
+*** projects planned for 2030 by project status
+                                      * p_CapacityBounds("2030",regi,te,project_status) )
+*** divide by 5-year time step to get to annual capacity additions
+                                    / 5;
 
 
 *** ------------------------------------------------------------------
 *' ##### Near-term capacity for electrolysis and hydrogen 
 *** ------------------------------------------------------------------
+
 *' set lower and upper bounds for 2025 and 2030 based on projects annoucements from IEA Hydryogen project database:
 *' https://www.iea.org/data-and-statistics/data-product/hydrogen-production-and-infrastructure-projects-database
 *' distribute to regions via GDP share of 2025 (we do not use later time steps as they may have different GDPs depending on the scenario)
