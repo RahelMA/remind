@@ -1344,9 +1344,9 @@ parameter
 $setglobal c_magpieIter  20,24,28,32     !! def = "20,24,28,32"  !! This regular expression works in manual test but not in checkFixCfg [0-9]{1,2}(,[0-9]{1,2})*
 
 
-*' c_transportIter      "Nash iterations in which EDGE-T runs"
+*' c_edgeTransportIter  "Nash iterations in which EDGE-T runs"
 *'
-$setglobal c_transportIter 14,16,18,20,22,24,27,30,33,36,39,42,45,50,55,60,65,70,75,80,85,90,95   !! def = "14,16,18,20,22,24,27,30,33,36,39,42,45,50,55,60,65,70,75,80,85,90,95" 
+$setglobal c_edgeTransportIter 10,12,14,16,18,20,22,24,27,30,33,36,39,42,45,50,55,60,65,70,75,80,85,90,95   !! def = "14,16,18,20,22,24,27,30,33,36,39,42,45,50,55,60,65,70,75,80,85,90,95" 
 
 *' cm_rcp_scen       "chooses RCP scenario"
 *'

@@ -2324,9 +2324,9 @@ magpieIter(iteration) "Nash iterations in which MAgPIE runs in core/presolve"
     %c_magpieIter%
 /
 
-transportIter(iteration) "Nash iterations in which EDGE-T runs"
+edgeTransportIter(iteration) "Nash iterations in which EDGE-T runs"
 /
-    %c_transportIter%
+    %c_edgeTransportIter%
 /
 ;
 
