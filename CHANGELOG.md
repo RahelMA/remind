@@ -54,6 +54,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     [[#2289](https://github.com/remindmodel/remind/pull/2289)]
 - **core** Adapt maximum early retirement rates and differentiate between NPi and policy runs 
     [[#2300](https://github.com/remindmodel/remind/pull/2300)]
+- **core** further decrease early retirement rates in Npi and adapt coal power trends 
+    [[#2311](https://github.com/remindmodel/remind/pull/2311)]
 
 ### removed
 - **21_tax** remove input files with upper bounds on subsidies for final energy, as it is directly applied as part of input data generation
