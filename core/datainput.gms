@@ -786,6 +786,9 @@ loop(ext_regi$pm_extRegiEarlyRetiRate(ext_regi),
 
 *** for runs with all EU subregions (regionmapping21_EU21), increase early retirement rates for the EU regions
 *** because the higher regional resolution already introduces more intertia to the phase-out dynamics
+*** This increase of the parameter value between the two regional resolution actually makes H12 results better match EU21 results. 
+*** The larger heterogeneity of the EU subregions means that the single-region version needs less flexibility to change at the 
+*** same speed that the sum over the many regions can change.
 *** check whether DEU, FRA, ENC, ESC, ESW, ECS all contained in regi set
 if(       (sum(regi$sameas(regi,"DEU"),1) > 0)
       and (sum(regi$sameas(regi,"FRA"),1) > 0)
@@ -914,6 +917,8 @@ if(pm_NuclearConstraint("2020",regi,"tnrs")<0,
 );
 
 *** read project pipeline data of capacities used for setting historical and near-term bounds across technologies
+*** coal power projects from Global Energy Monitor
+*** CO2 storage capacities from IEA CCU database
 parameter p_CapacityBounds(ttot,all_regi,all_te,project_status)        "technology capacity for historical and near-term time steps by project status, project status categories are operational, under construction and planned [GW(output) for energy technologies, MtCO2/yr for carbon management technologies]"
 /
 $ondelim
