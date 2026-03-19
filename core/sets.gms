@@ -2323,6 +2323,11 @@ magpieIter(iteration) "Nash iterations in which MAgPIE runs in core/presolve"
 /
     %c_magpieIter%
 /
+
+edgeTransportIter(iteration) "Nash iterations in which EDGE-T runs"
+/
+    %c_edgeTransportIter%
+/
 ;
 
 ***-----------------------------------------------------------------------------
