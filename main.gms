@@ -343,7 +343,7 @@ $setglobal industry  subsectors   !! def = subsectors
 *'---------------------    39_CCU    ---------------------------------
 *'
 *' * (on): representation of technologies for producing synthetic liquids and synthetic gases based on hydrogen and captured carbon
-*' * (off): no representation of carbon caputre and utilization technologies.
+*' * (off): no representation of carbon capture and utilization technologies.
 $setglobal CCU  on      !! def = on
 *'---------------------    40_techpol  ----------------------------------------
 *'
@@ -408,8 +408,7 @@ $setglobal carbonprice  NPi2025           !! def = NPi2025
 *' This module applies a markup pm_taxCO2eqRegi on top of pm_taxCO2eq to achieve additional intermediate targets.
 *'
 *' * (none): no regional carbonprice policies
-*' * (NDC): implements a carbon price markup trajectory consistent with the NDC targets between 2030 and 2070
-*' * (netZero): implements a carbon price markup trajectory consistent with the net zero targets, the region settings can be adjusted with cm_netZeroScen
+*' * (netZero): implements a regional carbon price markup so that regions reach their net-zero targets; for partial targets, use cm_netZeroPercent
 $setglobal carbonpriceRegi  none      !! def = none
 *'---------------------    47_regipol  -----------------------------------------
 *'
@@ -466,7 +465,7 @@ $setGlobal optimization  nash         !! def = nash
 *'---------------------    81_codePerformance    -------------------------------
 *'
 *' * (off): nothing happens
-*' * (on):  test code performance: noumerous (30) succesive runs performed in a triangle, tax0, tax30, tax150, all growing exponentially.
+*' * (on):  test code performance: numerous (30) successive runs performed in a triangle, tax0, tax30, tax150, all growing exponentially.
 $setGlobal codePerformance  off       !! def = off
 
 ***-----------------------------------------------------------------------------
@@ -534,7 +533,7 @@ parameter
 *' *  (6): budget
 *' *  (9): tax scenario (requires running module 21_tax "on"), tax level controlled by module 45_carbonprice, other GHG etc. controlled by cm_rcp_scen
 *' *  (10): used for cost-benefit analysis
-*' *JeS* WARNING: data for cm_emiscen 4 only exists for multigas_scen 2 bau scenarios and for multigas_scen 1
+*' *JeS* WARNING: data for cm_emiscen 4 only exists for cm_multigasscen 2 bau scenarios and for cm_multigasscen 1
 parameter
   cm_taxCO2_startyear    "level of co2 tax in start year in $ per t CO2eq"
 ;
@@ -772,6 +771,27 @@ parameter
 *' *  (2015): standard for all policy runs (eq. to fix2010), NDC, NPi and production baselines, especially if various baselines with varying parameters are explored
 *' *  (....): later start for delay policy runs, eg. 2025 for what used to be delay2020
 *'
+
+parameter
+  cm_LTSstartYr "[46_carbonpriceRegi] First year activating a regional carbon price markup to reach net-zero targets (Long-Term Strategy)"
+;
+  cm_LTSstartYr = 2040;        !! def = 2040  !! regexp = 20[2-9](0|5)
+*' *  (2040): NDC-LTS scenario: default start of rescaling is 2040, which allows meeting 2035 NDC targets
+*' *  (2030): LTS scenario: from 2030 onward, regions see a carbon price markup to reach their net-zero targets, so they may overshoot NDC targets
+
+parameter
+  cm_LTSendYr "[46_carbonpriceRegi] Year at which pm_taxCO2eqRegi drops to zero after having decreased linearly since the net-zero year"
+;
+  cm_LTSendYr = 0;        !! def = 0  !! regexp = [0-9]+
+*' *  (0): Regional markup carbon price in target year then applies forever
+*' *  (2200): Regional markup carbon price diminishes from target year toward reaching zero in 2200
+
+parameter
+  cm_netZeroPercent "[46_carbonpriceRegi] Share of emissions allowed at the target year of a country with a net-zero target [1]"
+;
+  cm_netZeroPercent = 0; !! def = 0
+*' setting 0.2 is in some scenarios of NGFS phase 6 (2026), allowing countries to keep 20% of 2025 emissions in net-zero year
+
 parameter
   c_start_budget            "start of GHG budget limit"
 ;
@@ -803,6 +823,7 @@ parameter
 *' (0): equal per capita redistribution
 *' (1): proportional redistribution
 *'
+
 parameter
   cm_multigasscen           "scenario on GHG portfolio to be included in permit trading scheme"
 ;
@@ -1411,16 +1432,7 @@ $setglobal cm_NDC_TargetCheckConv  off      !! def = "off"  !! regexp = on|off
 *' *  (2024_cond):   minimum technology targets are included from NewClimate latest policy modeling protocol in 2025
 *' *  (2024_uncond): maximal technology targets are included from NewClimate latest policy modeling protocol in 2025
 $setglobal cm_NPi_version  2025_cond    !! def = "2025_cond"  !! regexp = 2025_(un)?cond
-*' cm_netZeroScen     "choose scenario of net zero targets of netZero realization of module 46_carbonpriceRegi"
 *'
-*'  (NGFS_v4):        settings used for NGFS v4, 2023
-*'  (NGFS_v4_20pc):   settings used for NGFS v4, 2023, with still 20% of 2020 emissions in netZero year
-*'  (ELEVATE6p3):     settings used for ELEVATE6p3 LTS and NDC-LTS scenario
-$setglobal cm_netZeroScen  NGFS_v4     !! def = "NGFS_v4"  !! regexp = NGFS_v4|NGFS_v4_20pc|ELEVATE6p3
-*' cm_LTSstartYr   choose when rescaling of net-zero targets starts in 46_carbonpriceRegi netZero realisation
-*' *  (2040):      default start of rescaling is 2040, which allows meeting 2035 NDC targets (scenario known as NDC-LTS)
-*' *  (2035):      rescaling starts in 2035 to directly reach net-zero, which may overshoot NDC targets (scenario known as LTS)
-$setglobal cm_LTSstartYr  2040      !! def = 2040  
 *' *  c_regi_earlyreti_rate  "maximum percentage of capital stock that can be retired early (before reaching their expected lifetimes) in one year in specified regions, if they are not economically viable. It is applied to all techs unless otherwise specified in c_tech_earlyreti_rate."
 *' *  Default value used in NPi runs: EUR_regi 0.06, USA_regi 0.04, CHA_regi 0.04, CAZ_regi 0.04, JPN_regi 0.04, GLO 0.03 (0.06 means 6% of capacity can be retired early per year at maximum, i.e. full retirement after 16.7 years, 40% standing capacity after 10 years)
 *' *  In target scenarios with ambition level beyond the NPi, we assume slightly higher early retirement rates outside the EU.

@@ -38,6 +38,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     [[#2237](https://github.com/remindmodel/remind/pull/2207)]
 - **35_transport** replaced `cm_startIter_EDGET` with `c_edgeTransportIter`
     [[#2283](https://github.com/remindmodel/remind/pull/2283)]
+- **46_carbonpriceRegi** Refactor netZero realisation and ensure that targets are aligned with national accounting
+    [#2307](https://github.com/remindmodel/remind/pull/2307)
 
 ### added
 - **40_techpol** implement renewable energy share targets for NPi2025 realization based on NewClimate policy protocol
@@ -70,7 +72,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     [#2249](https://github.com/remindmodel/remind/pull/2249)
 - **scripts** The distinction between 'raw' and 'smoothed' land use CO2 emissions is no longer supported, as the MAgPIE reporting only includes raw emissions
     [#2255](https://github.com/remindmodel/remind/pull/2255)
-
+- **46_carbonpriceRegi** Remove NDC realisation: all NDC mechanisms are in 45_carbonprice
+    [#2307](https://github.com/remindmodel/remind/pull/2307)
 
     
 ### fixed
