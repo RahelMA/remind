@@ -1929,9 +1929,10 @@ $setglobal cm_taxCO2_regiDiff_convergence   scenario    !! def = scenario
 $setglobal cm_taxCO2_regiDiff_startyearValue endogenous !! def = "endogenous"
 *** cm_budgetCO2from2020RegiShare     "switch to set eoc regional carbon budget shares by region (for easier comparison than total budgets, endogenous calculation possible)"
 $setglobal cm_budgetCO2from2020RegiShare  off !! def = off
-*** cm_peakBudgYr_regi  "switch to prescribe regional years of peaking carbon price, e.g. the net zero CO2 time step. Requires cm_taxCO2_Shape = 2."
+*** cm_peakBudgYrRegi  "switch to prescribe regional years of peaking carbon price, e.g. the net zero CO2 time step. Requires cm_taxCO2_Shape = 2."
 *** (off): no peaking year prescribed, carbon price can increase throughout the century
-$setglobal cm_peakBudgYr_regi off !! def = off
+*** example: " USA 2045, CHA 2045, EUR 2045, JPN 2045, NEU 2060, REF 2060, CAZ 2070, MEA 2060, LAM 2080,  OAS 2090,  IND 2100, SSA 2100"
+$setglobal cm_peakBudgYrRegi off !! def = off
 *** cm_ind_energy_limit Switch for setting upper limits on industry energy
 *** efficiency improvements.  See ./modules/37_subsectors/datainput.gms for
 *** implementation.

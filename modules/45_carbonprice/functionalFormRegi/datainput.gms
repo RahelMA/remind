@@ -34,7 +34,7 @@ p45_FunnelUpper(iteration) = 2 * EXP(-0.15 * iteration.val) + 1.005;
 *** Other
 s45_YearBeforeStartYear = smax(ttot$( ttot.val lt cm_startyear ), ttot.val); !! Timestep before startyear
 
-$ifthen.peak "%cm_peakBudgYr_regi%" == "off"
+$ifthen.peak "%cm_peakBudgYrRegi%" == "off"
 p45_peakBudgYr_regi(regi) = cm_peakBudgYr;
 $endif.peak
 
@@ -71,7 +71,7 @@ else
               p45_taxCO2refYear(regi)  / (cm_taxCO2_expGrowth**(2100 - ttot.val));
     !! carbon price post 2100 is set in Part II for all cm_taxCO2_functionalForm
     
-  else !! increase until cm_peakBudgYr
+  else !! increase until p45_peakBudgYr_regi(regi) (determined globally by cm_peakBudgYr or regionally by cm_peakBudgYrRegi)
     loop(regi, 
        s45_regiHelperYear = p45_peakBudgYr_regi(regi);
        p45_taxCO2refYear(regi)  = sum(ttot$(ttot.val eq s45_regiHelperYear), p45_taxCO2eq_path_gdx_input(ttot,regi));  !! save cm_peakBudgYr CO2 price from the input.gdx as reference point

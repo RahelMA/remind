@@ -37,8 +37,8 @@ p45_taxCO2refYear(all_regi)                      "CO2 tax in reference year for 
 *** If there is a regional budget, read regional carbon budget from switch and set additionally needed parameters
 p45_budgetCO2from2020Regi(all_regi)                      "regional carbon budget (Gt CO2)"
 p45_budgetCO2from2020RegiShare(all_regi)                 "share of region in global carbon budget" /%cm_budgetCO2from2020RegiShare%/
-$ifthen.Peak not "%cm_peakBudgYr_regi%" == "off"
-p45_peakBudgYr_regi(all_regi)                            "prescribed peak carbon price year for each region" /%cm_peakBudgYr_regi%/
+$ifthen.Peak not "%cm_peakBudgYrRegi%" == "off"
+p45_peakBudgYr_regi(all_regi)                            "prescribed peak carbon price year for each region" /%cm_peakBudgYrRegi%/
 $else.Peak
 p45_peakBudgYr_regi(all_regi)                            "prescribed peak carbon price year for each region"
 $endif.Peak
