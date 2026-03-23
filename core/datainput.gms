@@ -822,17 +822,6 @@ loop((ext_regi,te)$p_techEarlyRetiRate(ext_regi,te),
 );
 $endif.tech_earlyreti
 
-*** Time-dependent early retirement rates in Baseline scenarios
-$ifthen.Base_Cprice %carbonprice% == "none"
-$ifthen.Base_techpol %techpol% == "none"
-*** CG: Allow no early retirement in future periods under baseline for developing countries
-loop(regi,
-if ( p_developmentState("2015",regi) < 1,
-pm_regiEarlyRetiRate(t,regi,"pc")= 0;
-);
-);
-$endif.Base_techpol
-$endif.Base_Cprice
 
 display pm_regiEarlyRetiRate;
 
