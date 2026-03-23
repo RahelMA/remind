@@ -65,8 +65,11 @@ loop(teRe2rlfDetail(te,rlf),
 *** ==================================================================
 *' #### 2. Historical and near-term capacities
 *** ==================================================================
+
+*** ------------------------------------------------------------------
 *' ##### Capacity for fossils and renewables
 *** ------------------------------------------------------------------
+
 loop(t $ (t.val >= 2015 and t.val <= 2025),
 *** fix renewable capacities to real world historical values if available
   vm_cap.lo(t,regi,teVRE(te),"1") $ pm_histCap(t,regi,te) = 0.95 * pm_histCap(t,regi,te);
@@ -98,12 +101,26 @@ loop(regi $ regi_group("EUR_regi",regi),
 
 *** RP: add lower bound on 2020 coal chp and upper bound on gas chp based on IEA data to have a more realistic starting point
 vm_prodSe.lo("2020",regi,"pecoal","seel","coalchp") = 0.8 * pm_IO_output("2020",regi,"pecoal","seel","coalchp") ;
-vm_prodSe.up("2020",regi,"pegas","seel","gaschp") = 1e-4 + 1.3 * pm_IO_output("2020",regi,"pegas","seel","gaschp") ;
+vm_prodSe.up("2020",regi,"pegas","seel","gaschp") = 1e-4 + 1.3 * pm_IO_output("2020",regi,"pegas","seel","gaschp");
+
+
+*** lower bounds on near-term capacity additions based on projects in "under construction" and "planned" category and
+*** the respective assumptions on completion rates (i.e. shares of projects that will actucally be completed and start operation until 2030,
+*** see p_ProjectsCompletionShare assumptions defined in  core/datainput.gms)
+*** generic implementation (other historic and near-term bounds above could be fit into this generic implementation in the future to have less and more structured code)
+vm_deltaCap.lo("2030",regi,te,"1") = sum( project_status,
+*** assumed shares of projects completed until 2030 by project status
+                                      p_ProjectsCompletionShare("2030",regi,te,project_status)
+*** projects planned for 2030 by project status
+                                      * p_CapacityBounds("2030",regi,te,project_status) )
+*** divide by 5-year time step to get to annual capacity additions
+                                    / 5;
 
 
 *** ------------------------------------------------------------------
 *' ##### Near-term capacity for electrolysis and hydrogen 
 *** ------------------------------------------------------------------
+
 *' set lower and upper bounds for 2025 and 2030 based on projects annoucements from IEA Hydryogen project database:
 *' https://www.iea.org/data-and-statistics/data-product/hydrogen-production-and-infrastructure-projects-database
 *' distribute to regions via GDP share of 2025 (we do not use later time steps as they may have different GDPs depending on the scenario)
@@ -332,8 +349,8 @@ if(c_ccsinjecratescen > 0,
 *** Potential of EU27 regions is pooled and redistributed according to GDP (Only upper limit for 2030)
 *** Norway and UK announced to store CO2 for EU27 countries. So 50% of Norway and UK potential in 2030 is attributed to EU27-Pool
   if(not cm_emiscen = 1, !! cm_emiscen 1 = BAU
-    vm_co2CCS.lo(t,regi,"cco2","ico2","ccsinjeon","1") $ (t.val <= 2030) = s_MtCO2_2_GtC * p_boundCapCCS(t,regi,"operational") $ (t.val <= 2030);
-    vm_co2CCS.up(t,regi,"cco2","ico2","ccsinjeon","1") $ (t.val <= 2030) = s_MtCO2_2_GtC * (
+    vm_co2CCS.lo(t,regi,"cco2","ico2","ccsinjeon","1") $ (t.val <= 2030) = sm_MtCO2_2_GtC * p_boundCapCCS(t,regi,"operational") $ (t.val <= 2030);
+    vm_co2CCS.up(t,regi,"cco2","ico2","ccsinjeon","1") $ (t.val <= 2030) = sm_MtCO2_2_GtC * (
         p_boundCapCCS(t,regi,"operational") $ (t.val <= 2030)
       + p_boundCapCCS(t,regi,"construction") $ (t.val <= 2030)
       + p_boundCapCCS(t,regi,"planned") $ (t.val <= 2030) * c_fracRealfromAnnouncedCCScap2030);
@@ -379,7 +396,7 @@ loop(regi $ (p_boundCapCCSindicator(regi) = 0),
 *** Limit REMINDs ability to vent captured CO2 to 1 MtCO2 per yr per region. This happens otherwise to a great extend in stringent climate 
 *** policy scenarios if CCS and CCU capacities are limited in early years, to lower overall adjustment costs of capture technologies.
 *** In reality, people don't have perfect foresight and without storage or usage capacities, no capture facilities will be built.
-v_co2capturevalve.up(t,regi) = 1 * s_MtCO2_2_GtC;
+v_co2capturevalve.up(t,regi) = 1 * sm_MtCO2_2_GtC;
 
 
 *** ==================================================================
