@@ -1384,6 +1384,10 @@ $setglobal cm_NDC_targetYear  2030, 2035    !! def = "2030, 2035"
 *' *  By default 2030 CO2 prices are limited to 150 USD/tCO2 in EUR, 80 USD/tCO2 in CAZ, USA, JPN and NEU, 50 USD/tCO2 in REF and MEA, 40 USD/tCO2 in LAM and CHA, 30 USD/tCO2 in OAS, 15 USD/tCO2 in IND and 10 USD/tCO2 in SSA.
 *' *  If set to "off", no CO2 price limits are applied in any region.
 $setglobal cm_NDC_CO2PriceLimit  2030.EUR 150, 2030.(CAZ,USA, JPN, NEU) 80, 2030.(REF,MEA) 50, 2030.(LAM, CHA) 40, 2030.OAS 30, 2030.IND 15, 2030.SSA 10    !! def = "2030.EUR 150, 2030.(CAZ,USA, JPN, NEU) 80, 2030.(REF,MEA) 50, 2030.(LAM, CHA) 40, 2030.OAS 30, 2030.IND 15, 2030.SSA 10" 
+*' cm_NDC_CO2PriceLimit_continuation "switch to determine whether CO2 price limits in NDC realization are applied only in the specified target year or also in subsequent years" [requires 45_carbonprice = NDC]
+*' *  (on): CO2 price limits are applied not only in the specified target year but also in subsequent years, with the limit increasing by 20% per year after the target year, but allowing for carbon price of at least 200$/tCO2 at minimum
+*' *  (off): CO2 price limits are only applied in the specified target year, but not in subsequent years
+$setglobal cm_NDC_CO2PriceLimit_continuation  off     !! def = "off"  !! regexp = on|off
 *' cm_NDC_postTargetDevelopment            "choose assumption on co2 price trajectory after NDC target years" [requires 45_carbonprice = NDC]
 *' *  (constant):                     carbon price remains constant after the last NDC target year
 *' *  (global_conv):                  carbon price converges across regions to a global value of 100$/tCO2 by 2100
