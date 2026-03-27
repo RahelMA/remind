@@ -580,7 +580,7 @@ parameter
 parameter
   sm_peakbudget_diff_tolerance  "convergence criterion for allowed difference between cumulative emissions in peak budget year and year of maximum cumulative emissions if both years are not the same. It is formulated as an absolute deviation from the target budget [GtCO2]"
 ;
-  sm_peakbudget_diff_tolerance      = 1;   !! def = 1 !! regexp = is.nonnegative
+  sm_peakbudget_diff_tolerance      = 5;   !! def = 5 !! regexp = is.nonnegative
 parameter
   cm_expoLinear_yearStart   "time at which carbon price increases linearly instead of exponentially"
 ;
