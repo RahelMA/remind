@@ -6,7 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
 ## [Unreleased]
-
+- **scripts** include reporttransport/remind2 (EDGE-T/REMIND) variable harmonization. reporttransport (EDGE-T side) energy service demand is rescaled to match exactly remind2 ES/FE/Emi values for variables reported by both models
+    [[#2320](https://github.com/remindmodel/remind/pull/2320)]
 ### input data/calibration
 - **mrremind** new data source for geological CO2 storage potential (split into onshore/offshore and technical vs. limited potentials), replacing the previous LimitCCS output
   [[#788](https://github.com/pik-piam/mrremind/pull/788)]
