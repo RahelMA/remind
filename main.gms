@@ -571,7 +571,7 @@ parameter
   cm_peakBudgYr            = 2050;   !! def = 2050
 *' time of global net-zero CO2 emissions (peak budget)
 *' endogenous adjustment by algorithms in 45_carbonprice/functionalForm/postsolve.gms [requires emiscen = 9 and cm_iterative_target_adj = 7 or 9]
-*' Under development: If used with 45_carbonprice/functionalFormREGI and cm_taxCO2_Shape = 2, it determines the peak of the carbon price
+*' Under development: If used with 45_carbonprice/functionalForm(REGI) and cm_taxCO2_Shape = 2, it determines the peak of the carbon price
 parameter
   cm_taxCO2_IncAfterPeakBudgYr "annual increase of CO2 tax after cm_peakBudgYr in $ per tCO2"
 ;
@@ -580,7 +580,7 @@ parameter
 parameter
   sm_peakbudget_diff_tolerance  "convergence criterion for allowed difference between cumulative emissions in peak budget year and year of maximum cumulative emissions if both years are not the same. It is formulated as an absolute deviation from the target budget [GtCO2]"
 ;
-  sm_peakbudget_diff_tolerance      = 1;   !! def = 1 !! regexp = is.nonnegative
+  sm_peakbudget_diff_tolerance      = 5;   !! def = 5 !! regexp = is.nonnegative
 parameter
   cm_expoLinear_yearStart   "time at which carbon price increases linearly instead of exponentially"
 ;
@@ -1948,8 +1948,12 @@ $setglobal cm_taxCO2_regiDiff_convergence   scenario    !! def = scenario
 *** For example, setting the switch to GLO 50, SSA 5, CHA 40 means that in cm_startyear, SSA has carbon price of 5$/tCO2,  CHA has carbon price of 40$/tCO2, and all other regions have carbon price of 50$/tCO2.
 *** Important note: If regional carbon prices in the start year are manually set, the regional values are used as lower bounds for pm_taxCO2eq
 $setglobal cm_taxCO2_regiDiff_startyearValue endogenous !! def = "endogenous"
-*' cm_budgetCO2from2020RegiShare     "switch to set eoc regional carbon budget shares by region (for easier comparison than total budgets, endogenous calculation possible)"
+*** cm_budgetCO2from2020RegiShare     "switch to set eoc regional carbon budget shares by region (for easier comparison than total budgets, endogenous calculation possible)"
 $setglobal cm_budgetCO2from2020RegiShare  off !! def = off
+*** cm_peakBudgYrRegi  "switch to prescribe regional years of peaking carbon price, e.g. the net zero CO2 time step. Requires cm_taxCO2_Shape = 2."
+*** (off): no peaking year prescribed, carbon price can increase throughout the century
+*** example: " USA 2045, CHA 2045, EUR 2045, JPN 2045, NEU 2060, REF 2060, CAZ 2070, MEA 2060, LAM 2080,  OAS 2090,  IND 2100, SSA 2100"
+$setglobal cm_peakBudgYrRegi off !! def = off
 *** cm_ind_energy_limit Switch for setting upper limits on industry energy
 *** efficiency improvements.  See ./modules/37_subsectors/datainput.gms for
 *** implementation.
