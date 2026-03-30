@@ -433,10 +433,10 @@ all_enty             "all types of quantities"
     n2obio       "N2O emissions from pebiolc "
     bc           "black carbon from fossil fuel combustion"
     oc           "organic carbon from fossil fuel combustion"
-    NOx          "nitrogen oxide emissions"
-    CO           "carbon monoxide emissions"
-    VOC          "volatile organic compound emissions"
-    NH3          "ammonia emissions"
+    nox          "nitrogen oxide emissions"
+    co           "carbon monoxide emissions"
+    voc          "volatile organic compound emissions"
+    nh3          "ammonia emissions"
 
 *** emissions from industry sub-sectors
     co2cement      "CO2 emissions from clinker and cement production"
@@ -918,30 +918,6 @@ module2realisation(modules,*) "mapping of modules and active realisations" /
 sets
 
 regi(all_regi)  "all regions used in the solution process"
-
-*** region sets used for MAGICC
-RCP_regions_world_bunkers "five RCP regions plus total (world) and bunkers"
-/
-    WORLD
-    R5OECD
-    R5REF
-    R5ASIA
-    R5MAF
-    R5LAM
-    BUNKERS
-/
-
-RCP_regions_world(RCP_regions_world_bunkers) "five RCP regions plus total (world)"
-/
-    WORLD
-    R5OECD
-    R5REF
-    R5ASIA
-    R5MAF
-    R5LAM
-    BUNKERS
-/
-;
 
 ***-----------------------------------------------------------------------------
 ***-----------------------------------------------------------------------------
@@ -1676,10 +1652,10 @@ enty(all_enty)       "all types of quantities"
     n2obio       "N2O emissions from pebiolc"
     bc           "black carbon from fossil fuel combustion"
     oc           "organic carbon from fossil fuel combustion"
-    NOx
-    CO
-    VOC
-    NH3
+    nox
+    co
+    voc
+    nh3
     cco2         "captured CO2"
 *        pco2         "CCS related parameter during compression of CO2"
 *        tco2         "CCS related parameter during transportation of CO2"
@@ -2150,33 +2126,6 @@ xirog       "parameters describing exhaustible extraction costs including long-r
 /
     xi1, xi2, xi3, xi4, xi5, xi6, xi7, xi8, dec
 /
-*** emissions exported to MAGICC
-emiRCP "emission types exported to MAGICC"
-/
-    FossilCO2
-    OtherCO2
-    CH4
-    N2O
-    SOx
-    CO
-    NMVOC
-    NOx
-    BC
-    OC
-    NH3
-    CF4
-    C2F6
-    C6F14
-    HFC23
-    HFC32
-    HFC43-10
-    HFC125
-    HFC134a
-    HFC143a
-    HFC227ea
-    HFC245fa
-    SF6
-/
 
 p                "parameter for ch4 and n2o waste emissions and co2 cement emissions"
 /
@@ -2185,6 +2134,8 @@ p                "parameter for ch4 and n2o waste emissions and co2 cement emiss
     p3
     p4
 /
+
+
 *** This is a work-around to ensure emissions are printed in correct order.
 numberEmiRCP "number of emission types" / 1 * 23 /
 
