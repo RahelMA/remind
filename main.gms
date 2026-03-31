@@ -810,7 +810,19 @@ parameter
 *' *  (1): CO2 only
 *' *  (2): all GHG
 *' *  (3): all GHG excl CO2 emissions from LULUCF
-*'
+
+parameter
+  cm_budgetscen            "determine the emissions included in the budget calculation, that determines the carbon price adjustment in functionalFormRegi"
+;
+  cm_budgetscen = 4;         !! def = 4  !! regexp = [1-8]
+*' * (1): incl. other GHGs, incl. LULUCF CO2, incl. bunkers
+*' * (2): incl. other GHGs, excl. LULUCF CO2, incl. bunkers
+*' * (3): incl. other GHGs, excl. LULUCF CO2, excl. bunkers !! = JustMIP 
+*' * (4): excl. other GHGs, incl. LULUCF CO2, incl. bunkers !! = REMIND default for global CO2 budget runs
+*' * (5): excl. other GHGs, excl. LULUCF CO2, incl. bunkers
+*' * (6): excl. other GHGs, excl. LULUCF CO2, excl. bunkers
+*' Note: whether the LULUCF CO2 and the GHG emissions are taxed or not is determined by cm_multigasscen!
+
 parameter
   cm_permittradescen        "scenario on permit trade"
 ;
