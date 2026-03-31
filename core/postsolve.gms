@@ -19,8 +19,8 @@ pm_actualbudgetco2(ttot)$( 2020 lt ttot.val )
     )
   * sm_c_2_co2;
 
-*** `pm_actualbudgetco2Regi(ttot, regi)` includes emissions from 2020 to `ttot` (inclusive).
-pm_actualbudgetco2Regi(ttot,regi)$( 2020 lt ttot.val )
+*** `pm_actualbudgetco2eqRegi(ttot, regi)` includes emissions from 2020 to `ttot` (inclusive).
+pm_actualbudgetco2eqRegi(ttot,regi)$( 2020 lt ttot.val )
   = sum((ttot2)$( 2020 le ttot2.val AND ttot2.val le ttot.val ),
       vm_emiAll.l(ttot2,regi,"co2")
       * ( (0.5 + pm_ts(ttot2) / 2)$( ttot2.val eq 2020 ) !! second half of the 2020 period (mid 2020 - end 2022) plus 0.5 to account fo beginning 2020 - mid 2020  
