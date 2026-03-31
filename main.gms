@@ -343,7 +343,7 @@ $setglobal industry  subsectors   !! def = subsectors
 *'---------------------    39_CCU    ---------------------------------
 *'
 *' * (on): representation of technologies for producing synthetic liquids and synthetic gases based on hydrogen and captured carbon
-*' * (off): no representation of carbon caputre and utilization technologies.
+*' * (off): no representation of carbon capture and utilization technologies.
 $setglobal CCU  on      !! def = on
 *'---------------------    40_techpol  ----------------------------------------
 *'
@@ -408,8 +408,7 @@ $setglobal carbonprice  NPi2025           !! def = NPi2025
 *' This module applies a markup pm_taxCO2eqRegi on top of pm_taxCO2eq to achieve additional intermediate targets.
 *'
 *' * (none): no regional carbonprice policies
-*' * (NDC): implements a carbon price markup trajectory consistent with the NDC targets between 2030 and 2070
-*' * (netZero): implements a carbon price markup trajectory consistent with the net zero targets, the region settings can be adjusted with cm_netZeroScen
+*' * (netZero): implements a regional carbon price markup so that regions reach their net-zero targets; for partial targets, use cm_netZeroPercent
 $setglobal carbonpriceRegi  none      !! def = none
 *'---------------------    47_regipol  -----------------------------------------
 *'
@@ -466,7 +465,7 @@ $setGlobal optimization  nash         !! def = nash
 *'---------------------    81_codePerformance    -------------------------------
 *'
 *' * (off): nothing happens
-*' * (on):  test code performance: noumerous (30) succesive runs performed in a triangle, tax0, tax30, tax150, all growing exponentially.
+*' * (on):  test code performance: numerous (30) successive runs performed in a triangle, tax0, tax30, tax150, all growing exponentially.
 $setGlobal codePerformance  off       !! def = off
 
 ***-----------------------------------------------------------------------------
@@ -534,7 +533,7 @@ parameter
 *' *  (6): budget
 *' *  (9): tax scenario (requires running module 21_tax "on"), tax level controlled by module 45_carbonprice, other GHG etc. controlled by cm_rcp_scen
 *' *  (10): used for cost-benefit analysis
-*' *JeS* WARNING: data for cm_emiscen 4 only exists for multigas_scen 2 bau scenarios and for multigas_scen 1
+*' *JeS* WARNING: data for cm_emiscen 4 only exists for cm_multigasscen 2 bau scenarios and for cm_multigasscen 1
 parameter
   cm_taxCO2_startyear    "level of co2 tax in start year in $ per t CO2eq"
 ;
@@ -581,7 +580,7 @@ parameter
 parameter
   sm_peakbudget_diff_tolerance  "convergence criterion for allowed difference between cumulative emissions in peak budget year and year of maximum cumulative emissions if both years are not the same. It is formulated as an absolute deviation from the target budget [GtCO2]"
 ;
-  sm_peakbudget_diff_tolerance      = 1;   !! def = 1 !! regexp = is.nonnegative
+  sm_peakbudget_diff_tolerance      = 5;   !! def = 5 !! regexp = is.nonnegative
 parameter
   cm_expoLinear_yearStart   "time at which carbon price increases linearly instead of exponentially"
 ;
@@ -772,6 +771,27 @@ parameter
 *' *  (2015): standard for all policy runs (eq. to fix2010), NDC, NPi and production baselines, especially if various baselines with varying parameters are explored
 *' *  (....): later start for delay policy runs, eg. 2025 for what used to be delay2020
 *'
+
+parameter
+  cm_LTSstartYr "[46_carbonpriceRegi] First year activating a regional carbon price markup to reach net-zero targets (Long-Term Strategy)"
+;
+  cm_LTSstartYr = 2040;        !! def = 2040  !! regexp = 20[2-9](0|5)
+*' *  (2040): NDC-LTS scenario: default start of rescaling is 2040, which allows meeting 2035 NDC targets
+*' *  (2030): LTS scenario: from 2030 onward, regions see a carbon price markup to reach their net-zero targets, so they may overshoot NDC targets
+
+parameter
+  cm_LTSendYr "[46_carbonpriceRegi] Year at which pm_taxCO2eqRegi drops to zero after having decreased linearly since the net-zero year"
+;
+  cm_LTSendYr = 0;        !! def = 0  !! regexp = [0-9]+
+*' *  (0): Regional markup carbon price in target year then applies forever
+*' *  (2200): Regional markup carbon price diminishes from target year toward reaching zero in 2200
+
+parameter
+  cm_netZeroPercent "[46_carbonpriceRegi] Share of emissions allowed at the target year of a country with a net-zero target [1]"
+;
+  cm_netZeroPercent = 0; !! def = 0
+*' setting 0.2 is in some scenarios of NGFS phase 6 (2026), allowing countries to keep 20% of 2025 emissions in net-zero year
+
 parameter
   c_start_budget            "start of GHG budget limit"
 ;
@@ -803,6 +823,7 @@ parameter
 *' (0): equal per capita redistribution
 *' (1): proportional redistribution
 *'
+
 parameter
   cm_multigasscen           "scenario on GHG portfolio to be included in permit trading scheme"
 ;
@@ -829,7 +850,18 @@ parameter
   cm_permittradescen  = 1;         !! def = 1  !! regexp = [1-3]
 *' *  (1): full permit trade (no restrictions)
 *' *  (2): no permit trade (only domestic mitigation)
-*' *  (3): limited trade (certain percentage of GDP)
+*' *  (3): limited trade (certain percentage of permits)
+*'
+parameter
+  cm_permitTradeFinalYr        "[TradingOnRef] Year until permit trading is allowed"
+;
+  cm_permitTradeFinalYr  = 2100;         !! def = 2100
+*'  
+
+parameter
+  cm_permitTradeRatio        "[TradingOnRef] Share of emissions allowed for permit trading between 0 and 1"
+;
+  cm_permitTradeRatio  = 0.2;         !! def = 0.2  
 *'
 parameter
   cm_rentdiscoil            "[grades2poly] discount factor for the oil rent"
@@ -1271,13 +1303,6 @@ parameter
 *' Default assumption is that only 30% of announced or planned capacities will be realised, either due to discontinuation or delay
 
 parameter
-  cm_startIter_EDGET          "starting iteration of EDGE-T"
-;
-  cm_startIter_EDGET = 10;  !! def = 10, by default EDGE-T is run first in iteration 10  !! regexp = [0-9]+
-*' EDGE-T transport starting iteration of coupling
-*' def 10, EDGE-T coupling starts at 10, if you want to test whether infeasibilities after EDGE-T -> set it to 1 to check after first iteration
-*'
-parameter
   cm_deuCDRmax                 "switch to limit maximum annual CDR amount in Germany in MtCO2 per y"
 ;
   cm_deuCDRmax = -1; !! def = -1
@@ -1351,6 +1376,11 @@ parameter
 *'
 $setglobal c_magpieIter  20,24,28,32     !! def = "20,24,28,32"  !! This regular expression works in manual test but not in checkFixCfg [0-9]{1,2}(,[0-9]{1,2})*
 
+
+*' c_edgeTransportIter  "Nash iterations in which EDGE-T runs"
+*'
+$setglobal c_edgeTransportIter 10,12,14,16,18,20,22,24,27,30,33,36,39,42,45,50,55,60,65,70,75,80,85,90,95   !! def = "10,12,14,16,18,20,22,24,27,30,33,36,39,42,45,50,55,60,65,70,75,80,85,90,95" 
+
 *' cm_rcp_scen       "chooses RCP scenario"
 *'
 *' *  (none): no RCP scenario, standard setting
@@ -1414,23 +1444,14 @@ $setglobal cm_NDC_TargetCheckConv  off      !! def = "off"  !! regexp = on|off
 *' *  (2024_cond):   minimum technology targets are included from NewClimate latest policy modeling protocol in 2025
 *' *  (2024_uncond): maximal technology targets are included from NewClimate latest policy modeling protocol in 2025
 $setglobal cm_NPi_version  2025_cond    !! def = "2025_cond"  !! regexp = 2025_(un)?cond
-*' cm_netZeroScen     "choose scenario of net zero targets of netZero realization of module 46_carbonpriceRegi"
 *'
-*'  (NGFS_v4):        settings used for NGFS v4, 2023
-*'  (NGFS_v4_20pc):   settings used for NGFS v4, 2023, with still 20% of 2020 emissions in netZero year
-*'  (ELEVATE6p3):     settings used for ELEVATE6p3 LTS and NDC-LTS scenario
-$setglobal cm_netZeroScen  NGFS_v4     !! def = "NGFS_v4"  !! regexp = NGFS_v4|NGFS_v4_20pc|ELEVATE6p3
-*' cm_LTSstartYr   choose when rescaling of net-zero targets starts in 46_carbonpriceRegi netZero realisation
-*' *  (2040):      default start of rescaling is 2040, which allows meeting 2035 NDC targets (scenario known as NDC-LTS)
-*' *  (2035):      rescaling starts in 2035 to directly reach net-zero, which may overshoot NDC targets (scenario known as LTS)
-$setglobal cm_LTSstartYr  2040      !! def = 2040  
 *' *  c_regi_earlyreti_rate  "maximum percentage of capital stock that can be retired early (before reaching their expected lifetimes) in one year in specified regions, if they are not economically viable. It is applied to all techs unless otherwise specified in c_tech_earlyreti_rate."
 *' *  Default value used in NPi runs: EUR_regi 0.06, USA_regi 0.04, CHA_regi 0.04, CAZ_regi 0.04, JPN_regi 0.04, GLO 0.03 (0.06 means 6% of capacity can be retired early per year at maximum, i.e. full retirement after 16.7 years, 40% standing capacity after 10 years)
 *' *  In target scenarios with ambition level beyond the NPi, we assume slightly higher early retirement rates outside the EU.
 *' *  Target scenario maximum retirement rates: EUR_regi 0.08, USA_regi 0.07, CHA_regi 0.07, CAZ_regi 0.07,  JPN_regi 0.07, GLO 0.06
 *' *  This reflects that the current aversion to shut down plants before end of their lifetime linked to political economy dynamics can be overcome to speed up the energy transition.
 *' *  Finally, note that these maximum early retirement rates are further differentiated by technology. Coal power has 20% higher rates, for instance, while CHP plants have 30% lower rates than the default value (see core/datainput.gms).
-$setglobal c_regi_earlyreti_rate  EUR_regi 0.06, USA_regi 0.04, CHA_regi 0.04, CAZ_regi 0.04, JPN_regi 0.04, GLO 0.03      !! def = EUR_regi 0.06, USA_regi 0.04, CHA_regi 0.04, CAZ_regi 0.04, JPN_regi 0.04, GLO 0.03
+$setglobal c_regi_earlyreti_rate  EUR_regi 0.06, USA_regi 0.04, CAZ_regi 0.04, JPN_regi 0.04, GLO 0.02      !! def = EUR_regi 0.06, USA_regi 0.04, CAZ_regi 0.04, JPN_regi 0.04, GLO 0.02
 *' *  c_tech_earlyreti_rate  "maximum percentage of capital stock of specific technologies that can be retired early in one year in specified regions. This switch overrides c_regi_earlyreti_rate to allow for fine-tuning of phase-out schedules, e.g. for implementation of certain policies or anticipated trends."
 *' *  Example use: USA_regi.pc 0.1, CHA_regi.pc 0.1: Change max retirement rates for coal power in US and China to 10%/yr.
 *' *  Keep value "off" if not needed.
@@ -2073,6 +2094,13 @@ $setglobal cm_subsec_model_steel  processes  !! def = processes  !! regexp = pro
 *** (off) no bounds for 2025
 *** (on) some generous bounds for 2025 assuming that certain developments are not possible anymore even for fast growing technologies given 2023 data
 $setglobal cm_tech_bounds_2025  on  !! def = on  !! regexp = on|off
+*' c_NearTermProjectCompletion
+*' Choose assumptions on completion rates, i.e. the share of planned capacity additions of technologies in the near-term that will actually be completed and start operation. 
+*'  This would effect, for example, the share of planned/under construction coal power projects that will reach completion in the first future time step. 
+*'  The implementation serves to set near-term bounds in the model. There are two options:
+*'  (conservative) conservative assumptions on completion rates (high completion rates of fossil technologies, low completion rates of clean technologies)
+*'  (transformative) transformative assumptions on completion rates (low completion rates of fossil technologies, high completion rates of clean technologies)
+$setglobal c_NearTermProjectCompletion  conservative  !! def = conservative  !! regexp = conservative|transformative
 *** cm_VREminCap_Ger
 *** activate bounds lower bounds for capacities of VRE technologies in Germany by 2030 based on different trend assessment of the current project pipeline
 *** (off) no bounds for 2030
