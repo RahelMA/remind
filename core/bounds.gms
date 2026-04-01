@@ -318,7 +318,7 @@ loop(te $ sameas(te, "biopyrliq"), !! does not yet exist commercially
 *' #### 4. Assumptions on carbon management
 *** ==================================================================
 
-*** lower bound on stored CO2
+*' Carbon capture is a positive variable
 vm_emiTe.lo(ttot,regi,"cco2") = 0;
 
 *' no CCS at all in 2010
@@ -390,12 +390,13 @@ loop(regi,
   );
 );
 
-loop(regi $ (p_boundCapCCSindicator(regi) = 0),
-  vm_cap.fx("2025",regi,teCCS,rlf) = 0;
-  vm_cap.fx("2030",regi,teCCS,rlf) = 0;
-);
+*' Limit REMINDs ability to vent captured CO2 to 1 MtCO2 per yr per region. This happens otherwise to a great extend in stringent climate 
+*' policy scenarios if CCS and CCU capacities are limited in early years, to lower overall adjustment costs of capture technologies.
+v_co2capturevalve.up(t,regi) = 1 * sm_MtCO2_2_GtC;
 
-*' Assumptions on leakage in the CCUS chain:
+*** ------------------------------------------------------------------
+*' ##### Assumptions on leakage in the CCUS chain:
+*** ------------------------------------------------------------------
 *' 1. Leakage from CO2 capture and transportation:
 *' 1 percent of captured CO2 leaks back to the atmosphere and is directly deduced from each technology's capture rate 
 *' See s_co2pipe_leakage in datainput.
@@ -411,12 +412,6 @@ loop(regi $ (p_boundCapCCSindicator(regi) = 0),
 *' leakage rate k = 0.0025% / yr
 *' After 100 years, this leads to a loss of 0.25% from the reservoirs
 *' so in the "unrealistic scenario" for every 400 GtCO2 stored, 1 GtCO2 leaks after 100 years.
-
-*** Limit REMINDs ability to vent captured CO2 to 1 MtCO2 per yr per region. This happens otherwise to a great extend in stringent climate 
-*** policy scenarios if CCS and CCU capacities are limited in early years, to lower overall adjustment costs of capture technologies.
-*** In reality, people don't have perfect foresight and without storage or usage capacities, no capture facilities will be built.
-v_co2capturevalve.up(t,regi) = 1 * sm_MtCO2_2_GtC;
-
 
 
 
