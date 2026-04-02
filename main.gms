@@ -833,9 +833,9 @@ parameter
 *' *  (3): all GHG excl CO2 emissions from LULUCF
 
 parameter
-  cm_budgetscen            "determine the emissions included in the budget calculation, that determines the carbon price adjustment in functionalFormRegi"
+  c_budgetscen            "specify the emissions included in the emissions budget used in functionalFormRegi"
 ;
-  cm_budgetscen = 4;         !! def = 4  !! regexp = [1-8]
+  c_budgetscen = 4;         !! def = 4  !! regexp = [1-8]
 *' * (1): incl. other GHGs, incl. LULUCF CO2, incl. bunkers
 *' * (2): incl. other GHGs, excl. LULUCF CO2, incl. bunkers
 *' * (3): incl. other GHGs, excl. LULUCF CO2, excl. bunkers !! = JustMIP 
