@@ -1409,8 +1409,7 @@ $setglobal cm_NDC_targetYear  2030, 2035    !! def = "2030, 2035"
 *' Instead, regions go "as close as still plausible" to their NDC targets. 
 *' * Examples on how to use:
 *' *  "2030.EUR 150" means that EUR has maximum CO2 price of 150 USD/tCO2 in 2030. 
-*' *  The CO2 price limit is increased after the specified target year by 20%/yr. 
-*' *  In the example, that would mean that EUR has a CO2 price limit in 2035 of 150 + 0.2 * 150 * 5 = 300 USD/tCO2. 
+*' *  For the development after the target year, the switch cm_NDC_CO2PriceLimit_continuation determines whether or not an upper limit on CO2 prices is imposed.
 *' *  By default 2030 CO2 prices are limited to 150 USD/tCO2 in EUR, 80 USD/tCO2 in CAZ, USA, JPN and NEU, 50 USD/tCO2 in REF and MEA, 40 USD/tCO2 in LAM and CHA, 30 USD/tCO2 in OAS, 15 USD/tCO2 in IND and 10 USD/tCO2 in SSA.
 *' *  If set to "off", no CO2 price limits are applied in any region.
 $setglobal cm_NDC_CO2PriceLimit  2030.EUR 150, 2030.(CAZ,USA, JPN, NEU) 80, 2030.(REF,MEA) 50, 2030.(LAM, CHA) 40, 2030.OAS 30, 2030.IND 15, 2030.SSA 10    !! def = "2030.EUR 150, 2030.(CAZ,USA, JPN, NEU) 80, 2030.(REF,MEA) 50, 2030.(LAM, CHA) 40, 2030.OAS 30, 2030.IND 15, 2030.SSA 10" 
