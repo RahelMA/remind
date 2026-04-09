@@ -14,7 +14,7 @@
 *#'  2. Contribution of countries within REMIND region without NDC target:
 *#'     (1 - share of emissions covered by NDC in particular region) *  REMIND NPI  emissions in target year
 p45_CO2eqwoLU_goal(p45_NDCyearSet(t,regi)) =
-          p45_EmiTargetAbs(t,regi)                                                  !! emissions target derivd from countries with NDC target
+          p45_EmiTargetAbs(t,regi)                                                  !! emissions target derived from countries with NDC target
         + (1-p45_shareTarget(t,regi)) * p45_BAU_reg_emi_wo_LU_wo_bunkers(t,regi);   !! countries without NDC target are assumed to follow NPI emissions pathway
 
 display pm_taxCO2eq,p45_CO2eqwoLU_goal;

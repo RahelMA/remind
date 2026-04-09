@@ -864,7 +864,7 @@ q_emiGHG_exclLULUCF_exclBunkers(t,regi)..
   vm_co2eq(t,regi) 
 *** add F-Gases, convert from MtCO2eq/yr to GtC/yr
   + vm_emiFgas(t,regi,"emiFgasTotal") / sm_c_2_co2 / 1000
-*** substract bunker emissions
+*** subtract bunker emissions
   - sum(se2fe(enty,enty2,te),
       pm_emifac(t,regi,enty,enty2,te,"co2")
       * vm_demFeSector(t,regi,enty,enty2,"trans","other") 
