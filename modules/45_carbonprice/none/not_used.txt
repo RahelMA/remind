@@ -50,7 +50,7 @@ sm_peakBudgYr_check,input,not needed
 sm_peakbudget_diff,input,not needed
 pm_macSwitch,input,not needed because default MAC curve settings are used
 pm_NDCEmiTargetDeviation,input,not used
-pm_actualbudgetco2Regi,input,added by codeCheck
+pm_actualbudgetco2eqRegi,input,added by codeCheck
 pm_dt,input,added by codeCheck
 cm_taxCO2_Shape,input,added by codeCheck
 cm_CPslopeAdjustment,input,added by codeCheck
