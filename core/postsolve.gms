@@ -22,7 +22,7 @@ pm_actualbudgetco2(ttot)$( 2020 lt ttot.val )
 *** `pm_actualbudgetco2eqRegi(ttot, regi)` includes emissions from 2020 to `ttot` (inclusive).
 pm_actualbudgetco2eqRegi(ttot,regi)$( 2020 lt ttot.val )
   = sum((ttot2)$( 2020 le ttot2.val AND ttot2.val le ttot.val ),
-      ((vm_emiAll.l(ttot2,regi,"co2") - vm_emiMacSector.l(ttot2,regi,"co2luc")$(c_budgetscen ne 1 AND c_budgetscen ne 4)) !! co2 emissions including or excluding land-use co2 emissions
+      ((vm_emiAll.l(ttot2,regi,"co2") - vm_emiMacSector.l(ttot2,regi,"co2luc")$(c_budgetscen gt 2 AND c_budgetscen ne 4)) !! co2 emissions including or excluding land-use co2 emissions
       + (sm_tgn_2_pgc * vm_emiAll.l(ttot2, regi, "n2o") + sm_tgch4_2_pgc * vm_emiAll.l(ttot2,regi, "ch4"))$(c_budgetscen le 3)  !! include other GHG emissions if c_budgetscen is 1, 2 or 3
       - sum(se2fe(enty,enty2,te),     !! subtract bunker emissions if cm_bunkerscen is eq 3 or 6
         pm_emifac(ttot2,regi,enty,enty2,te,"co2")
