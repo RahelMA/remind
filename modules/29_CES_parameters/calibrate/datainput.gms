@@ -178,7 +178,8 @@ loop ((ttot,regi,ppfKap_industry_dyn37(in))$( t(ttot-1) AND t(ttot+1) ),
   );
 );
 
-display pm_fedemand;
+display pm_fedemand_ind;
+display pm_fedemand_build;
 
 *** Change PPP for MER.
 p29_capitalQuantity(tall,all_regi,all_in)
@@ -213,16 +214,19 @@ Execute_Loadpoint 'input' vm_deltaCap;
 *** Load exogenous Labour, GDP
 pm_cesdata(t,regi,"inco","quantity") = pm_gdp(t,regi);
 pm_cesdata(t,regi,"lab","quantity") = pm_lab(t,regi);
-*** Load exogenous FE trajectories
+
+*** Load exogenous FE trajectories for buildings and industry
 *** Change EJ to TWa
 
-pm_cesdata(t,regi,in,"quantity")$(pm_fedemand(t,regi,in)) =
+pm_cesdata(t,regi,in,"quantity")$(pm_fedemand_build(t,regi,in)) = sm_EJ_2_TWa * pm_fedemand_build(t,regi,in)
+
+pm_cesdata(t,regi,in,"quantity")$(pm_fedemand_ind(t,regi,in)) = 
 $ifthen.industry_subsectors "%industry%" == "subsectors"
-  pm_fedemand(t,regi,in)$(industry_ue_calibration_target_dyn37(in))
+  pm_fedemand_ind(t,regi,in)$(industry_ue_calibration_target_dyn37(in))
   +
-  sm_EJ_2_TWa * pm_fedemand(t,regi,in)$(NOT industry_ue_calibration_target_dyn37(in));
+  sm_EJ_2_TWa * pm_fedemand_ind(t,regi,in)$(NOT industry_ue_calibration_target_dyn37(in));
 $else.industry_subsectors
-  sm_EJ_2_TWa * pm_fedemand(t,regi,in)
+  sm_EJ_2_TWa * pm_fedemand_ind(t,regi,in)
 $endif.industry_subsectors
 
 *** Load exogenous transport demand - required for the EDGE transport module
