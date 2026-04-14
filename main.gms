@@ -340,11 +340,11 @@ $setglobal buildings  simple      !! def = simple
 *' * (subsectors):   models industry subsectors explicitly with individual CES nests
 *'                   for cement, chemicals, steel, and otherInd production.
 $setglobal industry  subsectors   !! def = subsectors
-*'---------------------    39_CCU    ---------------------------------
+*'---------------------    39_carbonUtilization   -------------------------------
 *'
 *' * (on): representation of technologies for producing synthetic liquids and synthetic gases based on hydrogen and captured carbon
 *' * (off): no representation of carbon capture and utilization technologies.
-$setglobal CCU  on      !! def = on
+$setglobal carbonUtilization  on      !! def = on
 *'---------------------    40_techpol  ----------------------------------------
 *'
 *' * (none): no technology policies

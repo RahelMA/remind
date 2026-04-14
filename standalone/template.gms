@@ -87,8 +87,8 @@ $setGlobal transport  edge_esm         !! def = edge_esm
 $setglobal buildings  simple          !! def = simple
 ***---------------------    37_industry    --------------------------------------
 $setglobal industry  subsectors     !! def = simple
-***---------------------    39_CCU    --------------------------------------
-$setglobal CCU  off !! def = off
+***---------------------    39_carbonUtilization    -----------------------------
+$setglobal carbonUtilization  off !! def = off
 ***---------------------    40_techpol  -----------------------------------------
 $setglobal techpol  none              !! def = none
 ***---------------------    41_emicapregi  --------------------------------------

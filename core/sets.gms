@@ -862,7 +862,7 @@ sets
        transport
        buildings
        industry
-       CCU
+       carbonUtilization
        techpol
        emicapregi
        carbonprice
@@ -898,7 +898,7 @@ module2realisation(modules,*) "mapping of modules and active realisations" /
        transport . %transport%
        buildings . %buildings%
        industry . %industry%
-       CCU . %CCU%
+       carbonUtilization . %carbonUtilization%
        techpol . %techpol%
        emicapregi . %emicapregi%
        carbonprice . %carbonprice%
