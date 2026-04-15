@@ -1656,18 +1656,18 @@ $offdelim
 
 
 *** use cm_demScen for Industry and Buildings
-pm_fedemand_ind(tall,all_regi,in) = f_fedemand_ind(tall,all_regi,"%cm_demScen%",in);
-pm_fedemand_build(t,regi,cal_ppf_buildings_dyn36) = f_fedemand_build(t,regi,"%cm_demScen%","%cm_rcp_scen_build%",cal_ppf_buildings_dyn36);
+pm_fedemandInd(tall,all_regi,in) = f_fedemand_ind(tall,all_regi,"%cm_demScen%",in);
+pm_fedemandBuild(t,regi,cal_ppf_buildings_dyn36) = f_fedemand_build(t,regi,"%cm_demScen%","%cm_rcp_scen_build%",cal_ppf_buildings_dyn36);
 
 *** data input for industry FE that is no part of the CES tree
-pm_fedemand_ind(tall,all_regi,ppfen_no_ces_use) = f_fedemand_ind(tall,all_regi,"%cm_demScen%",ppfen_no_ces_use);
+pm_fedemandInd(tall,all_regi,ppfen_no_ces_use) = f_fedemand_ind(tall,all_regi,"%cm_demScen%",ppfen_no_ces_use);
 
 *** Scale FE demand across industry and building sectors
 $ifthen.scaleDemand not "%cm_scaleDemand%" == "off"
   loop((tall,tall2,all_regi) $ pm_scaleDemand(tall,tall2,all_regi),
 *FL*  rescaled demand                = normal demand                  * [ scaling factor                      + (1-scaling factor)                      * remaining phase-in, between zero and one               ]
-      pm_fedemand_ind(t,all_regi,all_in) = pm_fedemand_ind(t,all_regi,all_in) * ( pm_scaleDemand(tall,tall2,all_regi) + (1-pm_scaleDemand(tall,tall2,all_regi)) * min(1, max(0, tall2.val-t.val) / (tall2.val-tall.val)) );
-      pm_fedemand_build(t,all_regi,all_in) = pm_fedemand_build(t,all_regi,all_in) * ( pm_scaleDemand(tall,tall2,all_regi) + (1-pm_scaleDemand(tall,tall2,all_regi)) * min(1, max(0, tall2.val-t.val) / (tall2.val-tall.val)) );
+      pm_fedemandInd(t,all_regi,all_in) = pm_fedemandInd(t,all_regi,all_in) * ( pm_scaleDemand(tall,tall2,all_regi) + (1-pm_scaleDemand(tall,tall2,all_regi)) * min(1, max(0, tall2.val-t.val) / (tall2.val-tall.val)) );
+      pm_fedemandBuild(t,all_regi,all_in) = pm_fedemandBuild(t,all_regi,all_in) * ( pm_scaleDemand(tall,tall2,all_regi) + (1-pm_scaleDemand(tall,tall2,all_regi)) * min(1, max(0, tall2.val-t.val) / (tall2.val-tall.val)) );
   );
 $endif.scaleDemand
 
@@ -1693,7 +1693,7 @@ pm_scaleDemandBuildTable(t,regi) $ ( pm_scaleDemandBuildTable(t,regi) le 0) = 1;
 pm_scaleDemandBuildTable(t,regi) $ (t.val > 2100 ) = pm_scaleDemandBuildTable("2100",regi); !! continue 2100 multiplier until end of time
 
   loop( (t,regi,in) $ in_buildings_dyn36(in) ,
-    pm_fedemand_build(t,regi,in) = pm_fedemand_build(t,regi,in) * pm_scaleDemandBuildTable(t,regi)
+    pm_fedemandBuild(t,regi,in) = pm_fedemandBuild(t,regi,in) * pm_scaleDemandBuildTable(t,regi)
   );
 $endif.scaleDemandBuildTable
 
@@ -1718,7 +1718,7 @@ p_scaleDemandIndTable(t,regi) $ ( p_scaleDemandIndTable(t,regi) le 0) = 1;  !! I
 p_scaleDemandIndTable(t,regi) $ (t.val > 2100 ) = p_scaleDemandIndTable("2100",regi); !! continue 2100 multiplier until end of time
 
   loop( (t,regi,in) $ in_industry_dyn37(in) ,
-    pm_fedemand_ind(t,regi,in) = pm_fedemand_ind(t,regi,in) * p_scaleDemandIndTable(t,regi)
+    pm_fedemandInd(t,regi,in) = pm_fedemandInd(t,regi,in) * p_scaleDemandIndTable(t,regi)
   );
 $endif.scaleDemandIndTable
 

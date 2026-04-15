@@ -276,7 +276,7 @@ emiMac2mac("co2otherInd","co2otherInd") = NO;
 *** data on maximum secondary steel production
 *** The steel recycling rate limit is assumed to increase from 90 to 99 %.
   p37_cesIO_up_steel_secondary(tall,all_regi,all_GDPpopScen)
-  = pm_fedemand_ind(tall,all_regi,"ue_steel_secondary")
+  = pm_fedemandInd(tall,all_regi,"ue_steel_secondary")
   / 0.9
   * 0.99;
 
@@ -803,7 +803,7 @@ if (cm_startyear eq 2005,
 
     !! 2nd stage tech
     loop(mat2ue(mat,in),
-      p37_matFlowHist(ttot,regi,mat) = pm_fedemand_ind(ttot,regi,in) / p37_mat2ue(mat,in) * p37_ue_share(mat,in);
+      p37_matFlowHist(ttot,regi,mat) = pm_fedemandInd(ttot,regi,in) / p37_mat2ue(mat,in) * p37_ue_share(mat,in);
       loop(tePrc2matOut(tePrc,opmoPrc,mat),
         pm_outflowPrcHist(ttot,regi,tePrc,opmoPrc) = p37_matFlowHist(ttot,regi,mat) * p37_teMatShareHist(tePrc,opmoPrc,mat);
       );
@@ -824,7 +824,7 @@ if (cm_startyear eq 2005,
 
     loop((entyFe,ppfUePrc),
       p37_demFeTarget(ttot,regi,entyFe,ppfUePrc) = sum(tePrc2ue(tePrc,opmoPrc,ppfUePrc), pm_outflowPrcHist(ttot,regi,tePrc,opmoPrc) * p37_specFeDemTarget(entyFe,tePrc,opmoPrc));
-      p37_demFeActual(ttot,regi,entyFe,ppfUePrc) = sum((fe2ppfen_no_ces_use(entyFe,all_in),ue2ppfenPrc(ppfUePrc,all_in)), pm_fedemand_ind(ttot,regi,all_in) * sm_EJ_2_TWa);
+      p37_demFeActual(ttot,regi,entyFe,ppfUePrc) = sum((fe2ppfen_no_ces_use(entyFe,all_in),ue2ppfenPrc(ppfUePrc,all_in)), pm_fedemandInd(ttot,regi,all_in) * sm_EJ_2_TWa);
     );
 
     p37_demFeRatio(ttot,regi,ppfUePrc) = sum(entyFe,p37_demFeActual(ttot,regi,entyFe,ppfUePrc)) / sum(entyFe,p37_demFeTarget(ttot,regi,entyFe,ppfUePrc));
