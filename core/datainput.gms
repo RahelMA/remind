@@ -1638,29 +1638,28 @@ loop(te,
 *** ---- FE demand trajectories for calibration -------------------------------
 
 Parameter
-f_fedemand_ind(tall,all_regi,all_demScen,all_in) "final energy demand in industry"
+f_fedemandInd(tall,all_regi,all_demScen,all_in) "final energy demand in industry"
 /
 $ondelim
 $include "./core/input/f_fedemand_ind.cs4r"
 $offdelim
 /;
 
+pm_fedemandInd(t,regi,in) = f_fedemandInd(t,regi,"%cm_demScen%",in);
+*** data input for industry FE that is no part of the CES tree 
+*** needed for process-based steel implementation
+pm_fedemandInd(t,regi,ppfen_no_ces_use) = f_fedemandInd(t,regi,"%cm_demScen%",ppfen_no_ces_use);
+
 *** RCP-dependent demands in buildings (climate impact)
 Parameter 
-f_fedemand_build(tall,all_regi,all_demScen,all_rcp_scen,all_in) "RCP-dependent final energy demand in buildings"
+f_fedemandBuild(tall,all_regi,all_demScen,all_rcp_scen,all_in) "RCP-dependent final energy demand in buildings"
 /
 $ondelim
 $include "./core/input/f_fedemand_build.cs4r"
 $offdelim
 /;
 
-
-*** use cm_demScen for Industry and Buildings
-pm_fedemandInd(tall,all_regi,in) = f_fedemand_ind(tall,all_regi,"%cm_demScen%",in);
-pm_fedemandBuild(t,regi,cal_ppf_buildings_dyn36) = f_fedemand_build(t,regi,"%cm_demScen%","%cm_rcp_scen_build%",cal_ppf_buildings_dyn36);
-
-*** data input for industry FE that is no part of the CES tree
-pm_fedemandInd(tall,all_regi,ppfen_no_ces_use) = f_fedemand_ind(tall,all_regi,"%cm_demScen%",ppfen_no_ces_use);
+pm_fedemandBuild(t,regi,cal_ppf_buildings_dyn36) = f_fedemandBuild(t,regi,"%cm_demScen%","%cm_rcp_scen_build%",cal_ppf_buildings_dyn36);
 
 *** Scale FE demand across industry and building sectors
 $ifthen.scaleDemand not "%cm_scaleDemand%" == "off"
