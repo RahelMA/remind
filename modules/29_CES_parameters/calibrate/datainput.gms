@@ -144,7 +144,7 @@ ipf_beyond_last(out) = YES;
 *** End of Sets calculation
 
 Parameter
-p29_trpdemand       "transport demand"
+p29_fedemandTransp       "transport demand"
 /
 $ondelim
 $include "./modules/29_CES_parameters/calibrate/input/f29_trpdemand.cs4r"
@@ -227,10 +227,9 @@ pm_cesdata(t,regi,in,"quantity")$(pm_fedemandInd(t,regi,in)) =
    + sm_EJ_2_TWa * pm_fedemandInd(t,regi,in)$(NOT industry_ue_calibration_target_dyn37(in));
 
 *** Load exogenous transport demand - required for the EDGE transport module
-pm_cesdata(t,regi,in,"quantity")$p29_trpdemand(t,regi,"%cm_GDPpopScen%","%cm_demScen%","%cm_EDGEtr_scen%", in)
-           = p29_trpdemand(t,regi,"%cm_GDPpopScen%","%cm_demScen%","%cm_EDGEtr_scen%", in);
+pm_cesdata(t,regi,in,"quantity")$p29_fedemandTransp(t,regi,"%cm_GDPpopScen%","%cm_demScen%","%cm_EDGEtr_scen%", in)
+           = p29_fedemandTransp(t,regi,"%cm_GDPpopScen%","%cm_demScen%","%cm_EDGEtr_scen%", in);
 
-*** TODO: rename to p29_trpdemand to p29_fedemandTransp
 *** Load capital quantities
 pm_cesdata(t,regi,ppfKap,"quantity") = p29_capitalQuantity(t,regi,ppfKap);
 
