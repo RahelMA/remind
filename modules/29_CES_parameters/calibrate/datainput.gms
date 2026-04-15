@@ -216,29 +216,28 @@ pm_cesdata(t,regi,"inco","quantity") = pm_gdp(t,regi);
 pm_cesdata(t,regi,"lab","quantity") = pm_lab(t,regi);
 
 *** Load exogenous FE trajectories for buildings and industry
-*** Change EJ to TWa
+*** Convert EJ to TWa
 
 pm_cesdata(t,regi,in,"quantity")$(pm_fedemandBuild(t,regi,in)) = sm_EJ_2_TWa * pm_fedemandBuild(t,regi,in)
 
+
+*** Only convert FEs from EJ to TWa, for UEs keep original units
 pm_cesdata(t,regi,in,"quantity")$(pm_fedemandInd(t,regi,in)) = 
-$ifthen.industry_subsectors "%industry%" == "subsectors"
-  pm_fedemandInd(t,regi,in)$(industry_ue_calibration_target_dyn37(in))
-  +
-  sm_EJ_2_TWa * pm_fedemandInd(t,regi,in)$(NOT industry_ue_calibration_target_dyn37(in));
-$else.industry_subsectors
-  sm_EJ_2_TWa * pm_fedemandInd(t,regi,in)
-$endif.industry_subsectors
+   pm_fedemandInd(t,regi,in)$(industry_ue_calibration_target_dyn37(in)) 
+   + sm_EJ_2_TWa * pm_fedemandInd(t,regi,in)$(NOT industry_ue_calibration_target_dyn37(in));
 
 *** Load exogenous transport demand - required for the EDGE transport module
-$ifthen.edgesm %transport% ==  "edge_esm"
-pm_cesdata(t,regi,in,"quantity") $ p29_trpdemand(t,regi,"%cm_GDPpopScen%","%cm_demScen%","%cm_EDGEtr_scen%", in)
+pm_cesdata(t,regi,in,"quantity")$p29_trpdemand(t,regi,"%cm_GDPpopScen%","%cm_demScen%","%cm_EDGEtr_scen%", in)
            = p29_trpdemand(t,regi,"%cm_GDPpopScen%","%cm_demScen%","%cm_EDGEtr_scen%", in);
-$endif.edgesm
 
+*** TODO: rename to p29_trpdemand to p29_fedemandTransp
 *** Load capital quantities
 pm_cesdata(t,regi,ppfKap,"quantity") = p29_capitalQuantity(t,regi,ppfKap);
 
-$ifthen.subsectors "%industry%" == "subsectors"
+
+*** TODO: move to input data generation
+*** TODO: unify handling of offset_quantity
+
 *** Assume fehe_otherInd at 0.1% of fega_otherInd for regions with zero
 *** fehe_otherInd in historic periods (IND, LAM, MEA, SSA)
 loop ((t_29hist(t),regi_dyn29(regi))$(
@@ -276,15 +275,11 @@ loop (pf_quantity_shares_37(in,in2),
                                   pm_cesdata(t,regi,in,"offset_quantity") eq 0 )
   = -pm_cesdata(t,regi,in,"quantity");
 );
-$endif.subsectors
+
+*** end TODO
 
 
-$ifthen.build_H2_offset "%buildings%" == "simple"
-*** Assuming feh2b minimun levels as 5% of fegab to avoid CES numerical calibration issues and allow more aligned efficiencies between gas and h2
-*loop ((t,regi)$(pm_cesdata(t,regi,"feh2b","quantity") lt (0.05 *pm_cesdata(t,regi,"fegab","quantity"))),
-*	pm_cesdata(t,regi,"feh2b","offset_quantity") = - (0.05 * pm_cesdata(t,regi,"fegab","quantity") - pm_cesdata(t,regi,"feh2b","quantity"));
-*	pm_cesdata(t,regi,"feh2b","quantity") = 0.05 * pm_cesdata(t,regi,"fegab","quantity");
-*);
+*** TODO: where does this come from?
 
 *** RK: feh2b offset scaled from 1% in 2025 to 50% in 2050 of fegab quantity
 pm_cesdata(t,regi,"feh2b","offset_quantity")$(t.val gt cm_H2InBuildOnlyAfter) =
@@ -299,7 +294,6 @@ pm_cesdata(t,regi,"feh2b","quantity")$(t.val gt cm_H2InBuildOnlyAfter) =
 pm_cesdata(t,regi,"feh2b","quantity")$(t.val le cm_H2InBuildOnlyAfter) = 1e-6;
 pm_cesdata(t,regi,"feh2b","offset_quantity")$(t.val le cm_H2InBuildOnlyAfter) = - pm_cesdata(t,regi,"feh2b","quantity");
 
-$endif.build_H2_offset
 
 *** Add an epsilon to the values which are 0 so that they can fit in the CES
 *** function. And withdraw this epsilon when going to the ESM side
