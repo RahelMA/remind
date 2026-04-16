@@ -235,7 +235,7 @@ pm_cesdata(t,regi,ppfKap,"quantity") = p29_capitalQuantity(t,regi,ppfKap);
 
 
 *** TODO: move to input data generation
-*** TODO: unify handling of offset_quantity
+*** TODO: unify handling of offset_quantity accross all sectors?
 
 *** Assume fehe_otherInd at 0.1% of fega_otherInd for regions with zero
 *** fehe_otherInd in historic periods (IND, LAM, MEA, SSA)
@@ -275,10 +275,7 @@ loop (pf_quantity_shares_37(in,in2),
   = -pm_cesdata(t,regi,in,"quantity");
 );
 
-*** end TODO
 
-
-*** TODO: where does this come from?
 
 *** RK: feh2b offset scaled from 1% in 2025 to 50% in 2050 of fegab quantity
 pm_cesdata(t,regi,"feh2b","offset_quantity")$(t.val gt cm_H2InBuildOnlyAfter) =
@@ -288,6 +285,10 @@ pm_cesdata(t,regi,"feh2b","offset_quantity")$(t.val gt cm_H2InBuildOnlyAfter) =
 pm_cesdata(t,regi,"feh2b","quantity")$(t.val gt cm_H2InBuildOnlyAfter) = 
   (0.05 + 0.45 * min(1, max(0, (t.val - 2025) / (2050 - 2025))))
     * pm_cesdata(t,regi,"fegab","quantity");
+
+
+*** end TODO
+
 
 *** for the years that H2 buildings is fixed to zero, set offset to the exact value of the calibrated quantity to ignore it after calibration
 pm_cesdata(t,regi,"feh2b","quantity")$(t.val le cm_H2InBuildOnlyAfter) = 1e-6;

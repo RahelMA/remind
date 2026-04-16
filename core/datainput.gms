@@ -1647,7 +1647,7 @@ $offdelim
 
 pm_fedemandInd(t,regi,in) = f_fedemandInd(t,regi,"%cm_demScen%",in);
 *** data input for industry FE that is no part of the CES tree 
-*** needed for process-based steel implementation
+*** needed for process-based steel implementation, where these items are not part of "in"
 pm_fedemandInd(t,regi,ppfen_no_ces_use) = f_fedemandInd(t,regi,"%cm_demScen%",ppfen_no_ces_use);
 
 *** RCP-dependent demands in buildings (climate impact)
