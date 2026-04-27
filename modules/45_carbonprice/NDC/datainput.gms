@@ -14,7 +14,7 @@ pm_taxCO2eq(t,regi) = p45_taxCO2eq_bau(t,regi);
 
 
 *** load NDC emissions targets (only fraction of emissions in REMIND region from countries with NDC targets)
-Table fm_EmiTargetAbs(tall,all_regi,NDC_version,all_GDPpopScen) "Table for all NDC versions with absolute NDC emissions targets, emissions from countries without targets are not included [Mt CO2eq/yr]"
+Table f45_EmiTargetAbs(tall,all_regi,NDC_version,all_GDPpopScen) "Table for all NDC versions with absolute NDC emissions targets, emissions from countries without targets are not included [Mt CO2eq/yr]"
 $offlisting
 $ondelim
 $include "./modules/45_carbonprice/NDC/input/fm_EmiTargetAbs.cs3r"
@@ -23,7 +23,7 @@ $onlisting
 ;
 
 Parameter p45_EmiTargetAbs(ttot,all_regi) "Absolute NDC emissions targets, emissions from countries without targets are not included [Mt CO2eq/yr]";
-p45_EmiTargetAbs(t,all_regi) = fm_EmiTargetAbs(t,all_regi,"%cm_NDC_version%","%cm_GDPpopScen%");
+p45_EmiTargetAbs(t,all_regi) = f45_EmiTargetAbs(t,all_regi,"%cm_NDC_version%","%cm_GDPpopScen%");
 
 display p45_EmiTargetAbs;
 
@@ -54,7 +54,7 @@ $offdelim
 
 *** overwrite BAU emissions with emissions in GAMS variable from reference GDX
 p45_BAU_reg_emi_wo_LU_wo_bunkers(ttot,regi) = 0;
-Execute_Loadpoint 'input_ref' p45_BAU_reg_emi_wo_LU_wo_bunkers = vm_emiGHG_exclLULUCF_exclBunkers.l;
+Execute_Loadpoint 'input_ref' p45_BAU_reg_emi_wo_LU_wo_bunkers = v_emiGHG_exclLULUCF_exclBunkers.l;
 *** convert from GtCeq/yr to MtCO2eq/yr
 p45_BAU_reg_emi_wo_LU_wo_bunkers(ttot,regi) = p45_BAU_reg_emi_wo_LU_wo_bunkers(ttot,regi) * sm_c_2_co2 * 1000;
 
