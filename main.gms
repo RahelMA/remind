@@ -831,7 +831,23 @@ parameter
 *' *  (1): CO2 only
 *' *  (2): all GHG
 *' *  (3): all GHG excl CO2 emissions from LULUCF
-*'
+
+parameter
+  c_budgetscen            "specify the emissions included in the emissions budget used in functionalFormRegi"
+;
+  c_budgetscen = 4;         !! def = 4  !! regexp = [1-8]
+*' * (1): incl. other GHGs, incl. LULUCF CO2, incl. bunkers
+*' * (2): incl. other GHGs, incl. LULUCF CO2, excl. bunkers
+*' * (3): incl. other GHGs, excl. LULUCF CO2, excl. bunkers !! = JustMIP. 
+*' * (4): excl. other GHGs, incl. LULUCF CO2, incl. bunkers !! = REMIND default for global CO2 budget runs
+*' * (5): excl. other GHGs, excl. LULUCF CO2, incl. bunkers
+*' * (6): excl. other GHGs, excl. LULUCF CO2, excl. bunkers
+*' Note: whether the LULUCF CO2 and the GHG emissions are taxed or not is determined by cm_multigasscen!
+*' There are two main perspectives: 
+*' a) policy perspective incl. GHG emissions, excl. bunkers, LULUCF w/ national accounting.
+*'    Currently, LULUCF can only be excluded (due to poor data quality, i.e. (3)), or use the model LULUCF data (i.e.(2)).
+*' b) modeling perspective starting from the emissions included in the reference run, i.e. typically including all CO2 emissions (4).
+
 parameter
   cm_permittradescen        "scenario on permit trade"
 ;

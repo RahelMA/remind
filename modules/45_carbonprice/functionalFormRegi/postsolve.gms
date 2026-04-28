@@ -12,23 +12,23 @@
 if(cm_iterative_target_adj eq 5,
 *** 1. Get the relevant information from this iteration
   !! Update the actual budget by region and save across iterations for debugging
-  p45_actualbudgetco2Regi_2100(regi) = sum(t$(t.val eq 2100), pm_actualbudgetco2Regi(t,regi)); 
-  p45_actualbudgetco2Regi_2100_iter(iteration, regi) = p45_actualbudgetco2Regi_2100(regi);
+  p45_actualbudgetco2eqRegi_2100(regi) = sum(t$(t.val eq 2100), pm_actualbudgetco2eqRegi(t,regi)); 
+  p45_actualbudgetco2eqRegi_2100_iter(iteration, regi) = p45_actualbudgetco2eqRegi_2100(regi);
 
   !! Save pm_taxCO2eq over iterations
   pm_taxCO2eq_iter(iteration,ttot,regi) = pm_taxCO2eq(ttot,regi);
   
   !! Compute deviation from regional target budget 
-  pm_budgetDeviation(regi) =  p45_actualbudgetco2Regi_2100(regi) - p45_budgetCO2from2020Regi(regi);
+  pm_budgetDeviation(regi) =  p45_actualbudgetco2eqRegi_2100(regi) - p45_budgetCO2from2020Regi(regi);
   p45_budgetDeviation_iter(iteration, regi) = pm_budgetDeviation(regi) ; 
 
   !!  Save the best available information about the reaction of the actual budget to the change in prices 
   if (iteration.val ge 2,
      !! determine the (price change / budget change) in the last iteration. If no change in tax, then 0; no change of budget at all is very unlikely, thus negligible risk of infeasibility
       loop(regi,
-        if ((p45_actualbudgetco2Regi_2100_iter(iteration, regi) -  p45_actualbudgetco2Regi_2100_iter(iteration - 1, regi)) ne 0,
+        if ((p45_actualbudgetco2eqRegi_2100_iter(iteration, regi) -  p45_actualbudgetco2eqRegi_2100_iter(iteration - 1, regi)) ne 0,
         p45_TaxBudgetSlopeCurrent(regi) = (pm_taxCO2eq_iter(iteration, "2100", regi) - pm_taxCO2eq_iter(iteration-1, "2100", regi))
-                                          / (p45_actualbudgetco2Regi_2100_iter(iteration, regi) -  p45_actualbudgetco2Regi_2100_iter(iteration - 1, regi));
+                                          / (p45_actualbudgetco2eqRegi_2100_iter(iteration, regi) -  p45_actualbudgetco2eqRegi_2100_iter(iteration - 1, regi));
         else
         p45_TaxBudgetSlopeCurrent(regi) = 1000; !! TBD: it has now happened, that there was absolutely no change in the budget between iterations. 
                                                 !! How to deal with that case? Preliminary idea: 1000 as a marker for this case
@@ -67,21 +67,21 @@ else   !! if not yet within tolerance
     !! a) positive budget target 
     if (p45_budgetCO2from2020Regi(regi) > 0,   
       !! a1) positive actual budget        => case analogous to global target default case: ratio = (actual budget/target)
-          if (p45_actualbudgetco2Regi_2100(regi) >= 0,
-            p45_factorRescale_taxCO2Regi(iteration, regi) = max(0.5, (p45_actualbudgetco2Regi_2100(regi) / p45_budgetCO2from2020Regi(regi))); 
+          if (p45_actualbudgetco2eqRegi_2100(regi) >= 0,
+            p45_factorRescale_taxCO2Regi(iteration, regi) = max(0.5, (p45_actualbudgetco2eqRegi_2100(regi) / p45_budgetCO2from2020Regi(regi))); 
       !! a2) negative actual budget       => ratio = (positive target) / (absolute difference). Potential problem: Approaches 1 for small negative budgets              
           else 
             p45_factorRescale_taxCO2Regi(iteration, regi) = 
-                max(0.5, (p45_budgetCO2from2020Regi(regi) / (p45_budgetCO2from2020Regi(regi) + abs(p45_actualbudgetco2Regi_2100(regi))) ) ) ;
+                max(0.5, (p45_budgetCO2from2020Regi(regi) / (p45_budgetCO2from2020Regi(regi) + abs(p45_actualbudgetco2eqRegi_2100(regi))) ) ) ;
          )  !! positive target sub-categories             
     !! b) negative budget target
     else
       !! b1) positive actual budget             => take the absolute deviation & rescale to get a factor: ratio = log(actual + asb(target))
-           if (p45_actualbudgetco2Regi_2100(regi) >= 0,
-             p45_factorRescale_taxCO2Regi(iteration, regi) =  log(abs(p45_budgetCO2from2020Regi(regi)) + p45_actualbudgetco2Regi_2100(regi)) 
+           if (p45_actualbudgetco2eqRegi_2100(regi) >= 0,
+             p45_factorRescale_taxCO2Regi(iteration, regi) =  log(abs(p45_budgetCO2from2020Regi(regi)) + p45_actualbudgetco2eqRegi_2100(regi)) 
       !! b2) negative actual budget         => case reverse to global target default case: ratio = (target/actual budget)
           else
-            p45_factorRescale_taxCO2Regi(iteration, regi) = max(0.5, (p45_budgetCO2from2020Regi(regi) / p45_actualbudgetco2Regi_2100(regi))))
+            p45_factorRescale_taxCO2Regi(iteration, regi) = max(0.5, (p45_budgetCO2from2020Regi(regi) / p45_actualbudgetco2eqRegi_2100(regi))))
           )  !! target type
       ); !! earlier vs. later iterations
     ); !! tolerance check
