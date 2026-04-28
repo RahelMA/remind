@@ -195,7 +195,8 @@ loop(regi$(sameAs("DEU", regi)),
 *** set maximum coal share in buildings after 2020 to 2020 value as residential coal heating is not going to recover once phased out
   pm_secBioShare(t,regi,"fesos","build")$(t.val gt 2020) = pm_secBioShare("2020",regi,"fesos","build");
 );
-
+*** for solids in industry in ETS only: biomass fraction cannot be higher than 0.3 
+pm_secBioShare(ttot,regi,"fesos","indst") = min(0.3,pm_secBioShare(ttot,regi,"fesos","indst"));
 display pm_secBioShare;
 
 pm_IO_input(regi,all_enty,all_enty2,all_te)   = 0;

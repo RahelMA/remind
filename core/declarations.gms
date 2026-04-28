@@ -526,6 +526,8 @@ q_PE_histCap(ttot,all_regi,all_enty,all_enty)        "require minimum of fossil 
 q_PE_histCap_NGCC_2020_up(ttot,all_regi,all_enty,all_enty) "require maximum of gas power capacity in 2020 based on 2015 historical data and growth rate assumptions"
 q_shbiofe_up(ttot,all_regi,all_enty,emi_sectors,all_emiMkt) "constrain share of biomass in hydrocarbons of sectoral final energy in historical years based on historical data (upper bound)"
 q_shbiofe_lo(ttot,all_regi,all_enty,emi_sectors,all_emiMkt) "constrain share of biomass in hydrocarbons of sectoral final energy in historical years based on historical data (lower bound)"
+q_shbiofe_up_fesos(ttot,all_regi,all_enty,emi_sectors,all_emiMkt)  "share of biomass for fesos indst (upper bound)"
+q_shbiofe_lo_fesos(ttot,all_regi,all_enty,emi_sectors,all_emiMkt)  "share of biomass for fesos indst (lower bound)"
 
 *** energy service layer equations (only relevant for transport)
 q_transFe2Es(ttot,all_regi,all_enty,all_esty,all_teEs) "conversion from final energy to energy services"

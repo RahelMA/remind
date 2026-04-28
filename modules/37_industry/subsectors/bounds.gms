@@ -164,4 +164,7 @@ $endif.fixedUE_scenario
 !! Fix to avoid reoccurring random infeasibilities. May need to be excluded if e.g. synfuels (or something else) are set to zero.
 vm_demFeSector_afterTax.lo(t,regi,entySe,"fesos","indst",emiMkt)$(NOT sameAs(emiMkt, "other")) = 1e-16;
 
+!! Limit biosolids in industry to 0.3 of all solids used in industry (only for ETS - all sectors except otherInd)
+v37_shSolidsIndst.fx(t,regi) = 0.3 ;
+
 *** EOF ./modules/37_industry/subsectors/bounds.gms
