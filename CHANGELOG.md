@@ -16,6 +16,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     [[#2332](https://github.com/remindmodel/remind/pull/2332)]
 - **39_CCU** Rename module to `39_carbonUtilization`
     [[#2332](https://github.com/remindmodel/remind/pull/2332)]
+- **scripts** Use `quitte::write.gdx` in `climateAssessmentInterimRun.R` to dump climate assessment results to gdx
+    [[#2334](https://github.com/remindmodel/remind/pull/2334)]
 
 ### added
 -
