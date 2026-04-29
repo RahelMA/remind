@@ -42,8 +42,8 @@ p45_peakBudgYr_regi(all_regi)                            "prescribed peak carbon
 $else.Peak
 p45_peakBudgYr_regi(all_regi)                            "prescribed peak carbon price year for each region"
 $endif.Peak
-p45_actualbudgetco2Regi_2100(all_regi)                   "regional - actual level of 2020-2100 cumulated emissions, including all CO2 for last iteration"
-p45_actualbudgetco2Regi_2100_iter(iteration,all_regi)    "regional - actual level of 2020-2100 cumulated emissions, including all CO2 for last iteration"
+p45_actualbudgetco2eqRegi_2100(all_regi)                   "regional - actual level of 2020-2100 cumulated emissions, including all CO2 for last iteration"
+p45_actualbudgetco2eqRegi_2100_iter(iteration,all_regi)    "regional - actual level of 2020-2100 cumulated emissions, including all CO2 for last iteration"
 p45_factorRescale_taxCO2Regi(iteration,all_regi)         "regional - Multiplicative factor for rescaling the CO2 price to reach the target"
 p45_factorRescale_taxCO2Regi_Funneled(iteration, all_regi)  "regional - Multiplicative factor for rescaling the CO2 price to reach the target - Funnelled (static)"
 pm_factorRescale_taxCO2Regi_Funneled2(iteration, all_regi) "regional - Multiplicative factor for rescaling the CO2 price to reach the target - Funnelled (interactive, incl. adjustments based on last iterations)"
