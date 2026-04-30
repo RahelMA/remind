@@ -10,6 +10,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### input data/calibration
 
 ### changed
+- **33_CDR** Rename module to `33_carbonRemoval`
+    [[#2332](https://github.com/remindmodel/remind/pull/2332)]
+- **37_industry** Rename set item `pri` to `prim`
+    [[#2332](https://github.com/remindmodel/remind/pull/2332)]
+- **39_CCU** Rename module to `39_carbonUtilization`
+    [[#2332](https://github.com/remindmodel/remind/pull/2332)]
 - **scripts** Use `quitte::write.gdx` in `climateAssessmentInterimRun.R` to dump climate assessment results to gdx
     [[#2334](https://github.com/remindmodel/remind/pull/2334)]
 
