@@ -40,6 +40,32 @@ mag2rem <- tibble::tribble(
     'Emissions|CH4|Land|+|Peatland'                                                  ,   'ch4peatland'                ,   1               ,   'f_macBaseMagpie_coupling')
 
 
+# Mapping of air pollutant emissions from MAgPIE names to REMIND names
+# Unlike the variables above, the air pollutants are not imported into REMIND GAMS but directly to the reporting.
+# Therefore, they wont be written to the gdx but to an extra file the reporting uses.
+species <- c("BC","CO","NH3","NO2","OC","SO2","VOC")
+
+magAP <- c(paste0("Emissions|", species, "|AFOLU|Agriculture (Mt ", species, "/yr)"),                              
+         paste0("Emissions|", species, "|Land|Biomass Burning|+|Burning of Crop Residues (Mt ", species, "/yr)"),
+         paste0("Emissions|", species, "|Land|+|Peatland (Mt ", species, "/yr)"),
+         paste0("Emissions|", species, "|AFOLU|Land|Fires (Mt ", species, "/yr)"),                               
+         paste0("Emissions|", species, "|AFOLU|Land|Fires|+|Forest Burning (Mt ", species, "/yr)"),
+         paste0("Emissions|", species, "|AFOLU|Land|Fires|+|Grassland Burning (Mt ", species, "/yr)"),
+         paste0("Emissions|", species, "|AFOLU|Land|Fires|+|Peat Burning (Mt ", species, "/yr)")
+         )
+
+remAP <- c(paste0("Emi|", species, "|AFOLU|+|Agriculture (Mt ", species, "/yr)"),
+         paste0("Emi|", species, "|AFOLU|+|Agricultural Waste Burning (Mt ", species, "/yr)"),
+         paste0("Emi|", species, "|AFOLU|Land|+|Peatland (Mt ", species, "/yr)"),
+         paste0("Emi|", species, "|AFOLU|Land|+|Fires (Mt ", species, "/yr)"),           
+         paste0("Emi|", species, "|AFOLU|Land|Fires|+|Forest Burning (Mt ", species, "/yr)"),
+         paste0("Emi|", species, "|AFOLU|Land|Fires|+|Grassland Burning (Mt ", species, "/yr)"),
+         paste0("Emi|", species, "|AFOLU|Land|Fires|+|Peat Burning (Mt ", species, "/yr)")
+         )
+
+mappingAP <- tibble::tibble(mag = magAP, rem = remAP)
+
+
 # Delete entries in stack that contain needle and append new
 .setgdxcopy <- function(needle,stack,new){
   matches <- grepl(needle,stack)
