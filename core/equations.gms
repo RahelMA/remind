@@ -470,6 +470,7 @@ q_costTeCapital(t,regi,teLearn) $ (pm_data(regi,"tech_stat",teLearn) < 4 or t.va
 *** to phase-in the observed 2020 regional variation from input-data
   + macro_interpolate(t.val, 2005, 2020, macro_costGlob, macro_costRegi) $ (t.val > 2005 and t.val <= 2020)
 
+*** after 2020 for specific cm_floorCostScen: regional capital costs
 $if %cm_floorCostScen% == "pricestruc"  + macro_costRegi $ (t.val > 2020)
 $if %cm_floorCostScen% == "gdpBased"    + macro_costRegi $ (t.val > 2020)
 
