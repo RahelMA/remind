@@ -218,7 +218,7 @@ pm_cesdata(t,regi,"lab","quantity") = pm_lab(t,regi);
 *** Load exogenous FE trajectories for buildings and industry
 *** Convert EJ to TWa
 
-pm_cesdata(t,regi,in,"quantity")$(pm_fedemandBuild(t,regi,in)) = sm_EJ_2_TWa * pm_fedemandBuild(t,regi,in)
+pm_cesdata(t,regi,in,"quantity")$(pm_fedemandBuild(t,regi,in)) = sm_EJ_2_TWa * pm_fedemandBuild(t,regi,in);
 
 
 *** Only convert FEs from EJ to TWa, for UEs keep original units
