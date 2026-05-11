@@ -59,27 +59,20 @@ loop (pf_industry_relaxed_bounds_dyn37(in),
 );
 
 
-*' For primary steel, the upper bound from 2025 is too restrictive given slight inconsistencies in input data
-*' This helps to accommodate these inconsistencies, though ECS remains difficult.
+*' for primary steel, the iterative bounds used above are too restrictive 
+*' due to small inconsistencies in steel production input data.
+*' we add the option to use the previous time step's pm_cesdata value instead.
 $offOrder
-* vm_cesIO.up(t,regi,"ue_steel_primary")$(t.val gt 2005 AND NOT sameAs(regi, "ECS"))
 vm_cesIO.up(t,regi,"ue_steel_primary")$(t.val gt 2005)
 = max(
   pm_cesdata(t-1,regi,"ue_steel_primary","quantity"),
+  !! more flexible upper bound, can be set by the previous time step's data
   (pm_cesdata(t,regi,"ue_steel_primary","quantity")
   *(2.5 + max(0, (sm_CES_calibration_iteration - 1) / sm_tmp))
     ))$( sm_CES_calibration_iteration le sm_tmp )
   + INF$( sm_CES_calibration_iteration gt sm_tmp 
   );
 $onOrder
-
-*' primary steel requires a more flexible upper bound for calibration, due to a historically low capacity factor in historical data (pre 2025)
-* vm_cesIO.up(t,regi,"ue_steel_primary")$(t.val gt 2005)
-* = ( pm_cesdata(t,regi,"ue_steel_primary","quantity")
-*   !! goes from 1.5 to 2.5 in +0.2 steps, then jumps to inf
-*   * (1.5 + max(0, (sm_CES_calibration_iteration - 1) / sm_tmp))
-*   )$( sm_CES_calibration_iteration le sm_tmp )
-* + INF$( sm_CES_calibration_iteration gt sm_tmp );
 
 loop(p29_building_relaxed_bounds_dyn(in),
   vm_cesIO.lo(t,regi_dyn29(regi),in)$(t.val gt 2020 AND SAMEAS(regi, "MEA"))
