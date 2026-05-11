@@ -23,7 +23,6 @@ $ifThen.adTargetValue not "%cm_RenShareTargetValue%" == "off"
 Parameter
     p40_NPiRenShareTarget(ttot,all_regi,RenShareTargetType)      "region renewable share target [%]"  / %cm_RenShareTargetValue% /
     p40_NPiRenShareTarget_path(ttot,all_regi,RenShareTargetType) "constant renewable share target path" 
-    p40_RenShareTargetYear(all_regi)                             "target year for renewable share "
 ;
 $ENDIF.adTargetValue
     

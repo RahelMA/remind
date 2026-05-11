@@ -26,12 +26,6 @@ RenShareTargetType     "Renewable share target types"
     SolarWindElec               "solar and wind share in secondary energy electricity"
 /
 ;
-$ifThen.adTargetValue not "%cm_RenShareTargetValue%" == "off" 
-Sets
-    regiRenShareTarget(all_regi)                "regions with renewable share target" //
-    regiANDperiodRenShareTarget(ttot,all_regi)  "time-period and region combinations with renewable share target" //
-    ;
-$ENDIF.adTargetValue
 
 
 Sets

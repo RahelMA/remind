@@ -66,16 +66,7 @@ $ifThen.adTargetValue not "%cm_RenShareTargetValue%" == "off"
 
 *--- Loop over input targets
 loop((ttot,all_regi,RenShareTargetType)
-     $p40_NPiRenShareTarget(ttot,all_regi,RenShareTargetType),
-
-***     mark regions with targets
-    regiRenShareTarget(all_regi) = yes;
-    regiANDperiodRenShareTarget(ttot,all_regi) = yes;
-    p40_RenShareTargetYear(all_regi) = ttot.val;
-
-*** initialize propagated target
-    p40_NPiRenShareTarget_path(ttot,all_regi,RenShareTargetType)
-        = p40_NPiRenShareTarget(ttot,all_regi,RenShareTargetType);
+     $ p40_NPiRenShareTarget(ttot,all_regi,RenShareTargetType),
 
 *** keep target constant for all years after target year 
     loop(ttot2$(ttot2.val >= ttot.val),
