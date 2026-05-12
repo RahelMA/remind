@@ -1361,6 +1361,13 @@ parameter
 *' Note that the switch is only active in the NPi2025 realization of the 40_techpol module.
   cm_RenShareTargets = 1;      !! def = 1 renewable share targets are on !! regexp = 1|0
 *'
+*' cm_RenShareTargetValue: [40_techpol] define additional targets for renewable share in NPi2025
+*' Note that the switch is only active in the NPi2025 realization of the 40_techpol module.
+*' If cm_RenShareTargets is on, this switch overrides the regular NPi2025 renewable share targets.
+*' The input format should the the following ttot.regi.RenShareTargetType %value e.g., 2050.EUR.RenElec 0.8 for 80%.
+*' There are the following RenShareTargetType:  RenElec, NonBioRenElec, NonFossilElec, RenFE, SolarWindElec           
+$setGlobal cm_RenShareTargetValue    off !! def = off
+
 parameter
   cm_APsource                "data source for air pollution baseyear (2020) emissions"
 ;
