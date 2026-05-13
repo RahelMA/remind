@@ -190,8 +190,7 @@ $elseif.c_techAssumptScen "%c_techAssumptScen%" == "SSP3"
         fm_dataglob("omf",te) =          2/3 * fm_dataglob("omf",te);
     );
 *** hampers nuclear
-    fm_dataglob("inco0","tnrs") =        1.2 * fm_dataglob("inco0","tnrs");
-    fm_dataglob("lifetime","tnrs") =     0.8 * fm_dataglob("lifetime","tnrs");
+    fm_dataglob("inco0","tnrs") =        1.3 * fm_dataglob("inco0","tnrs");
 *** hampers transmission for non-ICE vehicules
     fm_dataglob("inco0",te) $ (sameas(te,"tdelt") or sameas(te,"tdh2t")) = 2 * fm_dataglob("inco0",te);
 *** hampers VRE a lot, and electricity storage
@@ -706,7 +705,7 @@ pm_histCap("2020",regi,teReNoBio) = max(pm_histCap("2015",regi,teReNoBio), pm_hi
 pm_histCap("2025",regi,teReNoBio) = max(pm_histCap("2020",regi,teReNoBio), pm_histCap("2025",regi,teReNoBio));
 
 *** calculate historic capacity additions
-pm_delta_histCap(tall,regi,te) = pm_histCap(tall,regi,te) - pm_histCap(tall-1,regi,te);
+pm_delta_histCap(ttot,regi,te) = pm_histCap(ttot,regi,te) - pm_histCap(ttot-1,regi,te);
 
 *** historical PE installed capacity
 table p_PE_histCap(tall,all_regi,all_enty,all_enty) "historical installed capacity (TW)"
