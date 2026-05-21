@@ -36,7 +36,8 @@ Parameter
 ;
 
 Equation
-    q40_RenShare                                  "constraint to enforce minimum share of renewables based on renewable share targets of NPi"
+    q40_RenShare_SE                               "constraint to enforce minimum share of renewables in secondary energy based on renewable share targets of NPi"
+    q40_RenShare_FE                               "constraint to enforce minimum share of renewables in final energy including ambient heat from heat pumps"
 ;
 
 
