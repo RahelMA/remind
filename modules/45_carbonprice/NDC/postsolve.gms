@@ -44,9 +44,19 @@ if(       iteration.val lt  8, p45_adjustExponent = 4;
 p45_factorRescaleCO2Tax(p45_NDCyearSet(t,regi)) =
   ( (p45_CO2eqwoLU_actual(t,regi)+0.0001)/(p45_CO2eqwoLU_goal(t,regi)+0.0001) )**p45_adjustExponent;
 
+*' Concave curve growing from 0 at iteration 0 to 1 at cm_iteration_max https://www.desmos.com/calculator/ekpauw9fxx
+p45_iterDamping =
+    1 - (1 - iteration.val / cm_iteration_max) ** 2;
+
+*' Damping factor to limit the change of the CO2 tax in each iteration, ensures convergence and prevents oscillation'    
 p45_factorRescaleCO2TaxLtd(p45_NDCyearSet(t,regi)) =
-  min(max(0.1**p45_adjustExponent, p45_factorRescaleCO2Tax(t,regi)), max(2-iteration.val/15,1.01-iteration.val/10000));
-*** use max(0.1, ...) to make sure that negative emission values cause no problem, use +0.0001 such that net zero targets cause no problem
+    min(5,
+    max(0.1,
+        1
+        + (p45_factorRescaleCO2Tax(t,regi) - 1)
+          * p45_iterDamping
+    ));
+
 
 pm_taxCO2eq(t,regi)$(t.val gt 2021 AND t.val le p45_lastNDCyear(regi)) = max(1* sm_DptCO2_2_TDpGtC,pm_taxCO2eq(t,regi) * p45_factorRescaleCO2TaxLtd(t,regi) );
 
