@@ -6,7 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
 ## [Unreleased]
-
+- **scripts** include reporttransport/remind2 (EDGE-T/REMIND) variable harmonization. reporttransport (EDGE-T side) energy service demand is rescaled to match exactly remind2 ES/FE/Emi values for variables reported by both models
+    [[#2320](https://github.com/remindmodel/remind/pull/2320)]
 ### input data/calibration
 
 ### changed
@@ -64,6 +65,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     [[#2229](https://github.com/remindmodel/remind/pull/2229)]
 - **46_carbonpriceRegi** Refactor netZero realisation and ensure that targets are aligned with national accounting
     [#2307](https://github.com/remindmodel/remind/pull/2307)
+- **45_carbonprice** adapt NDC realization of carbonprice module to implement absolute emissions targets instead of relative targets
+    [#2328](https://github.com/remindmodel/remind/pull/2328)
 
 ### added
 - **mapping** Add csv mapping MAgPIE to REMIND variables used by the coupling script

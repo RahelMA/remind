@@ -65,22 +65,16 @@ if (!file.exists(edgetOutputDir)) {
 }
 
 message("### start generation of EDGE-T reporting")
+reporttransport::checkConvergence()
 EDGEToutput <- reporttransport::reportEdgeTransport(edgetOutputDir,
-                                                    isTransportExtendedReported = FALSE,
-                                                    modelName = "REMIND",
-                                                    scenarioName = scenario,
-                                                    gdxPath = file.path(outputdir, "fulldata.gdx"),
-                                                    isStored = FALSE)
+                                                     isTransportExtendedReported = FALSE,
+                                                     modelName = "REMIND",
+                                                     scenarioName = scenario,
+                                                     gdxPath = file.path(outputdir, "fulldata.gdx"),
+                                                     isStored = FALSE,
+                                                     isHarmonized = TRUE)
 
-REMINDoutput <- read.quitte(file.path(outputdir, paste0("REMIND_generic_", scenario, "_withoutPlus.mif")))
-# drop regions from higher resolution EDGET reporting if REMIND is in H12
-EDGEToutput <- EDGEToutput[EDGEToutput$region %in% REMINDoutput$region, ]
-sharedVariables <- EDGEToutput[variable %in% REMINDoutput$variable | grepl(".*edge", variable)]
-EDGEToutput <- EDGEToutput[!(variable %in% REMINDoutput$variable | grepl(".*edge", variable))]
-message("The following variables will be dropped from the EDGE-Transport reporting because ",
-        "they are in the REMIND reporting: ", paste(unique(sharedVariables$variable), collapse = ", "))
-
-# For certain projects, we currently don't want to report EDGE-T results for 2005 and 2010. 
+# For certain projects, we currently don't want to report EDGE-T results for 2005 and 2010.
 # If the flag c_edgetReportAfter2010 is set, 2005 and 2010 values get replaced by NAs
 
 c_edgetReportAfter2010 <- gdx::readGDX(gdx, name = "c_edgetReportAfter2010")
@@ -95,10 +89,26 @@ quitte::write.mif(EDGEToutput, remind_reporting_file, append = TRUE)
 piamutils::deletePlus(remind_reporting_file, writemif = TRUE)
 
 # generate transport extended mif
-reporttransport::reportEdgeTransport(edgetOutputDir,
+EDGEToutputPriorHarmonization <-reporttransport::reportEdgeTransport(edgetOutputDir,
                                      isTransportExtendedReported = TRUE,
                                      gdxPath = file.path(outputdir, "fulldata.gdx"),
                                      isStored = TRUE)
+
+#Add ratio of "FE|Transport" (with bunkers) EDGE-T to REMIND before harmonization to the REMIND.mif as an indicator
+FEratioEDGE <- EDGEToutputPriorHarmonization[variable == "FE|Transport with bunkers"][, c("variable", "model", "scenario") := NULL]
+setnames(FEratioEDGE, "value", "EDGEfe")
+mifs <- list.files(".", recursive = FALSE, full.names = TRUE)
+mif <- mifs[grepl(".*withoutPlus\\.mif", mifs)]
+#Select matching variables
+REMINDvars <- as.data.table(read.quitte(mif))
+FEratioREMIND <- REMINDvars[variable == "FE|Transport"][, variable := NULL]
+setnames(FEratioREMIND, "value", "REMINDfe")
+FEratio <- merge(FEratioEDGE, FEratioREMIND, by = intersect(names(FEratioEDGE), names(FEratioREMIND)))
+FEratio[, value := (EDGEfe / REMINDfe) * 100]
+FEratio[, variable := "FE|Transport|a - ratio of EDGE-T to REMIND before harmonization"][, unit := "%"]
+FEratio[, c("EDGEfe", "REMINDfe") := NULL]
+quitte::write.mif(FEratio, remind_reporting_file, append = TRUE)
+piamutils::deletePlus(remind_reporting_file, writemif = TRUE)
 
 message("### end generation of EDGE-T reporting")
 

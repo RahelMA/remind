@@ -1361,6 +1361,13 @@ parameter
 *' Note that the switch is only active in the NPi2025 realization of the 40_techpol module.
   cm_RenShareTargets = 1;      !! def = 1 renewable share targets are on !! regexp = 1|0
 *'
+*' cm_RenShareTargetValue: [40_techpol] define additional targets for renewable share in NPi2025
+*' Note that the switch is only active in the NPi2025 realization of the 40_techpol module.
+*' If cm_RenShareTargets is on, this switch overrides the regular NPi2025 renewable share targets.
+*' The input format should the the following ttot.regi.RenShareTargetType %value e.g., 2050.EUR.RenElec 0.8 for 80%.
+*' There are the following RenShareTargetType:  RenElec, NonBioRenElec, NonFossilElec, RenFE, SolarWindElec           
+$setGlobal cm_RenShareTargetValue    off !! def = off
+
 parameter
   cm_APsource                "data source for air pollution baseyear (2020) emissions"
 ;
@@ -1420,16 +1427,28 @@ $setglobal cm_NDC_version  2026_cond    !! def = "2024_cond" !! regexp = 20(18|2
 *' * Note: including target years here does not mean they are automcatically considered in the carbonprice NDC realization. 
 *' * Depending on the p45_minRatioOfCoverageToMax parameter, each region receives the target year with the highest share of emissions covered under NDCs.
 $setglobal cm_NDC_targetYear  2030, 2035    !! def = "2030, 2035"
+
+*' cm_targetDelay            "delays NDC and LTS targets beyond the default target years" [requires cm_NDC_version = 2026_cond]
+*' *  (prisma): PRISMA asymetric rollback delays NDC and LTS target per region:
+*'      *   10 years delay for "Transition leaders": EUR, NEU, JPN (e.g. 2030 NDC shifted to 2040, 2035 NDC shifted to 2045, and 2050 NZ target shifted to 2060)
+*'      *   20 years delay for "Diversifying economies": LAM, USA, CAZ, IND, CHA, SSA, OAS
+*'      *   30 years delay for "Fossil-dependant": REF, MEA
+*'      *   Exceptions apply for some regions: the delay might deviate by 5 years due to model 10-year timesteps after 2060
+$setglobal cm_targetDelay  off     !! def = "off"
+
 *' cm_NDC_CO2PriceLimit            "sets regional upper limit for CO2 prices in NDC realization" [requires 45_carbonprice = NDC]"
 *' This serves to not force regions to reach NDC emissions targets at extremly high CO2 prices in the near-term. 
 *' Instead, regions go "as close as still plausible" to their NDC targets. 
 *' * Examples on how to use:
 *' *  "2030.EUR 150" means that EUR has maximum CO2 price of 150 USD/tCO2 in 2030. 
-*' *  The CO2 price limit is increased after the specified target year by 20%/yr. 
-*' *  In the example, that would mean that EUR has a CO2 price limit in 2035 of 150 + 0.2 * 150 * 5 = 300 USD/tCO2. 
+*' *  For the development after the target year, the switch cm_NDC_CO2PriceLimit_continuation determines whether or not an upper limit on CO2 prices is imposed.
 *' *  By default 2030 CO2 prices are limited to 150 USD/tCO2 in EUR, 80 USD/tCO2 in CAZ, USA, JPN and NEU, 50 USD/tCO2 in REF and MEA, 40 USD/tCO2 in LAM and CHA, 30 USD/tCO2 in OAS, 15 USD/tCO2 in IND and 10 USD/tCO2 in SSA.
 *' *  If set to "off", no CO2 price limits are applied in any region.
 $setglobal cm_NDC_CO2PriceLimit  2030.EUR 150, 2030.(CAZ,USA, JPN, NEU) 80, 2030.(REF,MEA) 50, 2030.(LAM, CHA) 40, 2030.OAS 30, 2030.IND 15, 2030.SSA 10    !! def = "2030.EUR 150, 2030.(CAZ,USA, JPN, NEU) 80, 2030.(REF,MEA) 50, 2030.(LAM, CHA) 40, 2030.OAS 30, 2030.IND 15, 2030.SSA 10" 
+*' cm_NDC_CO2PriceLimit_continuation "switch to determine whether CO2 price limits in NDC realization are applied only in the specified target year or also in subsequent years" [requires 45_carbonprice = NDC]
+*' *  (on): CO2 price limits are applied not only in the specified target year but also in subsequent years, with the limit increasing by 20% per year after the target year, but allowing for carbon price of at least 200$/tCO2 at minimum
+*' *  (off): CO2 price limits are only applied in the specified target year, but not in subsequent years
+$setglobal cm_NDC_CO2PriceLimit_continuation  off     !! def = "off"  !! regexp = on|off
 *' cm_NDC_postTargetDevelopment            "choose assumption on co2 price trajectory after NDC target years" [requires 45_carbonprice = NDC]
 *' *  (constant):                     carbon price remains constant after the last NDC target year
 *' *  (global_conv):                  carbon price converges across regions to a global value of 100$/tCO2 by 2100
@@ -1448,7 +1467,13 @@ $setglobal cm_NDC_TargetCheckConv  off      !! def = "off"  !! regexp = on|off
 *' *  (2024_cond):   minimum technology targets are included from NewClimate latest policy modeling protocol in 2025
 *' *  (2024_uncond): maximal technology targets are included from NewClimate latest policy modeling protocol in 2025
 $setglobal cm_NPi_version  2025_cond    !! def = "2025_cond"  !! regexp = 2025_(un)?cond
-*'
+
+*' cm_LTSexcludeRegi: comma-separated list of regions (H12) for which LTS should be ignored
+*' *  (off):   apply all hard-coded LTS of module 46 (see datainput)
+*' *  (USA):   by default, USA targets are ignored because of withdrawal from all climate agreements 
+*' *  (USA, OAS):   removing several regions
+$setglobal cm_LTSexcludeRegi USA !! def = "USA"  
+
 *' *  c_regi_earlyreti_rate  "maximum percentage of capital stock that can be retired early (before reaching their expected lifetimes) in one year in specified regions, if they are not economically viable. It is applied to all techs unless otherwise specified in c_tech_earlyreti_rate."
 *' *  Default value used in NPi runs: EUR_regi 0.06, USA_regi 0.04, CHA_regi 0.04, CAZ_regi 0.04, JPN_regi 0.04, GLO 0.03 (0.06 means 6% of capacity can be retired early per year at maximum, i.e. full retirement after 16.7 years, 40% standing capacity after 10 years)
 *' *  In target scenarios with ambition level beyond the NPi, we assume slightly higher early retirement rates outside the EU.
