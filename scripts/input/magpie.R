@@ -257,6 +257,7 @@ writeAPToReporting <- function(rem, mapping) {
   rem <- rem |>
     filter(parameter == "AirPollutantsMAgPIE") |>
     mutate(enty = paste0(enty, " (", unit, ")")) |>
+    mutate(enty = gsub("NO2", "NOx", enty)) |>
     select(ttot, regi, enty, value) |>
     write.table(file = "reporting/AirPollutantsMAgPIE.cs4r",
                 quote = FALSE, sep = ",", row.names = FALSE, col.names = FALSE)
