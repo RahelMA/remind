@@ -18,6 +18,13 @@ Parameter
     p40_CoalBound(ttot,iso_regi)                 "level for upper bound on absolute capacities, in GW for all technologies except electromobility"
 ;
 
+*--- Declaration of manual adjustment of renewable share targets from configuration file
+$ifThen.adTargetValue not "%cm_RenShareTargetValue%" == "off" 
+Parameter
+    p40_NPiRenShareTarget(ttot,all_regi,RenShareTargetType)      "region renewable share target [%]"  / %cm_RenShareTargetValue% /
+    p40_NPiRenShareTarget_path(ttot,all_regi,RenShareTargetType) "constant renewable share target path" 
+;
+$ENDIF.adTargetValue
     
 Equation 
     q40_ElecBioBound                              "equation low-carbon push technology policy for bio power"

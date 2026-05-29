@@ -23,8 +23,10 @@ RenShareTargetType     "Renewable share target types"
     NonBioRenElec               "non-biomass renewable share in secondary energy electricity"
     NonFossilElec               "non-fossil share in secondary energy electricity"
     RenFE                       "renewable share in total final energy"
+    SolarWindElec               "solar and wind share in secondary energy electricity"
 /
 ;
+
 
 Sets
 *** Mappings needed for renewable share targets (set filled with entries in sets_calculations.gms)
@@ -64,6 +66,12 @@ TargetType2TotalEnty("NonFossilElec","seel") = YES;
 *** Hence, this measure is not exactly the renewable share in final energy due to transmission losses between secondary energy and final energy.
 TargetType2ShareEnty("RenFE",enty)$( peRe(enty) OR sameas(enty,"seh2")  ) = YES;
 TargetType2TotalEnty("RenFE",entySe) = YES;
+
+*** 5. SolarWindElec: "solar and wind share in secondary energy electricity"
+*** Includes electricity produced from wind and solar primary energy.
+
+TargetType2ShareEnty("SolarWindElec",enty)$(sameas(enty,"pewin")OR sameas(enty,"pesol")) = YES;
+TargetType2TotalEnty("SolarWindElec","seel") = YES;
 
 
 *** EOF ./modules/40_techpol/NPi2025/sets.gms

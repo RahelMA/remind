@@ -38,6 +38,8 @@ q40_windBound(t,regi)$(t.val gt 2025 AND p40_TechBound(t,regi,"wind") gt 0)..
 *** 1.  RenElec                     "renewable share in secondary energy electricity"
 *** 2.  NonBioRenElec               "non-biomass renewable share in secondary energy electricity"
 *** 3.  NonFossilElec               "non-fossil share in secondary energy electricity"
+*** 4.  SolarWindElec               "solar and wind share in secondary energy electricity"
+*** 5.  RenFE                       "renewable share in total final energy"
 *** Note that we count hydrogen as a renewable source by assumption since most hydrogen in REMIND is of renewable origin.
 q40_RenShare_SE(t,regi,RenShareTargetType)$(p40_RenShareTargets(t,regi,RenShareTargetType)
                                           AND cm_RenShareTargets eq 1
