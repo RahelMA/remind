@@ -33,6 +33,7 @@ Equation
 
 Parameter
     p40_RenShareTargets(ttot,all_regi,RenShareTargetType)  "renewable share targets in NPi per REMIND region aggregated from country-level targets [share]"
+    p40_RenShare_FE(ttot,all_regi)                         "diagnostic parameter to shares in q40_RenShare_FE, calculated renewable share in final energy including ambient heat from heat pumps [share]"
 ;
 
 Equation
