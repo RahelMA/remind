@@ -333,8 +333,7 @@ $ifthen.REG_techcosts not "%cm_techcosts%" == "GLO"   !! cm_techcosts is REG or 
 *** Initial capacity differentiated by region:
   Execute_Loadpoint 'input' p_capCum = vm_capCum.l; !! read vm_capCum(t0,regi,teLearn) from input.gdx to have 2005 investment costs
   p_capCum("2015",regi,te) $ (p_capCum("2015",regi,te) = 0) = fm_dataglob("ccap0",te) / card(regi); !! if technology not in gdx, default to global value
-  p_capCum("2020",regi,"spv") = 0.6 / card(regi2); !! assume 600GW of solar PV in 2020 globally
-  display p_capCum;
+  p_capCum("2020",regi,"spv") $ (p_capCum("2020",regi,"spv") = 0) = 0.6 / card(regi2); !! assume 600GW of solar PV in 2020 globally
 $endif.REG_techcosts
 
 
@@ -378,6 +377,7 @@ fm_dataglob("floorcost",te)  = (1 + sum(regi, p_tkpremused(regi,te)) / card(regi
 $ifthen.floorscen not %cm_floorCostScen% == "default"
 *** report old floor costs pre manipulation in non-default scenario
   p_oldFloorCostdata(regi,teLearn(te)) = pm_data(regi,"floorcost",te);
+  display p_oldFloorCostdata;
 $endif.floorscen
 
 $ifthen.floorscen %cm_floorCostScen% == "pricestruc"
@@ -396,13 +396,16 @@ $elseif.floorscen %cm_floorCostScen% == "gdpBased"
 *'   - regions with average GDP have multiplier 1
 *'   - regions with very low GDP have multiplier 0.5
 *'   - regions with very high GDP have multiplier 1.5
-*' compute GDP MER per capita in 2050 per region and the population-weighted global average [$/capita]
+*' Compute GDP MER per capita in 2050 per region and the population-weighted global average [$/capita]
   p_GDPpCap2050(regi) = pm_gdp("2050",regi) / pm_pop("2050",regi) * 1000;
   p_GDPpCap2050_world = sum(regi, pm_gdp("2050",regi)) / sum(regi, pm_pop("2050",regi)) * 1000;
-*' apply sigmoid function (see shape on https://www.desmos.com/calculator/rbcjeoulgk):
-*' floor cost = standard floor cost * (1.5 - 1 / (1 + exp(-4 * (2050 global GDPpCap / 2050 regional GDPpCap          - 1))))
+*' As CHA is a leader in novel technologies, we assume a floorcost that corresponds to countries with half its actual GDP/cap
+  p_GDPpCap2050(regi) $ (sameas(regi,"CHA")) = p_GDPpCap2050(regi) / 2;
+
+*' Apply sigmoid function (see shape on https://www.desmos.com/calculator/rbcjeoulgk):
+*' floor cost = standard floor cost  * (0.5 + 1 / (1 + exp(4 * (2050 global GDPpCap / 2050 regional GDPpCap - 1))))
   pm_data(regi,"floorcost",teLearn(te)) =
-        pm_data(regi,"floorcost",te) * (1.5 - 1 / (1 + exp(-4 * (p_GDPpCap2050_world / (p_GDPpCap2050(regi) + sm_eps) - 1))));
+        pm_data(regi,"floorcost",te) * (0.5 + 1 / (1 + exp(4 * (p_GDPpCap2050_world / p_GDPpCap2050(regi) - 1))));
 $endif.floorscen
 
 
@@ -423,7 +426,6 @@ loop(teLearn(te),
 
 *** regional parameters
   pm_data(regi,"learnExp_wFC",te) = pm_data(regi,"inco0",te) / pm_data(regi,"incolearn",te) * log(1 - pm_data(regi,"learn",te)) / log(2);
-
 
 $ifthen %cm_techcosts% == "GLO"
   pm_data(regi,"learnMult_wFC",te) = pm_data(regi,"incolearn",te) / sum(regi2,pm_data(regi2,"ccap0",te)) ** pm_data(regi,"learnExp_wFC",te);
@@ -451,16 +453,14 @@ $include "./core/input/p_costMarkupAdvTech.prn"
 p_costMarkupAdvTech("4",ttot) = p_costMarkupAdvTech("3",ttot);
 p_costMarkupAdvTech("5",ttot) = p_costMarkupAdvTech("3",ttot);
 
-loop (teNoLearn(te),
+loop(teNoLearn(te),
   pm_inco0_t(ttot,regi,te) = pm_data(regi,"inco0",te);
-  loop (ttot$( ttot.val ge 2005 AND ttot.val lt 2035 ),
-    pm_inco0_t(ttot,regi,te)
-    = sum(s_statusTe$( s_statusTe.val eq pm_data(regi,"tech_stat",te) ),
-        p_costMarkupAdvTech(s_statusTe,ttot)
-      * pm_inco0_t(ttot,regi,te)
-      );
+  loop(s_statusTe $ (s_statusTe.val = fm_dataglob("tech_stat",te)),
+    pm_inco0_t(ttot,regi,te) $ (ttot.val >= 2005 and ttot.val <= 2030)
+      = p_costMarkupAdvTech(s_statusTe,ttot) * pm_inco0_t(ttot,regi,te);
   );
 );
+
 display pm_inco0_t;
 
 
@@ -488,13 +488,6 @@ $ifthen.REG_techcosts "%cm_techcosts%" == "REG"   !! cm_techcosts REG
     );
 
     pm_inco0_t(ttot,regi,te) $ (ttot.val >= c_teNoLearnConvEndYr) = fm_dataglob("inco0",te);
-  );
-
-*** re-insert effect of costMarkupAdvTech for IGCC in the regionalized cost
-*** data, as the IEA numbers have unrealistically low IGCC costs in 2005-2020
-  loop((regi,s_statusTe) $ (s_statusTe.val = pm_data(regi,"tech_stat","igcc")),
-    pm_inco0_t(ttot,regi,"igcc") $ (ttot.val >= 2005 and ttot.val <= 2030)
-      = p_costMarkupAdvTech(s_statusTe,ttot) * pm_inco0_t(ttot,regi,"igcc");
   );
 $endif.REG_techcosts
 
