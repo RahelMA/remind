@@ -76,8 +76,8 @@ For the calibration process to work, we need both:
   - `./core/input/f_gdp.cs3r`
   - `./core/input/f_pop.cs3r`
   - `./modules/29_CES_parameters/calibrate/input/f29_capitalQuantity.cs4r`
-  - `./core/input/f_fedemand_build.cs4r`
-  - `./core/input/f_fedemand_ind.cs4r`
+  - `./core/input/f_fedemandBuild.cs4r`
+  - `./core/input/f_fedemandInd.cs4r`
 
 2. Prices of `ppf` at the previous iteration. They are calculated using the `input.gdx` provided to
    the calibration run. User intervention is only required when prices cannot be derived from the `.gdx`
@@ -216,7 +216,7 @@ observed problems and suggested solutions.
   is missing entirely. Otherwise, check the input files
   (`./core/input/f_gdp.cs3r`, `./core/input/f_pop.cs3r`,
   `./modules/29_CES_parameters/calibrate/input/f29_capitalQuantity.cs4r`, 
-  `./core/input/f_fedemand_build.cs4r` and `./core/input/f_fedemand_ind.cs4r`) to 
+  `./core/input/f_fedemandBuild.cs4r` and `./core/input/f_fedemandInd.cs4r`) to 
   figure out which data is missing and fix it.
 
 #### $\xi \lt 0$  

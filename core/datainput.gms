@@ -1640,7 +1640,7 @@ Parameter
 f_fedemandInd(tall,all_regi,all_demScen,all_in) "final energy demand in industry"
 /
 $ondelim
-$include "./core/input/f_fedemand_ind.cs4r"
+$include "./core/input/f_fedemandInd.cs4r"
 $offdelim
 /;
 
@@ -1654,7 +1654,7 @@ Parameter
 f_fedemandBuild(tall,all_regi,all_demScen,all_rcp_scen,all_in) "RCP-dependent final energy demand in buildings"
 /
 $ondelim
-$include "./core/input/f_fedemand_build.cs4r"
+$include "./core/input/f_fedemandBuild.cs4r"
 $offdelim
 /;
 
