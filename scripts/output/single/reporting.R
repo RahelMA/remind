@@ -128,22 +128,29 @@ envir <- new.env()
 load(file.path(outputdir, "config.Rdata"), envir = envir)
 
 magpie_reporting_file <- envir$cfg$pathToMagpieReport
-if (!is.null(magpie_reporting_file) && file.exists(magpie_reporting_file)) {
-  message("### add MAgPIE reporting from ", magpie_reporting_file)
-  tmp_rem <- quitte::as.quitte(remind_reporting_file)
-  tmp_mag <- dplyr::filter(quitte::as.quitte(magpie_reporting_file), .data$period %in% unique(tmp_rem$period))
-  # remove common variables from magpie reporting to avoid duplication
-  sharedvariables <- intersect(tmp_mag$variable, tmp_rem$variable)
-  if (length(sharedvariables) > 0) {
-    message("The following variables will be dropped from MAgPIE reporting because they are in REMIND reporting: ",
-            paste(sharedvariables, collapse = ", "))
-    tmp_mag <- dplyr::filter(tmp_mag, !.data$variable %in% sharedvariables)
+
+if (!is.null(magpie_reporting_file)) {
+  if (file.exists(magpie_reporting_file)) {
+    message("### add MAgPIE reporting from ", magpie_reporting_file)
+    tmp_rem <- quitte::as.quitte(remind_reporting_file)
+    tmp_mag <- dplyr::filter(quitte::as.quitte(magpie_reporting_file), .data$period %in% unique(tmp_rem$period))
+    # remove common variables from magpie reporting to avoid duplication
+    sharedvariables <- intersect(tmp_mag$variable, tmp_rem$variable)
+    if (length(sharedvariables) > 0) {
+      message("The following variables will be dropped from MAgPIE reporting because they are in REMIND reporting: ",
+              paste(sharedvariables, collapse = ", "))
+      tmp_mag <- dplyr::filter(tmp_mag, !.data$variable %in% sharedvariables)
+    }
+    # Harmonize scenario names: use the REMIND scenario name also for MAgPIE
+    tmp_mag$scenario <- paste0(scenario)
+    tmp_rem_mag <- rbind(tmp_rem, tmp_mag)
+    quitte::write.mif(tmp_rem_mag, path = remind_reporting_file)
+    piamutils::deletePlus(remind_reporting_file, writemif = TRUE)
+  } else {
+    message("A path to a MAgPIE report was specified but the files cannot be found:", magpie_reporting_file)
   }
-  # Harmonize scenario names: use the REMIND scenario name also for MAgPIE
-  tmp_mag$scenario <- paste0(scenario)
-  tmp_rem_mag <- rbind(tmp_rem, tmp_mag)
-  quitte::write.mif(tmp_rem_mag, path = remind_reporting_file)
-  piamutils::deletePlus(remind_reporting_file, writemif = TRUE)
+} else {
+  message("Since no path to a MAgPIE report was specified  (which is normal for standalone runs), no MAgPIE report will be appended to the REMIND report.")
 }
 
 # warn if duplicates in mif and incorrect spelling of variables ----

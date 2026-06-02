@@ -67,7 +67,7 @@ remAP <- c(#paste0("Emi|", species, "|AFOLU|+|Agriculture"),
 
 mappingAP <- tibble::tibble(mag = magAP, enty = remAP, factorMag2Rem = 1, parameter = "AirPollutantsMAgPIE")
 
-mag2rem <- bind_rows(mag2rem, mappingAP)
+mag2rem <- dplyr::bind_rows(mag2rem, mappingAP)
 
 
 # Delete entries in stack that contain needle and append new
