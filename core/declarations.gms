@@ -300,7 +300,8 @@ p_co2CCSReference(ttot,all_regi,all_enty,all_enty,all_te,rlf) "Captured CO2 put 
 p_prodAllReference(ttot,all_regi,all_te)             "Sum of the above in the reference run. As each technology has only one type of output, the differing units should not be a problem"
 
 *** CES calibration tarjectories industry and buildings
-pm_fedemand(tall,all_regi,all_in)                    "read-in parameter for final energy and production trajectories used for the CES parameter calibration in industry and buildings [TWa]"
+pm_fedemandInd(tall,all_regi,all_in)                    "read-in parameter for final energy and production trajectories used for the CES parameter calibration in industry [EJ, ue_primary_steel, ue_secondary_steel: Gt, ue_otherInd: $tn]"
+pm_fedemandBuild(tall,all_regi,all_in)                  "read-in parameter for final energy and production trajectories used for the CES parameter calibration in buildings [EJ]"
 
 *** parameters for setting final energy shares
 pm_shfe_up(ttot,all_regi,all_enty,emi_sectors)       "Final energy shares exogenous upper bounds per sector [share]"
