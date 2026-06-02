@@ -386,10 +386,10 @@ $ifthen.floorscen %cm_floorCostScen% == "pricestruc"
 *' then it will also have a twice higher floor cost.
   pm_data(regi,"floorcost",te) $ (teRegTechCosts(te) and teLearn(te)) =
       fm_dataglob("floorcost",te) * p_inco0("2015",regi,te)
-    / (sum(regi, p_inco0("2015",regi,te)) / card(regi));
+    / (sum(regi2, p_inco0("2015",regi2,te)) / card(regi2));
   pm_data(regi,"floorcost",te) $ sameAs(te, "spv") =
       fm_dataglob("floorcost",te) * p_inco0("2020",regi,te)
-    / (sum(regi, p_inco0("2020",regi,te)) / card(regi));
+    / (sum(regi2, p_inco0("2020",regi2,te)) / card(regi2));
 
 $elseif.floorscen %cm_floorCostScen% == "gdpBased"
 *' Floor costs for learning technologies based on GDP MER per capita in 2050:
