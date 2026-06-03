@@ -295,7 +295,7 @@ getMagpieData <- function(path_to_report = "report.mif", mapping) {
     group_by(period, region, enty, parameter, unit)             |> # define groups for summation, include unit to keep it (needed for export of air pollutants to REMIND reporting)
     summarise(value = sum(value), .groups = "drop")       |> # sum MAgPIE emissions (variable) that have the same enty in remind
     rename(ttot = period, regi = region)                  |> # use REMIND set names 
-    filter(, regi != "World", between(ttot, 2005, 2150))     # keep REMIND time horizon and remove World region
+    filter(regi != "World", between(ttot, 2005, 2150))     # keep REMIND time horizon and remove World region
     
 
   # write data to gdx, that will be read by REMIND in the next Nash iteration. 
