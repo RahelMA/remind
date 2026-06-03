@@ -350,6 +350,8 @@ if(c_ccsinjecratescen > 0,
 *' In nash-mode regions cannot easily share ressources, therefore CCS potentials are redistributed in Europe in data preprocessing in mrremind:
 *' Potential of EU27 regions is pooled and redistributed according to GDP (Only upper limit for 2030)
 *' Norway and UK announced to store CO2 for EU27 countries. So 50% of Norway and UK potential in 2030 is attributed to EU27-Pool
+*' Furthermore we restrict 2035 capacities to a maximum of 2.5 times 2030 capacities, assuming an optimistic 20 percent annual growth.
+*' Regions without project announcements (IND, REF) are assigned an upper limit of 10 Mt storage per year in 2035.
   if(not cm_emiscen = 1, !! cm_emiscen 1 = BAU
     vm_co2CCS.lo(t,regi,"cco2","ico2","ccsinjeon","1") $ (t.val <= 2030) = sm_MtCO2_2_GtC * p_boundCapCCS(t,regi,"operational") $ (t.val <= 2030);
     vm_co2CCS.up(t,regi,"cco2","ico2","ccsinjeon","1") $ (t.val <= 2030) = sm_MtCO2_2_GtC * (
@@ -357,6 +359,17 @@ if(c_ccsinjecratescen > 0,
       + p_boundCapCCS(t,regi,"construction") $ (t.val <= 2030)
       + p_boundCapCCS(t,regi,"planned") $ (t.val <= 2030) * c_fracRealfromAnnouncedCCScap2030);
       !! DKX: assumptions for ccsinjeoff
+    vm_co2CCS.up(t,regi,"cco2","ico2","ccsinjeon","1") $ (t.val = 2035) =
+      2.5 * sm_MtCO2_2_GtC * (
+        p_boundCapCCS("2030",regi,"operational")
+        + p_boundCapCCS("2030",regi,"construction")
+        + p_boundCapCCS("2030",regi,"planned") * c_fracRealfromAnnouncedCCScap2030
+      );
+    loop(regi,
+      if( ((p_boundCapCCS("2030",regi,"operational") + p_boundCapCCS("2030",regi,"construction") + p_boundCapCCS("2030",regi,"planned")) = 0),
+        vm_co2CCS.up(t,regi,"cco2","ico2","ccsinjeon","1") $ (t.val = 2035) = 10 * sm_MtCO2_2_GtC;
+      );
+    );
   );
 );
 
