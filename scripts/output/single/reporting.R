@@ -84,9 +84,11 @@ if (c_edgetReportAfter2010 == 1) {
   EDGEToutput <- EDGEToutput %>%
     dplyr::mutate(value = if_else(period %in% c(2005, 2010), NA_real_, value))
 }
+ 
+#Select matching variables
+REMINDoutput <- read.quitte(file.path(outputdir, paste0("REMIND_generic_", scenario, "_withoutPlus.mif")))
 
-
-quitte::write.mif(EDGEToutput, remind_reporting_file, append = TRUE)
+quitte::write.mif(EDGEToutput[region %in% unique(REMINDoutput$region)], remind_reporting_file, append = TRUE)
 piamutils::deletePlus(remind_reporting_file, writemif = TRUE)
 
 # generate transport extended mif
@@ -99,13 +101,10 @@ EDGEToutputPriorHarmonization <- reporttransport::reportEdgeTransport(edgetOutpu
 #Add ratio of "FE|Transport" (with bunkers) EDGE-T to REMIND before harmonization to the REMIND.mif as an indicator
 FEratioEDGE <- EDGEToutputPriorHarmonization[variable == "FE|Transport with bunkers"][, c("variable", "model", "scenario") := NULL]
 setnames(FEratioEDGE, "value", "EDGEfe")
-mifs <- list.files(outputdir, recursive = FALSE, full.names = TRUE)
-mif <- mifs[grepl(".*withoutPlus\\.mif", mifs)]
-#Select matching variables
-REMINDvars <- as.data.table(read.quitte(mif))
-FEratioREMIND <- REMINDvars[variable == "FE|Transport"][, variable := NULL]
+
+FEratioREMIND <- REMINDoutput[variable == "FE|Transport"][, variable := NULL]
 setnames(FEratioREMIND, "value", "REMINDfe")
-FEratio <- merge(FEratioEDGE, FEratioREMIND, by = intersect(names(FEratioEDGE), names(FEratioREMIND)))
+FEratio <- merge(FEratioEDGE[region %in% unique(REMINDoutput$region)], FEratioREMIND, by = intersect(names(FEratioEDGE), names(FEratioREMIND)))
 FEratio[, value := (EDGEfe / REMINDfe) * 100]
 FEratio[, variable := "FE|Transport|a - ratio of EDGE-T to REMIND before harmonization"][, unit := "%"]
 FEratio[, c("EDGEfe", "REMINDfe") := NULL]
