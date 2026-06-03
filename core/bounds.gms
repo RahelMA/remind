@@ -466,18 +466,24 @@ vm_cap.lo(t,regi,"gash2",rlf) $ (t.val > 2030) = 0;
 
 *** strong reliance on coal-to-liquids is not consistent with SSP1 storyline, therefore limit their use in the SSP1 and SSP2 policy scenarios
 $ifthen %c_SSP_forcing_adjust% == "forcing_SSP1"
-  vm_prodSe.up(t,regi,"pecoal","seliqfos","coalftrec")  $ (t.val > 2050) = 1e-5;
-  vm_prodSe.up(t,regi,"pecoal","seliqfos","coalftcrec") $ (t.val > 2010) = 1e-5;
-  
+*** ensure that no new capacity is built after 2005 / in the active model time (t only starts in cm_startyear)
+  vm_deltaCap.up(t,regi,"coalftrec","1")  $ (t.val > 2005) = 1e-6; 
+  vm_deltaCap.up(t,regi,"coalftcrec","1")  $ (t.val > 2005) = 1e-6; 
+  vm_cap.lo(t,regi,"coalftrec","1")  $ (t.val > 2005) = 0; !! also relax the lower bound on vm_cap to prevent infeasibilities when vm_capEarlyReti is already close to 1
+  vm_cap.lo(t,regi,"coalftcrec","1")  $ (t.val > 2005) = 0; !! also relax the lower bound on vm_cap to prevent infeasibilities when vm_capEarlyReti is already close to 1
+
 *** fixing prodFE in 2005 to the value contained in pm_cesdata("2005",regi,in,"quantity"). This is done to ensure that the energy system will reproduce the 2005 calibration values.
 *** Fixing will produce clearly attributable errors (good for debugging) when using inconsistent data, as the GAMS accuracy when comparing fixed results is very high (< 1e-8).
 *** vm_prodFe.fx("2005",regi,se2fe(enty,enty2,te)) = sum(fe2ppfEn(enty2,in), pm_cesdata("2005",regi,in,"quantity") );
   vm_deltaCap.up(t,regi,"coalgas",rlf) $ (t.val > 2010) = 1e-5;
 $endif
 
+*** strong reliance on coal-to-liquids with CCS is not consistent with climate mitigation storyline in SSP2
 $ifthen %c_SSP_forcing_adjust% == "forcing_SSP2"
 if(cm_emiscen > 1,
-  vm_prodSe.up(t,regi,"pecoal","seliqfos","coalftcrec") $ (t.val > 2010) = 1e-5;
+*** as above: limit new additions after 2005 / in the active model time (t only starts in cm_startyear)
+  vm_deltaCap.up(t,regi,"coalftcrec","1")  $ (t.val > 2005)  = 1e-7; 
+  vm_cap.lo(t,regi,"coalftcrec","1")  $ (t.val > 2005) = 0; !! also relax the lower bound on vm_cap to prevent infeasibilities when vm_capEarlyReti is already close to 1
 );
 $endif
 

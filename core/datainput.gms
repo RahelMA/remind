@@ -190,8 +190,7 @@ $elseif.c_techAssumptScen "%c_techAssumptScen%" == "SSP3"
         fm_dataglob("omf",te) =          2/3 * fm_dataglob("omf",te);
     );
 *** hampers nuclear
-    fm_dataglob("inco0","tnrs") =        1.2 * fm_dataglob("inco0","tnrs");
-    fm_dataglob("lifetime","tnrs") =     0.8 * fm_dataglob("lifetime","tnrs");
+    fm_dataglob("inco0","tnrs") =        1.3 * fm_dataglob("inco0","tnrs");
 *** hampers transmission for non-ICE vehicules
     fm_dataglob("inco0",te) $ (sameas(te,"tdelt") or sameas(te,"tdh2t")) = 2 * fm_dataglob("inco0",te);
 *** hampers VRE a lot, and electricity storage
@@ -706,7 +705,7 @@ pm_histCap("2020",regi,teReNoBio) = max(pm_histCap("2015",regi,teReNoBio), pm_hi
 pm_histCap("2025",regi,teReNoBio) = max(pm_histCap("2020",regi,teReNoBio), pm_histCap("2025",regi,teReNoBio));
 
 *** calculate historic capacity additions
-pm_delta_histCap(tall,regi,te) = pm_histCap(tall,regi,te) - pm_histCap(tall-1,regi,te);
+pm_delta_histCap(ttot,regi,te) = pm_histCap(ttot,regi,te) - pm_histCap(ttot-1,regi,te);
 
 *** historical PE installed capacity
 table p_PE_histCap(tall,all_regi,all_enty,all_enty) "historical installed capacity (TW)"
@@ -1636,41 +1635,37 @@ loop(te,
 
 
 *** ---- FE demand trajectories for calibration -------------------------------
-*** also used for limiting secondary steel demand in baseline and policy
-*** scenarios
+
 Parameter
-f_fedemand(tall,all_regi,all_demScen,all_in)   "final energy demand"
+f_fedemandInd(tall,all_regi,all_demScen,all_in) "final energy demand in industry"
 /
 $ondelim
-$include "./core/input/f_fedemand.cs4r"
+$include "./core/input/f_fedemandInd.cs4r"
 $offdelim
 /;
 
-*** use cm_demScen for Industry and Buildings
-*** cm_GDPpopScen will be used for Transport (EDGE-T) (see p29_trpdemand)
-pm_fedemand(tall,all_regi,in) = f_fedemand(tall,all_regi,"%cm_demScen%",in);
-*** data input for industry FE that is no part of the CES tree
-pm_fedemand(tall,all_regi,ppfen_no_ces_use) = f_fedemand(tall,all_regi,"%cm_demScen%",ppfen_no_ces_use);
+pm_fedemandInd(t,regi,in) = f_fedemandInd(t,regi,"%cm_demScen%",in);
+*** data input for industry FE that is no part of the CES tree 
+*** needed for process-based steel implementation, where these items are not part of "in"
+pm_fedemandInd(t,regi,ppfen_no_ces_use) = f_fedemandInd(t,regi,"%cm_demScen%",ppfen_no_ces_use);
 
 *** RCP-dependent demands in buildings (climate impact)
-$ifthen.cm_rcp_scen_build not "%cm_rcp_scen_build%" == "none"
-Parameter f_fedemand_build(tall,all_regi,all_demScen,all_rcp_scen,all_in) "RCP-dependent final energy demand in buildings"
+Parameter 
+f_fedemandBuild(tall,all_regi,all_demScen,all_rcp_scen,all_in) "RCP-dependent final energy demand in buildings"
 /
 $ondelim
-$include "./core/input/f_fedemand_build.cs4r"
+$include "./core/input/f_fedemandBuild.cs4r"
 $offdelim
 /;
 
-
-pm_fedemand(t,regi,cal_ppf_buildings_dyn36) = f_fedemand_build(t,regi,"%cm_demScen%","%cm_rcp_scen_build%",cal_ppf_buildings_dyn36);
-$endif.cm_rcp_scen_build
-
+pm_fedemandBuild(t,regi,cal_ppf_buildings_dyn36) = f_fedemandBuild(t,regi,"%cm_demScen%","%cm_rcp_scen_build%",cal_ppf_buildings_dyn36);
 
 *** Scale FE demand across industry and building sectors
 $ifthen.scaleDemand not "%cm_scaleDemand%" == "off"
   loop((tall,tall2,all_regi) $ pm_scaleDemand(tall,tall2,all_regi),
 *FL*  rescaled demand                = normal demand                  * [ scaling factor                      + (1-scaling factor)                      * remaining phase-in, between zero and one               ]
-      pm_fedemand(t,all_regi,all_in) = pm_fedemand(t,all_regi,all_in) * ( pm_scaleDemand(tall,tall2,all_regi) + (1-pm_scaleDemand(tall,tall2,all_regi)) * min(1, max(0, tall2.val-t.val) / (tall2.val-tall.val)) );
+      pm_fedemandInd(t,all_regi,all_in) = pm_fedemandInd(t,all_regi,all_in) * ( pm_scaleDemand(tall,tall2,all_regi) + (1-pm_scaleDemand(tall,tall2,all_regi)) * min(1, max(0, tall2.val-t.val) / (tall2.val-tall.val)) );
+      pm_fedemandBuild(t,all_regi,all_in) = pm_fedemandBuild(t,all_regi,all_in) * ( pm_scaleDemand(tall,tall2,all_regi) + (1-pm_scaleDemand(tall,tall2,all_regi)) * min(1, max(0, tall2.val-t.val) / (tall2.val-tall.val)) );
   );
 $endif.scaleDemand
 
@@ -1696,7 +1691,7 @@ pm_scaleDemandBuildTable(t,regi) $ ( pm_scaleDemandBuildTable(t,regi) le 0) = 1;
 pm_scaleDemandBuildTable(t,regi) $ (t.val > 2100 ) = pm_scaleDemandBuildTable("2100",regi); !! continue 2100 multiplier until end of time
 
   loop( (t,regi,in) $ in_buildings_dyn36(in) ,
-    pm_fedemand(t,regi,in) = pm_fedemand(t,regi,in) * pm_scaleDemandBuildTable(t,regi)
+    pm_fedemandBuild(t,regi,in) = pm_fedemandBuild(t,regi,in) * pm_scaleDemandBuildTable(t,regi)
   );
 $endif.scaleDemandBuildTable
 
@@ -1721,7 +1716,7 @@ p_scaleDemandIndTable(t,regi) $ ( p_scaleDemandIndTable(t,regi) le 0) = 1;  !! I
 p_scaleDemandIndTable(t,regi) $ (t.val > 2100 ) = p_scaleDemandIndTable("2100",regi); !! continue 2100 multiplier until end of time
 
   loop( (t,regi,in) $ in_industry_dyn37(in) ,
-    pm_fedemand(t,regi,in) = pm_fedemand(t,regi,in) * p_scaleDemandIndTable(t,regi)
+    pm_fedemandInd(t,regi,in) = pm_fedemandInd(t,regi,in) * p_scaleDemandIndTable(t,regi)
   );
 $endif.scaleDemandIndTable
 

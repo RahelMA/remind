@@ -63,16 +63,6 @@ Sets
     feels . (feelcb,feelhpb,feelrhb)
   /
   
-  fe_tax_sub36(all_in,all_in)  "correspondence between tax and subsidy input data resolution and model sectoral resolution"
-  /
-    fesob . fesob
-    fehob . fehob
-    fegab . fegab
-    feh2b . feh2b
-    feheb . feheb
-    feelb . (feelcb,feelhpb,feelrhb)
-  /
-  
   ue_dyn36(all_in)  "useful energy items"
   //
 
@@ -99,7 +89,6 @@ in(in_buildings_dyn36)               = YES;
 ppfEn(ppfen_buildings_dyn36)         = YES;
 cesOut2cesIn(ces_buildings_dyn36)    = YES;
 fe2ppfEn(fe2ppfEn36)                 = YES;
-fe_tax_sub_sbi(fe_tax_sub36)         = YES;
 ppfen_CESMkup(ppfen_buildings_dyn36) = YES;
 
 *** EOF ./modules/36_buildings/simple/sets.gms

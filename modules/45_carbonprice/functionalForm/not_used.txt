@@ -22,7 +22,7 @@ fm_taxCO2eqHist,input,not needed
 sm_c_2_co2,input,added by codeCheck
 pm_macSwitch,input,not needed because default MAC curve settings are used
 pm_NDCEmiTargetDeviation,input,not used
-pm_actualbudgetco2Regi,input,added by codeCheck
+pm_actualbudgetco2eqRegi,input,added by codeCheck
 pm_dt,input,added by codeCheck
 cm_CPslopeAdjustment,input,added by codeCheck
 cm_useInputGdxForCarbonPrice,input,added by codeCheck
