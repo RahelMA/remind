@@ -171,7 +171,7 @@ $ifthen.cm_subsec_model_steel "%cm_subsec_model_steel%" == "processes"
 *** industry processes
 +                     bf         bof         idr         eaf
 tech_stat
-inco0              400.0       200.0       420.0       350.0
+inco0              460.0       200.0       420.0       350.0
 omf                 0.06        0.06        0.06        0.06
 lifetime              35          35          20          20
 
@@ -322,7 +322,9 @@ bf and bof:
     Figure shows 65 / 55 --> inco0 approx 700
     Agora KSV-Rechner: 38 € OPEX
     Woertler 2013 Exhibit 8: Components (no C&R) summed CAPEX 442 € (149 BF, 128 BOF, + Rest) --> approx 500 $
-    --> inco0 average is 600; distribution among bf and bof does not affect model, measurement of bf in tPI is negligible
+    --> inco0 average is 600 without relining;
+    Relining cost: IEAGHG 2013 states US$ 232 Mill => US$ 250 Mill today => $60/t. 
+    --> inco0 average is 660 with relining; Distribution among bf and bof does not affect model, measurement of bf in tPI is negligible
     Lifetime: bfs need a relining after 20 years (typically), but these are cheap -> default is 35 years (including one relining)
     Ambitious scenarios could consider using 20 years instead, especially for developed markets + China
 
