@@ -131,6 +131,7 @@ vm_co2eq(ttot,all_regi)                              "total greenhouse gas emiss
 vm_co2eqMkt(ttot,all_regi,all_emiMkt)                "total greenhouse gas emissions per market measured in co2 equivalents that are subject to carbon pricing, be aware that emissions coverage of this variable depends on switch cm_multigasscen [GtCeq]"
 vm_emiAll(ttot,all_regi,all_enty)                    "total emissions by species [GtC, Mt CH4, Mt N, Mt SO2, Mt BC, Mt OC]"
 v_co2eqCum(all_regi)                                 "cumulated vm_co2eq emissions for the first budget period [GtCeq]"
+v_emiGHG_exclLULUCF_exclBunkers(ttot,all_regi)       "total GHG emissions excl LULUCF and excl bunkers, needed for NDC targets [GtCeq]"
 
 *** sectoral emissions
 vm_emiTeDetail(ttot,all_regi,all_enty,all_enty,all_te,all_enty)  "emissions from energy technologies on supply-side (pm_emifac * PE) and demand-side (pm_emifac * FE), note: not equivalent to Emi|CO2|Energy in reporting [GtC, Mt CH4, Mt N, Mt SO2, Mt BC, Mt OC]"
@@ -184,6 +185,7 @@ q_emiCdrAll(ttot,all_regi)                           "summing over all CDR emiss
 q_balcapture(ttot,all_regi)                          "balance equation for carbon capture"
 q_balCCUvsCCS(ttot,all_regi)                         "balance equation for captured carbon to CCU or CCS or valve"
 q_ccsShare(ttot,all_regi)                            "calculate the share of captured CO2 that is stored geologically"
+q_emiGHG_exclLULUCF_exclBunkers(ttot,all_regi)       "calculate total GHG emissions excl LULUCF and excl bunkers"
 ;
 
 *** ---------------------------------------------------------------------------
@@ -298,7 +300,8 @@ p_co2CCSReference(ttot,all_regi,all_enty,all_enty,all_te,rlf) "Captured CO2 put 
 p_prodAllReference(ttot,all_regi,all_te)             "Sum of the above in the reference run. As each technology has only one type of output, the differing units should not be a problem"
 
 *** CES calibration tarjectories industry and buildings
-pm_fedemand(tall,all_regi,all_in)                    "read-in parameter for final energy and production trajectories used for the CES parameter calibration in industry and buildings [TWa]"
+pm_fedemandInd(tall,all_regi,all_in)                    "read-in parameter for final energy and production trajectories used for the CES parameter calibration in industry [EJ, ue_primary_steel, ue_secondary_steel: Gt, ue_otherInd: $tn]"
+pm_fedemandBuild(tall,all_regi,all_in)                  "read-in parameter for final energy and production trajectories used for the CES parameter calibration in buildings [EJ]"
 
 *** parameters for setting final energy shares
 pm_shfe_up(ttot,all_regi,all_enty,emi_sectors)       "Final energy shares exogenous upper bounds per sector [share]"
