@@ -1,6 +1,6 @@
 
 # Mapping of MAgPIE variables to REMIND variables
-# If you change the mapping, check whether the structure of the gdx object in ?getMagpieData? (see below) needs to be adjusted.
+# If you change the mapping, check whether the structure of the gdx object in the function "getMagpieData" (see below) needs to be adjusted.
 mag2rem <- tibble::tribble(
     ~mag                                                                             ,   ~enty                        ,   ~factorMag2Rem  ,   ~parameter                ,
     'Demand|Bioenergy|2nd generation|++|Bioenergy crops'                             ,   NA                           ,   1/31.536        ,   'pm_pebiolc_demandmag'    ,
@@ -42,11 +42,11 @@ mag2rem <- tibble::tribble(
 
 # Mapping of air pollutant emissions from MAgPIE names to REMIND names
 # Unlike the variables above, the air pollutants are not imported into REMIND GAMS but directly to the reporting.
-# Therefore, they wont be written to the gdx but to an extra file the reporting uses.
+# Therefore, they won't be written to the gdx but to an extra file the reporting uses.
 species <- c("BC","CO","NH3","NO2","OC","SO2","VOC")
 
 magAP <- c(#paste0("Emissions|", species, "|AFOLU|Agriculture"),  # exists for BC, CO, OC, SO2 and VOC only (exogenous in MAgPIE)
-           paste0("Emissions|", c("NH3", "NO2"), "|Land|+|Agriculture"), # exists for NH3, NO2 only (endogeous in MAgPIE)
+           paste0("Emissions|", c("NH3", "NO2"), "|Land|+|Agriculture"), # exists for NH3, NO2 only (endogenous in MAgPIE)
            paste0("Emissions|", species, "|Land|Biomass Burning|+|Burning of Crop Residues"),
            #paste0("Emissions|", species, "|Land|+|Peatland"),
            paste0("Emissions|", species, "|AFOLU|Land|Fires"),                               
