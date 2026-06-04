@@ -23,6 +23,7 @@ cm_GDPpopScen    "cm_GDPpopScen as set for use in GDX"      /%cm_GDPpopScen%/
 cm_APssp         "cm_APssp as set for use in GDX"           /%cm_APssp%/
 cm_APscen        "cm_APscen as set for use in GDX"          /%cm_APscen%/
 cm_LU_emi_scen   "cm_LU_emi_scen as set for use in GDX"     /%cm_LU_emi_scen%/
+cm_rcp_scen      "cm_rcp_scen as set for use in GDX"        /%cm_rcp_scen%/
 
 
 
