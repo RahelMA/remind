@@ -147,7 +147,7 @@ if (!is.null(magpie_reporting_file)) {
     quitte::write.mif(tmp_rem_mag, path = remind_reporting_file)
     piamutils::deletePlus(remind_reporting_file, writemif = TRUE)
   } else {
-    message("A path to a MAgPIE report was specified but the files cannot be found:", magpie_reporting_file)
+    message("A path to a MAgPIE report was specified but the files cannot be found: ", magpie_reporting_file)
   }
 } else {
   message("Since no path to a MAgPIE report was specified  (which is normal for standalone runs), no MAgPIE report will be appended to the REMIND report.")
