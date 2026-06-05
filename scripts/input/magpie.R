@@ -45,7 +45,7 @@ mag2rem <- tibble::tribble(
 # Therefore, they won't be written to the gdx but to an extra file the reporting uses.
 species <- c("BC","CO","NH3","NO2","OC","SO2","VOC")
 
-magAP <- c(#paste0("Emissions|", species, "|AFOLU|Agriculture"),  # exists for BC, CO, OC, SO2 and VOC only (exogenous in MAgPIE)
+magAP <- c(#paste0("Emissions|", species, "|AFOLU|Agriculture"), # temporarily existed as dummy zeros for BC, CO, OC, SO2, VOC to achieve completeness of emissions reporting for ScenarioMIP. Will be removed from magpie4 reporting
            paste0("Emissions|", c("NH3", "NO2"), "|Land|+|Agriculture"), # exists for NH3, NO2 only (endogenous in MAgPIE)
            paste0("Emissions|", species, "|Land|Biomass Burning|+|Burning of Crop Residues"),
            #paste0("Emissions|", species, "|Land|+|Peatland"),
