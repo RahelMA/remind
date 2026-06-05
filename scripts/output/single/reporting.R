@@ -86,7 +86,7 @@ if (c_edgetReportAfter2010 == 1) {
 }
  
 #Select matching variables
-REMINDoutput <- read.quitte(file.path(outputdir, paste0("REMIND_generic_", scenario, "_withoutPlus.mif")))
+REMINDoutput <- as.data.table(read.quitte(file.path(outputdir, paste0("REMIND_generic_", scenario, "_withoutPlus.mif"))))
 
 quitte::write.mif(EDGEToutput[region %in% unique(REMINDoutput$region)], remind_reporting_file, append = TRUE)
 piamutils::deletePlus(remind_reporting_file, writemif = TRUE)
