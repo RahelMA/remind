@@ -21,6 +21,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     [[#2334](https://github.com/remindmodel/remind/pull/2354)]
 - **inputdata** Split final energy demands into buildings and industry specific parameters
     [[#2329](https://github.com/remindmodel/remind/pull/2329/)]
+- **inputdata** update information form MAgPIE( e.g. AP, agricultural costs) to MAgPIE v4.14.0
+    [[#2329](https://github.com/remindmodel/remind/pull/2364/)]
 
 ### added
 -
