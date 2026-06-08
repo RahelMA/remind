@@ -6,9 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
 ## [Unreleased]
-- **scripts** include reporttransport/remind2 (EDGE-T/REMIND) variable harmonization. reporttransport (EDGE-T side) energy service demand is rescaled to match exactly remind2 ES/FE/Emi values for variables reported by both models
-    [[#2320](https://github.com/remindmodel/remind/pull/2320)]
+
 ### input data/calibration
+- Split final energy demands into buildings and industry specific parameters
+    [[#2329](https://github.com/remindmodel/remind/pull/2329/)]
+- update information form MAgPIE( e.g. AP, agricultural costs) to MAgPIE v4.14.0
+  New: land use air pollutants got a major update, because they are taken from current MAgPIE version from now on replacing outdated data
+    [[#2329](https://github.com/remindmodel/remind/pull/2364/)]
 
 ### changed
 - **33_CDR** Rename module to `33_carbonRemoval`
@@ -19,10 +23,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     [[#2332](https://github.com/remindmodel/remind/pull/2332)]
 - **scripts** Use `quitte::write.gdx` in `climateAssessmentInterimRun.R` to dump climate assessment results to gdx
     [[#2334](https://github.com/remindmodel/remind/pull/2354)]
-- **inputdata** Split final energy demands into buildings and industry specific parameters
-    [[#2329](https://github.com/remindmodel/remind/pull/2329/)]
-- **inputdata** update information form MAgPIE( e.g. AP, agricultural costs) to MAgPIE v4.14.0
-    [[#2329](https://github.com/remindmodel/remind/pull/2364/)]
+- **scripts** include reporttransport/remind2 (EDGE-T/REMIND) variable harmonization. reporttransport (EDGE-T side) energy service demand is rescaled to match exactly remind2 ES/FE/Emi values for variables reported by both models
+    [[#2320](https://github.com/remindmodel/remind/pull/2320)]
 
 ### added
 -
