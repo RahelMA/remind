@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     [[#2329](https://github.com/remindmodel/remind/pull/2329/)]
 - update information form MAgPIE( e.g. AP, agricultural costs) to MAgPIE v4.14.0
   New: land use air pollutants got a major update, because they are taken from current MAgPIE version from now on replacing outdated data
-    [[#2329](https://github.com/remindmodel/remind/pull/2364/)]
+    [[#2364](https://github.com/remindmodel/remind/pull/2364/)]
 
 ### changed
 - **33_CDR** Rename module to `33_carbonRemoval`
