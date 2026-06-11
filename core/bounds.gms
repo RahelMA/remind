@@ -526,9 +526,6 @@ loop(all_te $ (
   );
 );
 
-*** remove legacy values for timesteps and technologies that are not required 
-vm_capCum.l(tall,all_regi,all_te) $ (not (ttot(tall) and regi(all_regi) and te(all_te))) = 0;
-
 *** H2 Curtailment (TODO: RLDC removal)
 *** Fixing h2curt value to zero to avoid the model to generate SE out of nothing.
 *** Models that have additional se production channels should release this variable (eg. RLDC power module).
