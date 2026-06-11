@@ -392,20 +392,20 @@ $ifthen.floorscen %cm_floorCostScen% == "pricestruc"
     / (sum(regi2, p_inco0("2020",regi2,te)) / card(regi2));
 
 $elseif.floorscen %cm_floorCostScen% == "gdpBased"
-*' Floor costs for learning technologies based on GDP MER per capita in 2050:
+*' Floor costs for learning technologies based on GDP MER per capita in 2050 (see calculation below):
 *'   - regions with average GDP have multiplier 1
-*'   - regions with very low GDP have multiplier 0.5
-*'   - regions with very high GDP have multiplier 1.5
+*'   - regions with infinitely low GDP have multiplier 0.5
+*'   - regions with infinitely high GDP have multiplier 1.5
 *' Compute GDP MER per capita in 2050 per region and the population-weighted global average [$/capita]
-  p_GDPpCap2050(regi) = pm_gdp("2050",regi) / pm_pop("2050",regi) * 1000;
-  p_GDPpCap2050_world = sum(regi, pm_gdp("2050",regi)) / sum(regi, pm_pop("2050",regi)) * 1000;
+  p_floorcostRef(regi) = pm_gdp("2050",regi) / pm_pop("2050",regi) * 1000;
+  p_floorcostRef_world = sum(regi, pm_gdp("2050",regi)) / sum(regi, pm_pop("2050",regi)) * 1000;
 *' As CHA is a leader in novel technologies, we assume a floorcost that corresponds to countries with half its actual GDP/cap
-  p_GDPpCap2050(regi) $ (sameas(regi,"CHA")) = p_GDPpCap2050(regi) / 2;
+  p_floorcostRef(regi) $ (sameas(regi,"CHA")) = p_floorcostRef(regi) / 2;
 
 *' Apply sigmoid function (see shape on https://www.desmos.com/calculator/rbcjeoulgk):
-*' floor cost = standard floor cost  * (0.5 + 1 / (1 + exp(4 * (2050 global GDPpCap / 2050 regional GDPpCap - 1))))
+*' floor cost = standard floor cost  * (0.5 + 1 / (1 + exp(4 * (2050 global GDPpCap  / 2050 regional GDPpCap - 1))))
   pm_data(regi,"floorcost",teLearn(te)) =
-        pm_data(regi,"floorcost",te) * (0.5 + 1 / (1 + exp(4 * (p_GDPpCap2050_world / p_GDPpCap2050(regi) - 1))));
+        pm_data(regi,"floorcost",te) * (0.5 + 1 / (1 + exp(4 * (p_floorcostRef_world / p_floorcostRef(regi) - 1))));
 $endif.floorscen
 
 
