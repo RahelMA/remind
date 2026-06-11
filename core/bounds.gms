@@ -150,10 +150,6 @@ vm_deltaCap.lo(t,regi,"bioh2c","1") $ (t.val <= 2030) = 0;
 vm_costTeCapital.fx(ttot,regi,teNoLearn) = pm_inco0_t("2005",regi,teNoLearn); !! use 2005 value for the past
 vm_costTeCapital.fx(t,   regi,teNoLearn) = pm_inco0_t(t,regi,teNoLearn);
 
-*** RP: theoretically, floor costs represent the lower bound of investment costs for learnTe. However, with regional 
-*** variations of 2015 costs and long-term costs being high in SSP3/SSP5, this can be different -> set lower bound to 0.2
-vm_costTeCapital.lo(t,regi,teLearn) = 0.2 * pm_data(regi,"floorcost",teLearn);
-
 *' No battery storage in 2010
 vm_cap.up("2010",regi,teStor,"1") = 0;
 
@@ -558,7 +554,6 @@ loop(all_te $ (
     vm_prodSe.fx(t,regi,entyPe,entySe,all_te) = 0;
   );
 );
-
 
 *** H2 Curtailment (TODO: RLDC removal)
 *** Fixing h2curt value to zero to avoid the model to generate SE out of nothing.
