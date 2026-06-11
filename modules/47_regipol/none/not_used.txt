@@ -82,3 +82,4 @@ vm_emiCdrTeDetail,input,added by codeCheck
 vm_demFeNonEnergySector,input,added by codeCheck
 sm_MtCO2_2_GtC,input,not needed
 pm_emiLULUCF_GrassiShift,input,not needed
+vm_co2CCS,input,not needed
