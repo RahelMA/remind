@@ -59,4 +59,20 @@ loop (pf_industry_relaxed_bounds_dyn37(in),
 );
 
 
+*' for primary steel, the iterative bounds used above are too restrictive 
+*' due to small inconsistencies in steel production input data.
+*' we add the option to use the previous time step's pm_cesdata value instead.
+$offOrder
+vm_cesIO.up(t,regi,"ue_steel_primary")$(t.val gt 2005)
+= max(
+  pm_cesdata(t-1,regi,"ue_steel_primary","quantity"),
+  !! more flexible upper bound, can be set by the previous time step's data
+  (pm_cesdata(t,regi,"ue_steel_primary","quantity")
+  *(2.5 + max(0, (sm_CES_calibration_iteration - 1) / sm_tmp))
+    ))$( sm_CES_calibration_iteration le sm_tmp )
+  + INF$( sm_CES_calibration_iteration gt sm_tmp 
+  );
+$onOrder
+
+
 *** EOF ./modules/29_CES_parameters/calibrate/bounds.gms
