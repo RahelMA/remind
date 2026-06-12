@@ -811,6 +811,11 @@ pm_regiEarlyRetiRate(t,regi,"gaschp")  = 0.7 * pm_regiEarlyRetiRate(t,regi,"gasc
 pm_regiEarlyRetiRate(t,regi,"coalchp") = 0.7 * pm_regiEarlyRetiRate(t,regi,"coalchp");  !! chp should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
 pm_regiEarlyRetiRate(t,regi,"gashp")   = 0.5 * pm_regiEarlyRetiRate(t,regi,"gashp");    !! district heating plants should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
 pm_regiEarlyRetiRate(t,regi,"coalhp")  = 0.5 * pm_regiEarlyRetiRate(t,regi,"coalhp");   !! district heating plants should only be phased out slowly, as district heating networks/ industry uses are designed to a specific heat input
+
+pm_regiEarlyRetiRate(t,regi,"bf")   = 0.25 * pm_regiEarlyRetiRate(t,regi,"bf");          !! bf-bof plants should only be phased out slowly, as they are capital-intensive and typically operate as long as possible
+pm_regiEarlyRetiRate(t,regi,"bof")  = 0.25 * pm_regiEarlyRetiRate(t,regi,"bof");         !! bf-bof plants should only be phased out slowly, as they are capital-intensive and typically operate as long as possible
+pm_regiEarlyRetiRate(t,regi,"bfcc")   = 0.25 * pm_regiEarlyRetiRate(t,regi,"bfcc");      !! bf-bof plants should only be phased out slowly, as they are capital-intensive and typically operate as long as possible
+
 pm_regiEarlyRetiRate(t,regi,"biohp")   = 0.25 * pm_regiEarlyRetiRate(t,regi,"biohp");   !! biomass technologies should only be phased-out slowly, case for their early retirement is shifting the allocation of biomass across technologies to optimize biogenic carbon capture/use
 pm_regiEarlyRetiRate(t,regi,"biochp")  = 0.25 * pm_regiEarlyRetiRate(t,regi,"biochp");  !! biomass technologies should only be phased-out slowly, case for their early retirement is shifting the allocation of biomass across technologies to optimize biogenic carbon capture/use
 pm_regiEarlyRetiRate(t,regi,"bioigcc") = 0.25 * pm_regiEarlyRetiRate(t,regi,"bioigcc"); !! biomass technologies should only be phased-out slowly, case for their early retirement is shifting the allocation of biomass across technologies to optimize biogenic carbon capture/use
@@ -1287,8 +1292,8 @@ loop(ttot$(ttot.val ge 2005),
   p_adj_seed_te(ttot,regi,'oae_el')     = 0.25;
 $ifthen.cm_subsec_model_steel "%cm_subsec_model_steel%" == "processes"
 *** steel technologies
-  p_adj_seed_te(ttot,regi,"bfcc")       = 0.05;
-  p_adj_seed_te(ttot,regi,"idrcc")      = 0.05;
+  p_adj_seed_te(ttot,regi,"bfcc")       = 0.02;
+  p_adj_seed_te(ttot,regi,"idrcc")      = 0.02;
 $endif.cm_subsec_model_steel
 
 *RP: for comparison of different technologies:
@@ -1341,8 +1346,8 @@ $endif.cm_subsec_model_steel
   p_adj_coeff(ttot,regi,'oae_el')       = 0.8;
 $ifthen.cm_subsec_model_steel "%cm_subsec_model_steel%" == "processes"
 *** steel technologies
-  p_adj_coeff(ttot,regi,"bfcc")         = 1.0;
-  p_adj_coeff(ttot,regi,"idrcc")        = 1.0;
+  p_adj_coeff(ttot,regi,"bfcc")         = 4.0;
+  p_adj_coeff(ttot,regi,"idrcc")        = 4.0;
 $endif.cm_subsec_model_steel
 );
 
