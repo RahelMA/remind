@@ -18,13 +18,13 @@ p25_waccCostO_tewacc(t, regi, tewacc) =
 p25_techwaccCostO(t, regi) = sum(tewacc, p25_waccCostO_tewacc(t, regi, tewacc));       
 
 ***This calculates WACC costs only for technologies coming from previous periods
-p25_waccCost1_tewacc(t, regi, tewacc) =
+p25_waccCostOPrev_tewacc(t, regi, tewacc) =
   sum((t2)$((t.val - t2.val <= pm_lifetime_max(regi,tewacc)) and (t2.val < t.val)),  
       (vm_costInvTeDir.l(t2, regi, tewacc)         
        + vm_costInvTeAdj.l(t2, regi, tewacc)$teAdj(tewacc)  
       ) * p25_techwacc(t2, regi, tewacc) * pm_ts(t2)/2);
 
-p25_techwaccCost1(t, regi) = sum(tewacc, p25_waccCost1_tewacc(t, regi, tewacc));       
+p25_techwaccCostOPrev(t, regi) = sum(tewacc, p25_waccCostOPrev_tewacc(t, regi, tewacc));       
 
 p25_counwaccCostO(t, regi)=
     sum((t2, in)$(

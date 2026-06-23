@@ -8,11 +8,11 @@
 
 Parameters
 p25_techwaccCostO(ttot, all_regi)                          "reference level value of technology WACC costs of the cuurent and previous period (trillion USD)"
-p25_counwaccCost0(ttot, all_regi)                          "reference level value of macro investments WACC costs of the cuurent and previous period (trillion USD)"
-p25_techwaccCost1(ttot, all_regi)                          "reference level value of WACC costs of the previous period"
+p25_counwaccCostO(ttot, all_regi)                          "reference level value of macro investments WACC costs of the cuurent and previous period (trillion USD)"
+p25_techwaccCostOPrev(ttot, all_regi)                          "reference level value of WACC costs of the previous period"
 
 p25_waccCostO_tewacc(ttot, all_regi, tewacc)                 "reference level value of WACC costs of the cuurent and previous period (trillion USD)"
-p25_waccCost1_tewacc(ttot, all_regi, tewacc)                 "reference level value of WACC costs of the previous period (trillion USD)"
+p25_waccCostOPrev_tewacc(ttot, all_regi, tewacc)                 "reference level value of WACC costs of the previous period (trillion USD)"
 ; 
 
 equations 
