@@ -7,6 +7,7 @@
 *** SOF ./modules/25_WACC/off/realization.gms
 
 *####################### R SECTION START (PHASES) ##############################
+$Ifi "%phase%" == "declarations" $include "./modules/25_WACC/off/declarations.gms"
 $Ifi "%phase%" == "bounds" $include "./modules/25_WACC/off/bounds.gms"
 *######################## R SECTION END (PHASES) ###############################
 *** EOF ./modules/25_WACC/off/realization.gms

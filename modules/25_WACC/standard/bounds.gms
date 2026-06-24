@@ -7,7 +7,7 @@
 *** SOF ./modules/25_WACC/standard/bounds.gms
 
 p25_techwaccCostO("2005", regi)  = 0 ;
-p25_techwaccCost1("2005", regi)  = 0 ;
+p25_techwaccCostOPrev("2005", regi)  = 0 ;
 p25_counwaccCostO("2005", regi)  = 0 ;
 p25_waccCostO_tewacc("2005", regi, tewacc) = 0 ;
 p25_waccCostOPrev_tewacc("2005", regi, tewacc) = 0 ;
