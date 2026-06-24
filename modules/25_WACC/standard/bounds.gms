@@ -11,7 +11,7 @@ p25_techwaccCostOPrev("2005", regi)  = 0 ;
 p25_counwaccCostO("2005", regi)  = 0 ;
 p25_waccCostO_tewacc("2005", regi, tewacc) = 0 ;
 p25_waccCostOPrev_tewacc("2005", regi, tewacc) = 0 ;
-
+vm_waccCost.fx("2005",regi) = 0 ; 
 *** EOF ./modules/25_WACC/standard/bounds.gms
 
 
