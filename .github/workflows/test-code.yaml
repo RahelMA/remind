@@ -9,7 +9,7 @@ on:
       - main
       - master
       - develop
-        
+
 name: check
 
 jobs:

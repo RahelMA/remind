@@ -99,6 +99,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **45_carbonprice** update NDC realization to run 2030+2035 NDC emissions targets by default and clean up and extend on switches for NDC variants
     [[#2289](https://github.com/remindmodel/remind/pull/2289)]
 
+### modules
+- Add module 25_WACC to represent technology-specific weighted average cost of capital (WACC) and investment financing costs
+    [[#2378](https://github.com/remindmodel/remind/pull/2378)]
 ### removed
 - **scripts** Remove of coupling scripts
     [#2249](https://github.com/remindmodel/remind/pull/2249)
