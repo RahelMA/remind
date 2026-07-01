@@ -115,7 +115,7 @@ pm_taxCO2eq(t,regi) = max(  pm_taxCO2eq(t,regi),
 $elseif.cm_NDC_CO2PriceMinimum "%cm_NDC_CO2PriceMinimum%" == "NonDecreasing"
 *** CO2 price cannot decrease after first NDC target year, but can increase or remain constant
 loop(regi,
-  loop( t2$( t2.val eq p45_lastNDCyear(regi) ) ,
+  loop( t2$( t2.val eq p45_firstNDCyear(regi) ) ,
     pm_taxCO2eq(t,regi)$(t.val gt t2.val) = max(  pm_taxCO2eq(t,regi), 
                                                   pm_taxCO2eq(t2,regi)  );
   );
