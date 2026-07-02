@@ -297,6 +297,11 @@ $setglobal capitalMarket  debt_limit           !! def = debt_limit
 *' * (se_trade): macro-economic commodities, primary energy commodities and secondary energy hydrogen and electricity trading
 *' * (capacity): capacity-based trade implementation
 $setglobal trade  standard           !! def = standard
+*'---------------------    25_WACC    ------------------------------------------
+*'
+*' * (standard): WACC like tax
+*' * (off): no WACC
+$setglobal WACC  off         !! def = standard
 *'----------------------   26_agCosts  ----------------------------------------
 *'
 *' * (off): agricultural costs zero, no trade taken into account
@@ -1195,19 +1200,19 @@ parameter
   cm_H2InBuildOnlyAfter = 2150;   !! def = 2150 (rule out H2 in buildings)
 *' For all years until the given year, FE demand for H2 in buildings is set to zero
 parameter
-  c_teNoLearngConvEndYr      "Year at which regional costs of non-learning technologies converge"
+  c_teNoLearnConvEndYr      "Year at which regional costs of non-learning technologies converge"
 ;
-  c_teNoLearngConvEndYr  = 2070;   !! def = 2070
+  c_teNoLearnConvEndYr  = 2070;   !! def = 2070
 *'
 parameter
-  c_LearnTeConvStartYear  "start year of cost convergence of learning technologies"
+  c_teLearnConvStartYr  "start year of cost convergence of learning technologies"
 ;
-c_LearnTeConvStartYear = 2025; !! def = 2025
+c_teLearnConvStartYr = 2025; !! def = 2025
 *'
 parameter
-  c_LearnTeConvEndYear "end year of cost convergence of learning technologies"
+  c_teLearnConvEndYr "end year of cost convergence of learning technologies"
 ;
-c_LearnTeConvEndYear = 2080;   !! def = 2080
+c_teLearnConvEndYr = 2080;   !! def = 2080
 *'
 parameter
   c_earlyRetiValidYr         "Year before which the early retirement rate designated by c_tech_earlyreti_rate holds"
@@ -1311,6 +1316,13 @@ parameter
 ;
   cm_deuCDRmax = -1; !! def = -1
 *'  switch to cap annual DEU CDR amount by value assigned to switch, or no cap if -1, in MtCO2
+
+parameter
+  cm_EURCDRmax                 "switch to limit maximum annual CDR amount in the EU in MtCO2 per y"
+;
+  cm_EURCDRmax = -1; !! def = -1
+*'  switch to cap annual EUR CDR amount by value assigned to switch, or no cap if -1, in MtCO2
+
 parameter
   cm_EnSecScen_limit        "switch for limiting the gas demand from 2025 onward, currently only applied to Germany"
 ;
@@ -1691,15 +1703,15 @@ $setglobal cm_in_limit_price_change "ue_steel_primary, kap_steel_primary"   !! d
 *** cm_calibration_string "def = off, else = additional string to include in the calibration name to be used" label for your calibration run to keep calibration files with different setups apart (e.g. with low elasticities, high elasticities)
 $setglobal cm_calibration_string  off    !!  def  =  off
 *** cm_techcosts -     use regionalized or globally homogenous technology costs for certain technologies
-*** (REG) regionalized technology costs with linear convergence between 2020 and year c_teNoLearngConvEndYr
+*** (REG) regionalized technology costs with linear convergence between 2020 and year c_teNoLearnConvEndYr
 *** (REG2040) regionalized technology costs given by p_inco0 until 2040, then stable without convergence
 *** (GLO) globally homogenous technology costs
 $setglobal cm_techcosts  REG       !! def = REG  !! regexp = REG|REG2040|GLO
 *** cm_floorCostScen regionally differentiated floor cost scenarios
 *** (default) uniform floor cost (almost no regional differentiation)
 *** (pricestruc) regionally differentiated floor costs, the differentiated costs have the same ratio between regions as the ratio between 2020 tech cost values
-*** (techtrans) regionally differentiated floor costs, which are the universal global floor costs in the default case time the MER PPP price ratios. new floor cost = MER/PPP * old floor cost
-$setglobal cm_floorCostScen default       !! def = default
+*** (gdpBased) regionally differentiated floor costs based on GDP per capita in 2050: regions with above-average GDP get higher floor costs (up to 1.5x), regions with below-average GDP get lower floor costs (down to 0.5x)
+$setglobal cm_floorCostScen default       !! def = default  !! regexp = default|pricestruc|gdpBased
 *** cfg$gms$cm_EDGEtr_scen  "the EDGE-T scenario"  # def <- "Mix1". For calibration runs: Mix1. Mix2, Mix3, Mix4 also available - numbers after the "mix" denote policy strength, with 1 corresponding roughly to Baseline/NPI, 2= NDC, 3= Budg1500, 4 = Budg800
 ***  The following descriptions are based on scenario results for EUR in 2050 unless specified otherwise.
 ***  Whenever we give numbers, please be aware that they are just there to estimate the ballpark.
@@ -1877,7 +1889,7 @@ $setglobal cm_inco0RegiFactor  off  !! def = off
 *** cm_CCS_markup "multiplicative factor for CSS cost markup"
 ***   def <- "off" = use default CCS pm_inco0_t values.
 ***   or number (ex. 0.66), multiply by 0.66 the CSS cost markup
-$setglobal cm_ccsinjeCost med !! def = med !! regexp = med|low|high
+$setglobal cm_ccsinjeCost high !! def = high !! regexp = med|low|high
 *' switch from standard to low and high CO2 transport & storage cost.
 *' Warning: it applies absolute values; only use it in combination with default c_techAssumptScen SSP2. 
 *'  * (low): old estimate before 03/2024; ~7.5 USD/tCO2 in 2035. Also applies tech_stat=2 and constrTme=0
