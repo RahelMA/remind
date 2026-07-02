@@ -9,4 +9,3 @@ cm_solver_try_max,   switch,      not needed
 pm_prtp,             parameter,   ???
 pm_ttot_val,         parameter,   ???
 pm_welf,             parameter,   ???
-sm_peakBudgYr_check, input,       not needed
