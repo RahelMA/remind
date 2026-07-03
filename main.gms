@@ -243,6 +243,7 @@ $setGlobal c_results_folder  REMIND results_folder will be automatically added d
 *'---------------------    01_macro    -----------------------------------------
 *'
 *' * (singleSectorGr) neo-classical, single sector growth model
+*' * (Investment_Inefficiencies) Investment losses due to domestic capital market inefficiencies
 $setGlobal macro  singleSectorGr  !! def = singleSectorGr
 *'---------------------    02_welfare    ---------------------------------------
 *'
