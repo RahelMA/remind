@@ -76,9 +76,17 @@ loop(t $ (t.val >= 2015 and t.val <= 2025),
   if(t.val <= 2020, !! TODO: activate 2025 upper-bound when consolidated data available
     vm_cap.up(t,regi,teVRE(te),"1") $ pm_histCap(t,regi,te) = 1.05 * pm_histCap(t,regi,te);
   );
+*** for 2025: as no 2025 data avaiable yet, fix lower bound to 2024 capacity + 0.5 times the annual growth in 2022-2024
+*** but at least 2024 capacity
+  if(t.val = 2025,
+    vm_cap.lo(t,regi,teVRE(te),"1") $ pm_histCapYearly("2024",regi,te) = max(pm_histCapYearly("2024",regi,te) 
+                                                                                + 0.5
+                                                                                  * ( pm_histCapYearly("2024",regi,te) 
+                                                                                    - pm_histCapYearly("2022",regi,te) ) / 2,
+                                                                              pm_histCapYearly("2024",regi,te)
+                                                                            );
 *** for 2025: as no 2025 data avaiable yet, fix upper bound to 2024 capacity + 2 times the annual growth in 2022-2024
 *** but at least 10% growth of 2024 capacity
-  if(t.val = 2025,
     vm_cap.up(t,regi,teVRE(te),"1") $ pm_histCapYearly("2024",regi,te) = max(pm_histCapYearly("2024",regi,te) 
                                                                                 + 2
                                                                                   * ( pm_histCapYearly("2024",regi,te) 
