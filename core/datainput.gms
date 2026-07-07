@@ -684,6 +684,19 @@ pm_histCap("2025",regi,teReNoBio) = max(pm_histCap("2020",regi,teReNoBio), pm_hi
 *** calculate historic capacity additions
 pm_delta_histCap(ttot,regi,te) = pm_histCap(ttot,regi,te) - pm_histCap(ttot-1,regi,te);
 
+*** historical installed capacity for yearly time-steps
+*** (same as pm_histCap, but with yearly time-steps instead of 5-year time-steps)
+$Offlisting
+table   p_histCapYearly(tall,all_regi,all_te) "historical installed capacity in yearly time steps (TW)"
+$ondelim
+$include "./core/input/pm_histCapYearly.cs3r"
+$offdelim
+;
+$Onlisting
+
+
+
+
 *** historical PE installed capacity
 table p_PE_histCap(tall,all_regi,all_enty,all_enty) "historical installed capacity (TW)"
 $ondelim
@@ -1513,7 +1526,15 @@ pm_macBaseMagpie(ttot,regi,emiMacMagpie(enty))$(ttot.val ge 2005) = f_macBaseMag
 
 *** pm_macBaseMagpie gets updated in core/presolve.gms when coupling to MAgPIE is active
 
-p_co2lucSub(ttot,regi,emiMacMagpieCO2Sub(all_enty))$(ttot.val ge 2005) = f_macBaseMagpie(ttot,regi,emiMacMagpieCO2Sub,"%cm_LU_emi_scen%","%cm_rcp_scen%");
+*** In case of fixing, load p_co2lucSub from input_ref.gdx, since parameters are not automatically treated by the fixing mechanism.
+*** Years >= cm_startyear get their values from the lookup table 
+if( (cm_startyear gt 2005),
+    Execute_Loadpoint "input_ref" p_co2lucSub = p_co2lucSub;
+);
+
+*** p_co2lucSub gets updated in core/presolve.gms when coupling to MAgPIE is active
+*** Overwrite values >= cm_startyear with lookup table, leave values < cm_startyear untouched (from input_ref.gdx, see above)
+p_co2lucSub(ttot,regi,emiMacMagpieCO2Sub(all_enty))$(ttot.val ge cm_startyear) = f_macBaseMagpie(ttot,regi,emiMacMagpieCO2Sub,"%cm_LU_emi_scen%","%cm_rcp_scen%");
 
 *** p_macPolCO2luc defines the lower limit for abatement of CO2 landuse change emissions in REMIND
 *** The values are derived from MAgPIE runs with very strong mitigation
