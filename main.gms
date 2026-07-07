@@ -243,6 +243,7 @@ $setGlobal c_results_folder  REMIND results_folder will be automatically added d
 *'---------------------    01_macro    -----------------------------------------
 *'
 *' * (singleSectorGr) neo-classical, single sector growth model
+*' * (Investment_Inefficiencies) Investment losses due to domestic capital market inefficiencies
 $setGlobal macro  singleSectorGr  !! def = singleSectorGr
 *'---------------------    02_welfare    ---------------------------------------
 *'
@@ -1469,7 +1470,7 @@ $setglobal cm_NDC_postTargetDevelopment  constant    !! def = "constant"
 *' *  (zero):                         no minimum carbon price after first NDC target year, i.e. carbon price can decrease to zero after first NDC target year
 *' *  (NPi):                          carbon price cannot fall below carbon price of NPi run as this represent the development of current policies
 *' *  (NonDecreasing):                carbon price cannot decrease after first NDC target year, but can increase or remain constant 
-$setglobal cm_NDC_CO2PriceMinimum  NPi     !! def = "NPi"  !! regexp = zero|NPi|NonDecreasing
+$setglobal cm_NDC_CO2PriceMinimum  NonDecreasing     !! def = "NonDecreasing"  !! regexp = zero|NPi|NonDecreasing
 *' cm_NDC_TargetCheckConv            "choose whether iterations should go on until all NDC emissions targets are fullfilled" [requires 45_carbonprice = NDC]
 *' This setting determines whether compliance with NDC emissions targets should be a criterion for convergence of REMIND. 
 *' *  (on):                         runs only converges if all NDC emissions targets are met within the tolerance defined by cm_NDC_target_DevTol
