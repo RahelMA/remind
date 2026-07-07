@@ -687,7 +687,7 @@ pm_delta_histCap(ttot,regi,te) = pm_histCap(ttot,regi,te) - pm_histCap(ttot-1,re
 *** historical installed capacity for yearly time-steps
 *** (same as pm_histCap, but with yearly time-steps instead of 5-year time-steps)
 $Offlisting
-table   pm_histCapYearly(tall,all_regi,all_te) "historical installed capacity in yearly time steps (TW)"
+table   p_histCapYearly(tall,all_regi,all_te) "historical installed capacity in yearly time steps (TW)"
 $ondelim
 $include "./core/input/pm_histCapYearly.cs3r"
 $offdelim
