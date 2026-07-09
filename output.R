@@ -38,7 +38,7 @@ helpText <- "
 #'                        comp=comparison means scripts to compare runs
 #'                        (e.g. compareScenarios2, ...)
 #'                        comp=export means scripts to export runs
-#'                        (e..g xlsx_IIASA, ...)
+#'                        (e.g. xlsx_IIASA, ...)
 #'
 #'   --filename_prefix=   string to be added to filenames by some output scripts
 #'                        (compareScenarios, xlsx_IIASA)
@@ -49,6 +49,10 @@ helpText <- "
 #'   --outputdir=         Directly specify the output directories, bypassing run
 #'                        selection, as a comma-separated list
 #'                        (e.g. outputdir=./output/SSP2-Base-rem-1,./output/NDC-rem-1)
+#'
+#'   --aliases=           Specify aliases for the runs given in outputdir,
+#'                        as a comma-separated list
+#'                        (e.g. aliases=default,modified)
 #'
 #'   --remind_dir=        path to remind or output directories where runs can be
 #'                        found.  Defaults to ./output but can also be used to
@@ -94,7 +98,7 @@ flags <- NULL
 if (!exists("source_include")) {
   # if this script is not being sourced by another script but called from the command line via Rscript read the command
   # line arguments and let the user choose the slurm options
-  flags <- readArgs("outputdir", "output", "comp", "remind_dir", "slurmConfig", "filename_prefix",
+  flags <- readArgs("outputdir", "output", "aliases", "comp", "remind_dir", "slurmConfig", "filename_prefix",
                     .flags = c(t = "--test", h = "--help"))
 }
 
@@ -134,6 +138,42 @@ choose_filename_prefix <- function(modules, title = "") {
   }
   return(filename_prefix)
 }
+
+mutateDuplicates <- function(strings, duplicate_vector) {
+  # adds suffixes to all strings marked as duplicates by the duplicate_vector
+  stopifnot(length(strings) == length(duplicate_vector))
+  counter <- 1
+  for (i in seq_along(strings)) {
+    if(duplicate_vector[i]) {
+      strings[i] <- paste0(strings[i], "-dup-", counter)
+      counter <- counter + 1
+    }
+  }
+  return(strings)
+}
+
+promptForAliases <- function(outputdirs, scenarios) {
+  message("\nDuplicate scenario titles detected, suggested aliases to be used in the output (e.g. PDF files):")
+  for (i in seq_along(outputdirs)) {
+    message(sprintf("  [%d] %s -> \"%s\"", i, basename(outputdirs[i]), scenarios[i]))
+  }
+  message("\nIf you want to change these, please choose unique aliases.")
+  message("Names separated by , or leave empty to accept suggestions:")
+  aliases_str <- gms::getLine()
+  aliases_list <- trimws(unlist(strsplit(aliases_str, ",")))
+
+  if (length(scenarios) > length(aliases_list)) {
+    warning("Not enough aliases supplied. Only renaming first scenarios.")
+  }
+  for (i in seq_along(aliases_list)) {
+    if (i > length(scenarios)) {
+      stop("Too many aliases supplied")
+    }
+    scenarios[i] <- aliases_list[i]
+  }
+  return(scenarios)
+}
+
 
 if (exists("source_include")) {
   comp <- "single"
@@ -194,6 +234,20 @@ if (! exists("outputdir")) {
   }
 } else {
   outputdirs <- outputdir
+}
+
+# aliases are names for scenarios (=outputdirs) that are prompted when the scenarios have duplicate names
+# currently only compareScenarios2 uses aliases, feel free to implement it for your comparison script
+if (! exists("aliases")) {
+  scenarios <- unname(lucode2::getScenNames(outputdirs))
+  duplicate <- duplicated(scenarios)
+  aliases <- mutateDuplicates(scenarios, duplicate)
+  # For better scripting, only prompt for aliases if output dirs were selected manually
+  if (!exists("outputdir") || any(duplicate)) {
+    aliases = promptForAliases(outputdirs, aliases)
+  }
+} else {
+   stopifnot("Number of aliases and outputdirs must be equal" = length(aliases) == length(outputdirs))
 }
 
 if (comp %in% c("comparison", "export")) {
