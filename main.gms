@@ -1410,7 +1410,7 @@ $setglobal c_edgeTransportIter 10,12,14,16,18,20,22,24,27,30,33,36,39,42,45,50,5
 *' *  (none): no RCP scenario, standard setting
 *' *  (rcp20): RCP2.0
 *' *  (rcp26): RCP2.6
-*' *  (rcp37): RCP3.7 [currently not operational: test and verify before using it!]
+*' *  (rcp37): RCP3.7
 *' *  (rcp45): RCP4.5
 *' *  (rcp60): RCP6.0 [currently not operational: test and verify before using it!]
 *' *  (rcp85): RCP8.5 [currently not operational: test and verify before using it!]
