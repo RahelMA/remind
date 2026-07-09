@@ -34,7 +34,7 @@ p45_EmiTargetAbs(t,all_regi) = f45_EmiTargetAbs(t,all_regi,"%cm_NDC_version%","%
 *** UK 2035 percentage reduction target: 0.81
 *** EUR target = EU27 + UK target = 4652*(1-0.69375) + 817*(1-0.81) = 1579.9 MtCO2eq/yr (incl LULUCF)
 *** Assume -310 LULUCF 2035 emissions  (kept constant from 2030 goal) => EUR 2035 target excl LULUCF = 1579.9 + 310 ~ 1890 MtCO2eq/yr
-p45_EmiTargetAbs(t,regi) = p45_EmiTargetAbs(t,regi)$(t.val eq 2035 and regi eq "EUR") = 1890;
+p45_EmiTargetAbs(t,regi)$(t.val eq 2035 AND sameas(regi,"EUR")) = 1890;
 
 $ifThen "%cm_targetDelay%" == "prisma"
 *** PRISMA Asymetric rollback: 
