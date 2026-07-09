@@ -139,25 +139,12 @@ choose_filename_prefix <- function(modules, title = "") {
   return(filename_prefix)
 }
 
-mutateDuplicates <- function(strings, duplicate_vector) {
-  # adds suffixes to all strings marked as duplicates by the duplicate_vector
-  stopifnot(length(strings) == length(duplicate_vector))
-  counter <- 1
-  for (i in seq_along(strings)) {
-    if(duplicate_vector[i]) {
-      strings[i] <- paste0(strings[i], "-dup-", counter)
-      counter <- counter + 1
-    }
-  }
-  return(strings)
-}
-
 promptForAliases <- function(outputdirs, scenarios) {
-  message("\nDuplicate scenario titles detected, suggested aliases to be used in the output (e.g. PDF files):")
+  message("\nSuggested names to be used in the output (e.g. PDF files):")
   for (i in seq_along(outputdirs)) {
     message(sprintf("  [%d] %s -> \"%s\"", i, basename(outputdirs[i]), scenarios[i]))
   }
-  message("\nIf you want to change these, please choose unique aliases.")
+  message("\nIf you want to change these, please choose unique names")
   message("Names separated by , or leave empty to accept suggestions:")
   aliases_str <- gms::getLine()
   aliases_list <- trimws(unlist(strsplit(aliases_str, ",")))
@@ -238,16 +225,17 @@ if (! exists("outputdir")) {
 
 # aliases are names for scenarios (=outputdirs) that are prompted when the scenarios have duplicate names
 # currently only compareScenarios2 uses aliases, feel free to implement it for your comparison script
-if (! exists("aliases")) {
+modules_supporting_aliases <- c("compareScenarios2")
+if (!exists("aliases") && any(modules_supporting_aliases %in% output)) {
   scenarios <- unname(lucode2::getScenNames(outputdirs))
-  duplicate <- duplicated(scenarios)
-  aliases <- mutateDuplicates(scenarios, duplicate)
-  # For better scripting, only prompt for aliases if output dirs were selected manually
-  if (!exists("outputdir") || any(duplicate)) {
+  aliases <- make.unique(scenarios)
+  # For better scripting backwards compatibility, don't prompt for aliases if output dirs were selected with command line parameters
+  if (!exists("outputdir")) {
     aliases = promptForAliases(outputdirs, aliases)
   }
-} else {
-   stopifnot("Number of aliases and outputdirs must be equal" = length(aliases) == length(outputdirs))
+}
+if (exists("aliases")) {
+  stopifnot("Number of aliases and outputdirs must be equal" = length(aliases) == length(outputdirs))
 }
 
 if (comp %in% c("comparison", "export")) {
