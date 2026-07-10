@@ -31,6 +31,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     [[#2329](https://github.com/remindmodel/remind/pull/2329/)]
 - **scripts** include reporttransport/remind2 (EDGE-T/REMIND) variable harmonization. reporttransport (EDGE-T side) energy service demand is rescaled to match exactly remind2 ES/FE/Emi values for variables reported by both models
     [[#2320](https://github.com/remindmodel/remind/pull/2320)]
+- **core** Set default regional floor cost to gdpBased instead of uniform
+    [[#2400](https://github.com/remindmodel/remind/pull/2400)]
 
 ### added
 - **30_biomass** Quick-fix for `cm_maxProdBiolc`: allocate up to 25 EJ/yr of the global lignocellulosic biomass potential to regions by hardcoded 2020 crop-production shares (remainder still via marginal-cost inversion); scales down if the budget is smaller and works for both the H12 and EU21 region resolutions
