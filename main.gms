@@ -1449,6 +1449,10 @@ $setglobal cm_NDC_targetYear  2030, 2035    !! def = "2030, 2035"
 *'      *   Exceptions apply for some regions: the delay might deviate by 5 years due to model 10-year timesteps after 2060
 $setglobal cm_targetDelay  off     !! def = "off"
 
+*' cm_ReferenceCapacities            "using capacity pathways of reference scenario"
+*' *  (prisma): PRISMA Staying Alive: use MeetAspiration as reference scenario for wind and solar capacity pathways by using "prisma_SA"
+$setglobal cm_ReferenceCapacities  off     !! def = "off"
+
 *' cm_NDC_CO2PriceLimit            "sets regional upper limit for CO2 prices in NDC realization" [requires 45_carbonprice = NDC]"
 *' This serves to not force regions to reach NDC emissions targets at extremly high CO2 prices in the near-term. 
 *' Instead, regions go "as close as still plausible" to their NDC targets. 
