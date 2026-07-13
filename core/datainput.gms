@@ -374,7 +374,7 @@ fm_dataglob("floorcost",te)  = (1 + sum(regi, p_tkpremused(regi,te)) / card(regi
 
 
 *** ====================== floor cost scenarios ===========================
-$ifthen.floorscen not %cm_floorCostScen% == "default"
+$ifthen.floorscen not %cm_floorCostScen% == "uniform"
 *** report old floor costs pre manipulation in non-default scenario
   p_oldFloorCostdata(regi,teLearn(te)) = pm_data(regi,"floorcost",te);
   display p_oldFloorCostdata;

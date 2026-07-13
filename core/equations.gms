@@ -474,7 +474,7 @@ q_costTeCapital(t,regi,teLearn) $ (pm_data(regi,"tech_stat",teLearn) < 4 or t.va
 $if %cm_floorCostScen% == "pricestruc"  + macro_costRegi $ (t.val > 2020)
 $if %cm_floorCostScen% == "gdpBased"    + macro_costRegi $ (t.val > 2020)
 
-$ifthen.default %cm_floorCostScen% == "default"
+$ifthen.default %cm_floorCostScen% == "uniform"
 *** from 2020 to c_teLearnConvStartYr: regional capital costs
   + macro_costRegi $ (t.val > 2020 and t.val <= c_teLearnConvStartYr)
 
