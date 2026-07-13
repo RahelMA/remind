@@ -374,7 +374,7 @@ fm_dataglob("floorcost",te)  = (1 + sum(regi, p_tkpremused(regi,te)) / card(regi
 
 
 *** ====================== floor cost scenarios ===========================
-$ifthen.floorscen not %cm_floorCostScen% == "default"
+$ifthen.floorscen not %cm_floorCostScen% == "uniform"
 *** report old floor costs pre manipulation in non-default scenario
   p_oldFloorCostdata(regi,teLearn(te)) = pm_data(regi,"floorcost",te);
   display p_oldFloorCostdata;
@@ -684,6 +684,19 @@ pm_histCap("2025",regi,teReNoBio) = max(pm_histCap("2020",regi,teReNoBio), pm_hi
 *** calculate historic capacity additions
 pm_delta_histCap(ttot,regi,te) = pm_histCap(ttot,regi,te) - pm_histCap(ttot-1,regi,te);
 
+*** historical installed capacity for yearly time-steps
+*** (same as pm_histCap, but with yearly time-steps instead of 5-year time-steps)
+$Offlisting
+table   p_histCapYearly(tall,all_regi,all_te) "historical installed capacity in yearly time steps (TW)"
+$ondelim
+$include "./core/input/pm_histCapYearly.cs3r"
+$offdelim
+;
+$Onlisting
+
+
+
+
 *** historical PE installed capacity
 table p_PE_histCap(tall,all_regi,all_enty,all_enty) "historical installed capacity (TW)"
 $ondelim
@@ -821,10 +834,10 @@ pm_data(regi,"lifetime","tdh2b") = pm_data(regi,"lifetime","tdh2s");
 *' slow depreciation during the first half of the lifetime and faster during the second half.
 *' The area under that curve (capacity * age) equals the average technical lifetime of the technology,
 *' provided in generisdata_tech.prn.
-*' There is still some non-zero capacity beyond the average lifetime, until the maximum lifetime p_lifetime_max
+*' There is still some non-zero capacity beyond the average lifetime, until the maximum lifetime pm_lifetime_max
 *' (calculated from an integral as 5/4 times the average lifetime).
-p_lifetime_max(regi,te) = 5 / 4 * pm_data(regi,"lifetime",te);
-pm_omeg(regi,opTimeYr,te) = max(0, 1 - ((opTimeYr.val - 0.5) / p_lifetime_max(regi,te))**4);
+pm_lifetime_max(regi,te) = 5 / 4 * pm_data(regi,"lifetime",te);
+pm_omeg(regi,opTimeYr,te) = max(0, 1 - ((opTimeYr.val - 0.5) / pm_lifetime_max(regi,te))**4);
 
 *** Map each technology with its possible age
 opTimeYr2te(te,opTimeYr) $ sum(regi $ (pm_omeg(regi,opTimeYr,te) > 0), 1) = yes;
@@ -854,8 +867,8 @@ loop(regi,
     if(pm_omeg(regi,"1",te) eq 0,
       abort "Technology has zero lifetime", pm_omeg);
 ***   - lifetime of technology is longer than allowed by opTimeYr
-    if(p_lifetime_max(regi,te) > smax(opTimeYr, opTimeYr.val),
-      abort "Technology has longer lifetime than allowed by opTimeYr", opTimeYr, p_lifetime_max);
+    if(pm_lifetime_max(regi,te) > smax(opTimeYr, opTimeYr.val),
+      abort "Technology has longer lifetime than allowed by opTimeYr", opTimeYr, pm_lifetime_max);
 ***   - technology has remaining capacity beyond its lifetime
     if(
       sum(opTimeYr $ (opTimeYr.val > smax(opTimeYr2te(te,opTimeYr2), opTimeYr2.val)),
@@ -1513,7 +1526,16 @@ pm_macBaseMagpie(ttot,regi,emiMacMagpie(enty))$(ttot.val ge 2005) = f_macBaseMag
 
 *** pm_macBaseMagpie gets updated in core/presolve.gms when coupling to MAgPIE is active
 
-p_co2lucSub(ttot,regi,emiMacMagpieCO2Sub(all_enty))$(ttot.val ge 2005) = f_macBaseMagpie(ttot,regi,emiMacMagpieCO2Sub,"%cm_LU_emi_scen%","%cm_rcp_scen%");
+*** In case of fixing, load p_co2lucSub from input_ref.gdx, since parameters are not automatically treated by the fixing mechanism.
+*** Years >= cm_startyear get their values from the lookup table rather than the input_ref.gdx (see below).
+if( (cm_startyear gt 2005),
+    Execute_Loadpoint "input_ref" p_co2lucSub = p_co2lucSub;
+);
+
+
+*** Overwrite values >= cm_startyear with lookup table, leave values < cm_startyear untouched (from input_ref.gdx, see above).
+*** Gets updated for >= cm_startyear in core/presolve.gms when coupling to MAgPIE is active.
+p_co2lucSub(ttot,regi,emiMacMagpieCO2Sub(all_enty))$(ttot.val ge cm_startyear) = f_macBaseMagpie(ttot,regi,emiMacMagpieCO2Sub,"%cm_LU_emi_scen%","%cm_rcp_scen%");
 
 *** p_macPolCO2luc defines the lower limit for abatement of CO2 landuse change emissions in REMIND
 *** The values are derived from MAgPIE runs with very strong mitigation

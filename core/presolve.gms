@@ -127,7 +127,7 @@ if (sm_magpieIter gt 0,
 *** MAgPIE has run once at least: the start values for pm_macBaseMagpie come from the last MAgPIE iteration
   Execute_Loadpoint 'magpieData.gdx' f_macBaseMagpie_coupling;
   pm_macBaseMagpie(ttot,regi,emiMacMagpie(enty))$(ttot.val ge 2005)  = f_macBaseMagpie_coupling(ttot,regi,emiMacMagpie);
-  p_co2lucSub(ttot,regi,emiMacMagpieCO2Sub(enty))$(ttot.val ge 2005) = f_macBaseMagpie_coupling(ttot,regi,emiMacMagpieCO2Sub);
+  p_co2lucSub(ttot,regi,emiMacMagpieCO2Sub(all_enty))$(ttot.val ge cm_startyear) = f_macBaseMagpie_coupling(ttot,regi,emiMacMagpieCO2Sub);
 *** Biomass emission factor is set to zero after MAgPIE has run at least one, since biomass emissions are included in the emissions imported above. 
   p_efFossilFuelExtr(regi,"pebiolc","n2obio") = 0.0;
 *** In coupling mode LU emissions are abated in MAgPIE (moved here from core/datainput.gms)
