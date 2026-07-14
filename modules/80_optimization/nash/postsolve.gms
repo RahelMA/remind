@@ -29,9 +29,9 @@ loop(ttot$(ttot.val ge 2005),
       p80_Mport_iter(ttot,trade,regi,iteration) = vm_Mport.l(ttot,regi,trade);
       p80_Mport_iter(ttot,trade,regi,iteration) = vm_Xport.l(ttot,regi,trade);
     );
-    loop(entyPE,
-      p80_prodPe_iter(ttot,regi,entyPE,iteration)      = vm_prodPe.l(ttot,regi,entyPE);   
-      p80_fuExtr_iter(ttot,regi,entyPE,rlf,iteration)  = vm_fuExtr.l(ttot,regi,entyPE,rlf);
+    loop(entyPe,
+      p80_prodPe_iter(ttot,regi,entyPe,iteration)      = vm_prodPe.l(ttot,regi,entyPe);   
+      p80_fuExtr_iter(ttot,regi,entyPe,rlf,iteration)  = vm_fuExtr.l(ttot,regi,entyPe,rlf);
     );
   ); 
 ); 
