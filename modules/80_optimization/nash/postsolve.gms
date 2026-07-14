@@ -26,8 +26,8 @@ p80_normalize0(ttot,regi,tradePe)$(ttot.val ge 2005) = max(0.5 * (sum(rlf, vm_fu
 loop(ttot$(ttot.val ge 2005),
   loop(regi,
     loop(trade,
-      p80_Mport_iter(ttot,trade,regi,iteration) = vm_Mport.l(ttot,regi,trade);
-      p80_Mport_iter(ttot,trade,regi,iteration) = vm_Xport.l(ttot,regi,trade);
+      p80_Mport_iter(ttot,regi,trade,iteration) = vm_Mport.l(ttot,regi,trade);
+      p80_Mport_iter(ttot,regi,trade,iteration) = vm_Xport.l(ttot,regi,trade);
     );
     loop(entyPe,
       p80_prodPe_iter(ttot,regi,entyPe,iteration)      = vm_prodPe.l(ttot,regi,entyPe);   
