@@ -100,22 +100,22 @@ else   !! if not yet within tolerance
   !! copy the information before further funnel adjustments
   pm_factorRescale_taxCO2Regi_Funneled2(iteration, regi)  = p45_factorRescale_taxCO2Regi_Funneled(iteration, regi) ;
   
-  !! check how the rescaling factor changed over the last three iterations to dampen or expand the rescaling factor depending on the case
+   !! check how the rescaling factor changed over the last three iterations to dampen or expand the rescaling factor depending on the case
   if ((iteration.val ge 4),
   loop(regi, 
     !! if the factor was set to the *upper* bound for this and the last 2 iterations: increase the allowed factor this iteration
-    if ((   (pm_factorRescale_taxCO2Regi_Funneled2(iteration, regi) ge p45_FunnelUpper(iteration))  !! ge because last iteration may have already been adjusted upwards
-        AND (pm_factorRescale_taxCO2Regi_Funneled2(iteration-1, regi) ge p45_FunnelUpper(iteration-1))
-        AND (pm_factorRescale_taxCO2Regi_Funneled2(iteration-2, regi) ge p45_FunnelUpper(iteration-2))),
-        pm_factorRescale_taxCO2Regi_Funneled2(iteration, regi) = min(1.2 * p45_FunnelUpper(iteration), !! if funnel was 1.001, it is now 1.201
+    if ((   (pm_factorRescale_taxCO2Regi_Funneled2(iteration, regi) gt p45_FunnelUpper(iteration))  !! ge because last iteration may have already been adjusted upwards
+        AND (pm_factorRescale_taxCO2Regi_Funneled2(iteration-1, regi) gt p45_FunnelUpper(iteration-1))
+        AND (pm_factorRescale_taxCO2Regi_Funneled2(iteration-2, regi) gt p45_FunnelUpper(iteration-2))),
+        pm_factorRescale_taxCO2Regi_Funneled2(iteration, regi) = min(1.1 * p45_FunnelUpper(iteration), !! if funnel was 1.001, it is now 1.201
                                                                       p45_factorRescale_taxCO2Regi(iteration,regi));  !! unless the original planned rescaling factor was less
         );
 
     !! if the factor was set to the *lower* bound for this and the last 2 iterations: increase the allowed factor this iteration
-    if ((   (pm_factorRescale_taxCO2Regi_Funneled2(iteration, regi) le (1/p45_FunnelUpper(iteration)))  !! le because last iteration may have already been adjusted upwards
-        AND (pm_factorRescale_taxCO2Regi_Funneled2(iteration-1, regi) le (1/p45_FunnelUpper(iteration-1)))
-        AND (pm_factorRescale_taxCO2Regi_Funneled2(iteration-2, regi) le (1/p45_FunnelUpper(iteration-2)))),
-        pm_factorRescale_taxCO2Regi_Funneled2(iteration, regi) = max( (1/p45_FunnelUpper(iteration)) / 1.2, 
+    if ((   (pm_factorRescale_taxCO2Regi_Funneled2(iteration, regi) lt (1/p45_FunnelUpper(iteration)))  !! le because last iteration may have already been adjusted upwards
+        AND (pm_factorRescale_taxCO2Regi_Funneled2(iteration-1, regi) lt (1/p45_FunnelUpper(iteration-1)))
+        AND (pm_factorRescale_taxCO2Regi_Funneled2(iteration-2, regi) lt (1/p45_FunnelUpper(iteration-2)))),
+        pm_factorRescale_taxCO2Regi_Funneled2(iteration, regi) = max( (1/p45_FunnelUpper(iteration)) / 1.1, 
                                                                       p45_factorRescale_taxCO2Regi(iteration,regi));
         );
     !! if the factor jumping pos-neg-pos or neg-pos-neg or if it was already on 1 for the last two iterations -> make the last increase only 30% of what was intended

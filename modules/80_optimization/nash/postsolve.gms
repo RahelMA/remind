@@ -454,13 +454,21 @@ $ifthen.carbonpriceRegi %carbonprice% == "functionalFormRegi"
   !! If the deviation is negative, i.e. budget is too low and would require a decrease of the Carbon Price => only "not converged" if the carbon price is not already very low, 
   !! "Very low" is for now <1 USD/t CO2 in 2100, tbd
   else
-    if ((abs(p80_regionalBudget_absDev_iter(iteration,regi)) gt abs(cm_budgetCO2_absDevTol)) 
-         AND (pm_taxCO2eq("2100",regi) gt (1 * sm_DptCO2_2_TDpGtC)), 
-      s80_bool = 0;
-      p80_messageShow("regiBudget") = YES;
-    );
-  );
-  );  
+    if (cm_taxCO2_lowerBound_nr eq 0,
+      if ((abs(p80_regionalBudget_absDev_iter(iteration,regi)) gt pm_regionalBudget_absDevTol(regi)) 
+          AND (pm_taxCO2eq("2100",regi) gt (1 * sm_DptCO2_2_TDpGtC)),
+        s80_bool = 0;
+        p80_messageShow("regiBudget") = YES;
+      );
+    else  !! if there is a lower bound that is equal to cm_taxCO2_lowerBound_nr, then this should be the defining lower carbon price bound
+     if ((abs(p80_regionalBudget_absDev_iter(iteration,regi)) gt pm_regionalBudget_absDevTol(regi)) 
+          AND (pm_taxCO2eq("2100",regi) gt (1.01 * cm_taxCO2_lowerBound_nr * sm_DptCO2_2_TDpGtC)),
+        s80_bool = 0;
+        p80_messageShow("regiBudget") = YES;
+      );
+    ); !! if there is a lower carbon price bound set through cm_taxCO2_lowerBound_nr
+  ); !! if else for positive vs negative deviation 
+  ); !! loop regi
 $endIf.carbonpriceRegi
 
 
