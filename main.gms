@@ -621,6 +621,13 @@ parameter
 *' * (0): no lower bound
 *'
 parameter
+  jpn_goes_wild             "implement looser CDR constraints in Japan, i.e. ccs, oae, erw"
+;
+  jpn_goes_wild      = 0;         !! def = 0  !! regexp = 0|1
+*' *  (0): no, Japan has the same CDR constraints as other regions
+*' *  (1): yes, Japan has looser CDR constraints than other regions
+
+parameter
   c_macscen                 "scenario switch on whether or not to use MAC (Marginal Abatement Cost) for certain sectors not related to direct combustion of fossil fuel, e.g. fugitive emissions from old mines, forestry, agriculture and cement"
 ;
   c_macscen         = 1;               !! def = 1  !! regexp = 1|2
