@@ -243,6 +243,7 @@ $setGlobal c_results_folder  REMIND results_folder will be automatically added d
 *'---------------------    01_macro    -----------------------------------------
 *'
 *' * (singleSectorGr) neo-classical, single sector growth model
+*' * (Investment_Inefficiencies) Investment losses due to domestic capital market inefficiencies
 $setGlobal macro  singleSectorGr  !! def = singleSectorGr
 *'---------------------    02_welfare    ---------------------------------------
 *'
@@ -297,6 +298,11 @@ $setglobal capitalMarket  debt_limit           !! def = debt_limit
 *' * (se_trade): macro-economic commodities, primary energy commodities and secondary energy hydrogen and electricity trading
 *' * (capacity): capacity-based trade implementation
 $setglobal trade  standard           !! def = standard
+*'---------------------    25_WACC    ------------------------------------------
+*'
+*' * (standard): WACC like tax
+*' * (off): no WACC
+$setglobal WACC  off         !! def = standard
 *'----------------------   26_agCosts  ----------------------------------------
 *'
 *' * (off): agricultural costs zero, no trade taken into account
@@ -323,10 +329,10 @@ $setglobal fossil  grades2poly        !! def = grades2poly
 *'
 *' * (IntC)      :    Power sector formulation with Integration Cost (IntC) markups and curtailment for VRE integration - linearly increasing with VRE share -, and fixed capacity factors for dispatchable power plants
 $setglobal power  IntC        !! def = IntC
-*'---------------------    33_CDR       ----------------------------------------
+*'---------------------    33_carbonRemoval       ---------------------------------
 *'
 *' * (portfolio) : CDR options added via switches: cm_33[option abbreviation]
-$setglobal CDR  portfolio        !! def = portfolio
+$setglobal carbonRemoval  portfolio        !! def = portfolio
 *'---------------------    35_transport    ----------------------------------------
 *'
 *' * (edge_esm): transport realization with iterative coupling to logit-based transport model EDGE-Transport with detailed representation of transport modes and technologies
@@ -340,11 +346,11 @@ $setglobal buildings  simple      !! def = simple
 *' * (subsectors):   models industry subsectors explicitly with individual CES nests
 *'                   for cement, chemicals, steel, and otherInd production.
 $setglobal industry  subsectors   !! def = subsectors
-*'---------------------    39_CCU    ---------------------------------
+*'---------------------    39_carbonUtilization   -------------------------------
 *'
 *' * (on): representation of technologies for producing synthetic liquids and synthetic gases based on hydrogen and captured carbon
 *' * (off): no representation of carbon capture and utilization technologies.
-$setglobal CCU  on      !! def = on
+$setglobal carbonUtilization  on      !! def = on
 *'---------------------    40_techpol  ----------------------------------------
 *'
 *' * (none): no technology policies
@@ -571,7 +577,7 @@ parameter
   cm_peakBudgYr            = 2050;   !! def = 2050
 *' time of global net-zero CO2 emissions (peak budget)
 *' endogenous adjustment by algorithms in 45_carbonprice/functionalForm/postsolve.gms [requires emiscen = 9 and cm_iterative_target_adj = 7 or 9]
-*' Under development: If used with 45_carbonprice/functionalFormREGI and cm_taxCO2_Shape = 2, it determines the peak of the carbon price
+*' Under development: If used with 45_carbonprice/functionalForm(REGI) and cm_taxCO2_Shape = 2, it determines the peak of the carbon price
 parameter
   cm_taxCO2_IncAfterPeakBudgYr "annual increase of CO2 tax after cm_peakBudgYr in $ per tCO2"
 ;
@@ -831,7 +837,23 @@ parameter
 *' *  (1): CO2 only
 *' *  (2): all GHG
 *' *  (3): all GHG excl CO2 emissions from LULUCF
-*'
+
+parameter
+  c_budgetscen            "specify the emissions included in the emissions budget used in functionalFormRegi"
+;
+  c_budgetscen = 4;         !! def = 4  !! regexp = [1-8]
+*' * (1): incl. other GHGs, incl. LULUCF CO2, incl. bunkers
+*' * (2): incl. other GHGs, incl. LULUCF CO2, excl. bunkers
+*' * (3): incl. other GHGs, excl. LULUCF CO2, excl. bunkers !! = JustMIP. 
+*' * (4): excl. other GHGs, incl. LULUCF CO2, incl. bunkers !! = REMIND default for global CO2 budget runs
+*' * (5): excl. other GHGs, excl. LULUCF CO2, incl. bunkers
+*' * (6): excl. other GHGs, excl. LULUCF CO2, excl. bunkers
+*' Note: whether the LULUCF CO2 and the GHG emissions are taxed or not is determined by cm_multigasscen!
+*' There are two main perspectives: 
+*' a) policy perspective incl. GHG emissions, excl. bunkers, LULUCF w/ national accounting.
+*'    Currently, LULUCF can only be excluded (due to poor data quality, i.e. (3)), or use the model LULUCF data (i.e.(2)).
+*' b) modeling perspective starting from the emissions included in the reference run, i.e. typically including all CO2 emissions (4).
+
 parameter
   cm_permittradescen        "scenario on permit trade"
 ;
@@ -1179,19 +1201,19 @@ parameter
   cm_H2InBuildOnlyAfter = 2150;   !! def = 2150 (rule out H2 in buildings)
 *' For all years until the given year, FE demand for H2 in buildings is set to zero
 parameter
-  c_teNoLearngConvEndYr      "Year at which regional costs of non-learning technologies converge"
+  c_teNoLearnConvEndYr      "Year at which regional costs of non-learning technologies converge"
 ;
-  c_teNoLearngConvEndYr  = 2070;   !! def = 2070
+  c_teNoLearnConvEndYr  = 2070;   !! def = 2070
 *'
 parameter
-  c_LearnTeConvStartYear  "start year of cost convergence of learning technologies"
+  c_teLearnConvStartYr  "start year of cost convergence of learning technologies"
 ;
-c_LearnTeConvStartYear = 2025; !! def = 2025
+c_teLearnConvStartYr = 2025; !! def = 2025
 *'
 parameter
-  c_LearnTeConvEndYear "end year of cost convergence of learning technologies"
+  c_teLearnConvEndYr "end year of cost convergence of learning technologies"
 ;
-c_LearnTeConvEndYear = 2080;   !! def = 2080
+c_teLearnConvEndYr = 2080;   !! def = 2080
 *'
 parameter
   c_earlyRetiValidYr         "Year before which the early retirement rate designated by c_tech_earlyreti_rate holds"
@@ -1295,6 +1317,13 @@ parameter
 ;
   cm_deuCDRmax = -1; !! def = -1
 *'  switch to cap annual DEU CDR amount by value assigned to switch, or no cap if -1, in MtCO2
+
+parameter
+  cm_EURCDRmax                 "switch to limit maximum annual CDR amount in the EU in MtCO2 per y"
+;
+  cm_EURCDRmax = -1; !! def = -1
+*'  switch to cap annual EUR CDR amount by value assigned to switch, or no cap if -1, in MtCO2
+
 parameter
   cm_EnSecScen_limit        "switch for limiting the gas demand from 2025 onward, currently only applied to Germany"
 ;
@@ -1345,6 +1374,13 @@ parameter
 *' Note that the switch is only active in the NPi2025 realization of the 40_techpol module.
   cm_RenShareTargets = 1;      !! def = 1 renewable share targets are on !! regexp = 1|0
 *'
+*' cm_RenShareTargetValue: [40_techpol] define additional targets for renewable share in NPi2025
+*' Note that the switch is only active in the NPi2025 realization of the 40_techpol module.
+*' If cm_RenShareTargets is on, this switch overrides the regular NPi2025 renewable share targets.
+*' The input format should the the following ttot.regi.RenShareTargetType %value e.g., 2050.EUR.RenElec 0.8 for 80%.
+*' There are the following RenShareTargetType:  RenElec, NonBioRenElec, NonFossilElec, RenFE, SolarWindElec           
+$setGlobal cm_RenShareTargetValue    off !! def = off
+
 parameter
   cm_APsource                "data source for air pollution baseyear (2020) emissions"
 ;
@@ -1374,7 +1410,7 @@ $setglobal c_edgeTransportIter 10,12,14,16,18,20,22,24,27,30,33,36,39,42,45,50,5
 *' *  (none): no RCP scenario, standard setting
 *' *  (rcp20): RCP2.0
 *' *  (rcp26): RCP2.6
-*' *  (rcp37): RCP3.7 [currently not operational: test and verify before using it!]
+*' *  (rcp37): RCP3.7
 *' *  (rcp45): RCP4.5
 *' *  (rcp60): RCP6.0 [currently not operational: test and verify before using it!]
 *' *  (rcp85): RCP8.5 [currently not operational: test and verify before using it!]
@@ -1404,16 +1440,28 @@ $setglobal cm_NDC_version  2026_cond    !! def = "2024_cond" !! regexp = 20(18|2
 *' * Note: including target years here does not mean they are automcatically considered in the carbonprice NDC realization. 
 *' * Depending on the p45_minRatioOfCoverageToMax parameter, each region receives the target year with the highest share of emissions covered under NDCs.
 $setglobal cm_NDC_targetYear  2030, 2035    !! def = "2030, 2035"
+
+*' cm_targetDelay            "delays NDC and LTS targets beyond the default target years" [requires cm_NDC_version = 2026_cond]
+*' *  (prisma): PRISMA asymetric rollback delays NDC and LTS target per region:
+*'      *   10 years delay for "Transition leaders": EUR, NEU, JPN (e.g. 2030 NDC shifted to 2040, 2035 NDC shifted to 2045, and 2050 NZ target shifted to 2060)
+*'      *   20 years delay for "Diversifying economies": LAM, USA, CAZ, IND, CHA, SSA, OAS
+*'      *   30 years delay for "Fossil-dependant": REF, MEA
+*'      *   Exceptions apply for some regions: the delay might deviate by 5 years due to model 10-year timesteps after 2060
+$setglobal cm_targetDelay  off     !! def = "off"
+
 *' cm_NDC_CO2PriceLimit            "sets regional upper limit for CO2 prices in NDC realization" [requires 45_carbonprice = NDC]"
 *' This serves to not force regions to reach NDC emissions targets at extremly high CO2 prices in the near-term. 
 *' Instead, regions go "as close as still plausible" to their NDC targets. 
 *' * Examples on how to use:
 *' *  "2030.EUR 150" means that EUR has maximum CO2 price of 150 USD/tCO2 in 2030. 
-*' *  The CO2 price limit is increased after the specified target year by 20%/yr. 
-*' *  In the example, that would mean that EUR has a CO2 price limit in 2035 of 150 + 0.2 * 150 * 5 = 300 USD/tCO2. 
+*' *  For the development after the target year, the switch cm_NDC_CO2PriceLimit_continuation determines whether or not an upper limit on CO2 prices is imposed.
 *' *  By default 2030 CO2 prices are limited to 150 USD/tCO2 in EUR, 80 USD/tCO2 in CAZ, USA, JPN and NEU, 50 USD/tCO2 in REF and MEA, 40 USD/tCO2 in LAM and CHA, 30 USD/tCO2 in OAS, 15 USD/tCO2 in IND and 10 USD/tCO2 in SSA.
 *' *  If set to "off", no CO2 price limits are applied in any region.
 $setglobal cm_NDC_CO2PriceLimit  2030.EUR 150, 2030.(CAZ,USA, JPN, NEU) 80, 2030.(REF,MEA) 50, 2030.(LAM, CHA) 40, 2030.OAS 30, 2030.IND 15, 2030.SSA 10    !! def = "2030.EUR 150, 2030.(CAZ,USA, JPN, NEU) 80, 2030.(REF,MEA) 50, 2030.(LAM, CHA) 40, 2030.OAS 30, 2030.IND 15, 2030.SSA 10" 
+*' cm_NDC_CO2PriceLimit_continuation "switch to determine whether CO2 price limits in NDC realization are applied only in the specified target year or also in subsequent years" [requires 45_carbonprice = NDC]
+*' *  (on): CO2 price limits are applied not only in the specified target year but also in subsequent years, with the limit increasing by 20% per year after the target year, but allowing for carbon price of at least 200$/tCO2 at minimum
+*' *  (off): CO2 price limits are only applied in the specified target year, but not in subsequent years
+$setglobal cm_NDC_CO2PriceLimit_continuation  off     !! def = "off"  !! regexp = on|off
 *' cm_NDC_postTargetDevelopment            "choose assumption on co2 price trajectory after NDC target years" [requires 45_carbonprice = NDC]
 *' *  (constant):                     carbon price remains constant after the last NDC target year
 *' *  (global_conv):                  carbon price converges across regions to a global value of 100$/tCO2 by 2100
@@ -1422,7 +1470,7 @@ $setglobal cm_NDC_postTargetDevelopment  constant    !! def = "constant"
 *' *  (zero):                         no minimum carbon price after first NDC target year, i.e. carbon price can decrease to zero after first NDC target year
 *' *  (NPi):                          carbon price cannot fall below carbon price of NPi run as this represent the development of current policies
 *' *  (NonDecreasing):                carbon price cannot decrease after first NDC target year, but can increase or remain constant 
-$setglobal cm_NDC_CO2PriceMinimum  NPi     !! def = "NPi"  !! regexp = zero|NPi|NonDecreasing
+$setglobal cm_NDC_CO2PriceMinimum  NonDecreasing     !! def = "NonDecreasing"  !! regexp = zero|NPi|NonDecreasing
 *' cm_NDC_TargetCheckConv            "choose whether iterations should go on until all NDC emissions targets are fullfilled" [requires 45_carbonprice = NDC]
 *' This setting determines whether compliance with NDC emissions targets should be a criterion for convergence of REMIND. 
 *' *  (on):                         runs only converges if all NDC emissions targets are met within the tolerance defined by cm_NDC_target_DevTol
@@ -1432,7 +1480,13 @@ $setglobal cm_NDC_TargetCheckConv  off      !! def = "off"  !! regexp = on|off
 *' *  (2024_cond):   minimum technology targets are included from NewClimate latest policy modeling protocol in 2025
 *' *  (2024_uncond): maximal technology targets are included from NewClimate latest policy modeling protocol in 2025
 $setglobal cm_NPi_version  2025_cond    !! def = "2025_cond"  !! regexp = 2025_(un)?cond
-*'
+
+*' cm_LTSexcludeRegi: comma-separated list of regions (H12) for which LTS should be ignored
+*' *  (off):   apply all hard-coded LTS of module 46 (see datainput)
+*' *  (USA):   by default, USA targets are ignored because of withdrawal from all climate agreements 
+*' *  (USA, OAS):   removing several regions
+$setglobal cm_LTSexcludeRegi USA !! def = "USA"  
+
 *' *  c_regi_earlyreti_rate  "maximum percentage of capital stock that can be retired early (before reaching their expected lifetimes) in one year in specified regions, if they are not economically viable. It is applied to all techs unless otherwise specified in c_tech_earlyreti_rate."
 *' *  Default value used in NPi runs: EUR_regi 0.06, USA_regi 0.04, CHA_regi 0.04, CAZ_regi 0.04, JPN_regi 0.04, GLO 0.03 (0.06 means 6% of capacity can be retired early per year at maximum, i.e. full retirement after 16.7 years, 40% standing capacity after 10 years)
 *' *  In target scenarios with ambition level beyond the NPi, we assume slightly higher early retirement rates outside the EU.
@@ -1650,15 +1704,15 @@ $setglobal cm_in_limit_price_change "ue_steel_primary, kap_steel_primary"   !! d
 *** cm_calibration_string "def = off, else = additional string to include in the calibration name to be used" label for your calibration run to keep calibration files with different setups apart (e.g. with low elasticities, high elasticities)
 $setglobal cm_calibration_string  off    !!  def  =  off
 *** cm_techcosts -     use regionalized or globally homogenous technology costs for certain technologies
-*** (REG) regionalized technology costs with linear convergence between 2020 and year c_teNoLearngConvEndYr
+*** (REG) regionalized technology costs with linear convergence between 2020 and year c_teNoLearnConvEndYr
 *** (REG2040) regionalized technology costs given by p_inco0 until 2040, then stable without convergence
 *** (GLO) globally homogenous technology costs
 $setglobal cm_techcosts  REG       !! def = REG  !! regexp = REG|REG2040|GLO
-*** cm_floorCostScen regionally differentiated floor cost scenarios
-*** (default) uniform floor cost (almost no regional differentiation)
-*** (pricestruc) regionally differentiated floor costs, the differentiated costs have the same ratio between regions as the ratio between 2020 tech cost values
-*** (techtrans) regionally differentiated floor costs, which are the universal global floor costs in the default case time the MER PPP price ratios. new floor cost = MER/PPP * old floor cost
-$setglobal cm_floorCostScen default       !! def = default
+*** cm_floorCostScen: regionally differentiated floor cost scenarios
+***   (uniform)    uniform floor cost (almost no regional differentiation)
+***   (pricestruc) regionally differentiated floor costs, the differentiated costs have the same ratio between regions as the ratio between 2020 tech cost values
+***   (gdpBased)   regionally differentiated floor costs based on GDP per capita in 2050: regions with above-average GDP get higher floor costs (up to 1.5x), regions with below-average GDP get lower floor costs (down to 0.5x)
+$setglobal cm_floorCostScen gdpBased       !! def = gdpBased  !! regexp = uniform|pricestruc|gdpBased
 *** cfg$gms$cm_EDGEtr_scen  "the EDGE-T scenario"  # def <- "Mix1". For calibration runs: Mix1. Mix2, Mix3, Mix4 also available - numbers after the "mix" denote policy strength, with 1 corresponding roughly to Baseline/NPI, 2= NDC, 3= Budg1500, 4 = Budg800
 ***  The following descriptions are based on scenario results for EUR in 2050 unless specified otherwise.
 ***  Whenever we give numbers, please be aware that they are just there to estimate the ballpark.
@@ -1836,7 +1890,7 @@ $setglobal cm_inco0RegiFactor  off  !! def = off
 *** cm_CCS_markup "multiplicative factor for CSS cost markup"
 ***   def <- "off" = use default CCS pm_inco0_t values.
 ***   or number (ex. 0.66), multiply by 0.66 the CSS cost markup
-$setglobal cm_ccsinjeCost med !! def = med !! regexp = med|low|high
+$setglobal cm_ccsinjeCost high !! def = high !! regexp = med|low|high
 *' switch from standard to low and high CO2 transport & storage cost.
 *' Warning: it applies absolute values; only use it in combination with default c_techAssumptScen SSP2. 
 *'  * (low): old estimate before 03/2024; ~7.5 USD/tCO2 in 2035. Also applies tech_stat=2 and constrTme=0
@@ -1948,8 +2002,12 @@ $setglobal cm_taxCO2_regiDiff_convergence   scenario    !! def = scenario
 *** For example, setting the switch to GLO 50, SSA 5, CHA 40 means that in cm_startyear, SSA has carbon price of 5$/tCO2,  CHA has carbon price of 40$/tCO2, and all other regions have carbon price of 50$/tCO2.
 *** Important note: If regional carbon prices in the start year are manually set, the regional values are used as lower bounds for pm_taxCO2eq
 $setglobal cm_taxCO2_regiDiff_startyearValue endogenous !! def = "endogenous"
-*' cm_budgetCO2from2020RegiShare     "switch to set eoc regional carbon budget shares by region (for easier comparison than total budgets, endogenous calculation possible)"
+*** cm_budgetCO2from2020RegiShare     "switch to set eoc regional carbon budget shares by region (for easier comparison than total budgets, endogenous calculation possible)"
 $setglobal cm_budgetCO2from2020RegiShare  off !! def = off
+*** cm_peakBudgYrRegi  "switch to prescribe regional years of peaking carbon price, e.g. the net zero CO2 time step. Requires cm_taxCO2_Shape = 2."
+*** (off): no peaking year prescribed, carbon price can increase throughout the century
+*** example: " USA 2045, CHA 2045, EUR 2045, JPN 2045, NEU 2060, REF 2060, CAZ 2070, MEA 2060, LAM 2080,  OAS 2090,  IND 2100, SSA 2100"
+$setglobal cm_peakBudgYrRegi off !! def = off
 *** cm_ind_energy_limit Switch for setting upper limits on industry energy
 *** efficiency improvements.  See ./modules/37_subsectors/datainput.gms for
 *** implementation.
