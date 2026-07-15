@@ -119,18 +119,18 @@ else   !! if not yet within tolerance
                                                                       p45_factorRescale_taxCO2Regi(iteration,regi));
         );
     !! if the factor jumping pos-neg-pos or neg-pos-neg or if it was already on 1 for the last two iterations -> make the last increase only 30% of what was intended
-    if ((   (pm_factorRescale_taxCO2Regi_Funneled2(iteration, regi) le 1)  !! ge because last iteration may have already been adjusted upwards
-        AND (pm_factorRescale_taxCO2Regi_Funneled2(iteration-1, regi) ge 1)
-        AND (pm_factorRescale_taxCO2Regi_Funneled2(iteration-2, regi) le 1))
-        OR 
-        (   (pm_factorRescale_taxCO2Regi_Funneled2(iteration, regi) ge 1)  !! ge because last iteration may have already been adjusted upwards
-        AND (pm_factorRescale_taxCO2Regi_Funneled2(iteration-1, regi) le 1)
+    if ((   (pm_factorRescale_taxCO2Regi_Funneled2(iteration, regi) lt 1)  !! ge because last iteration may have already been adjusted upwards
+        AND (pm_factorRescale_taxCO2Regi_Funneled2(iteration-1, regi) gt 1)
+        AND (pm_factorRescale_taxCO2Regi_Funneled2(iteration-2, regi) lt 1))
+        OR
+        (   (pm_factorRescale_taxCO2Regi_Funneled2(iteration, regi) gt 1)  !! ge because last iteration may have already been adjusted upwards
+        AND (pm_factorRescale_taxCO2Regi_Funneled2(iteration-1, regi) lt 1)
         AND (pm_factorRescale_taxCO2Regi_Funneled2(iteration-2, regi) ge 1)),
         pm_factorRescale_taxCO2Regi_Funneled2(iteration, regi) = 1 - (0.3 * (1-p45_factorRescale_taxCO2Regi_Funneled(iteration, regi))); !! decrease the distance to 1
         );
   ); !! regi loop
   ); !! if iteration far enough
-
+  
 !! Simultaneous up- and downward adjustment of carbon prices in early iterations
 if (iteration.val le 30,
   p45_factorRescale_taxCO2Regi_Final(iteration, regi) = pm_factorRescale_taxCO2Regi_Funneled2(iteration, regi);
