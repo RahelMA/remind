@@ -616,10 +616,10 @@ o_pm_pebiolc_demandmag(iteration,ttot,all_regi)      "track pm_pebiolc_demandmag
 o_pm_macBaseMagpie(iteration,ttot,all_regi,all_enty) "track pm_macBaseMagpie across Nash iterations"
 o_pm_macSwitch(iteration,ttot,all_regi,all_enty)     "track pm_macSwitch across Nash iterations"
 o_p_efFossilFuelExtr_n2obio(iteration,all_regi)      "track p_efFossilFuelExtr for n2obio across Nash iterations"
-o_vm_fuExtr_pebiolc(iteration,ttot,all_regi)         "track vm_fuExtr for pebiolc across Nash iterations"
-o_vm_pebiolc_price(iteration,ttot,all_regi)          "track vm_pebiolc_price across Nash iterations"
-o_PEDem_Bio_ECrops(iteration,ttot,all_regi)          "track pebiolc demand across Nash iterations"
-o_vm_emiMacSector_co2luc(iteration,ttot,all_regi)    "track co2luc across Nash iterations"
+o_vm_fuExtr_pebiolc_iter(iteration,ttot,all_regi)         "track vm_fuExtr for pebiolc across Nash iterations"
+o_vm_pebiolc_price_iter(iteration,ttot,all_regi)          "track vm_pebiolc_price across Nash iterations"
+o_PEDem_Bio_ECrops_iter(iteration,ttot,all_regi)          "track pebiolc demand across Nash iterations"
+o_vm_emiMacSector_co2luc_iter(iteration,ttot,all_regi)    "track co2luc across Nash iterations"
 
 *** CES tree and energy services
 o_vm_cesIO_iter(ttot,all_regi,all_in,iteration)                              "Production factor over iterations" 
