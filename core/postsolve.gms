@@ -225,4 +225,15 @@ o_vm_fuExtr_pebiolc(iteration,ttot,regi) = vm_fuExtr.l(ttot,regi,"pebiolc","1");
 o_PEDem_Bio_ECrops(iteration,ttot,regi) = vm_fuExtr.l(ttot,regi,"pebiolc","1") + (1 - pm_costsPEtradeMp(regi,"pebiolc")) * vm_Mport.l(ttot,regi,"pebiolc") - vm_Xport.l(ttot,regi,"pebiolc");
 o_vm_emiMacSector_co2luc(iteration,ttot,regi) = vm_emiMacSector.l(ttot,regi,"co2luc");
 
+*** track CES tree and energy services over iterations
+loop(ttot$(ttot.val ge 2005),
+  o_vm_cesIO_iter(ttot,regi,in,iteration) = vm_cesIO.l(ttot,regi,in) ;
+  loop(entyFe2Sector(entyFe,"trans"),
+    o_vm_demFeForEs_iter(ttot,regi,entyFe,esty,teEs,iteration)$fe2es(entyFe,esty,teEs) = vm_demFeForEs.l(ttot,regi,entyFe,esty,teEs);
+    o_v_prodEs_iter(ttot,regi,entyFe,esty,teEs,iteration)$fe2es(entyFe,esty,teEs) = v_prodEs.l(ttot,regi,entyFe,esty,teEs);
+  );
+);
+
+
+
 *** EOF ./core/postsolve.gms

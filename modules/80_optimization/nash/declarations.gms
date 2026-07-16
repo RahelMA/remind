@@ -48,10 +48,6 @@ p80_esCapCost_iter(ttot,all_regi,all_teEs,iteration)                 "Capital en
 p80_fe2es_iter(ttot,all_regi,all_teEs,iteration)                     "Conversion factor from final energies to transport energy services over iterations [Tpkm/TWa, Ttkm/TWa]"
 p80_shFeCes_iter(ttot,all_regi,all_enty,all_in,all_teEs,iteration)   "Shares of fuels by CES node over iterations"
 
-*** CES tree 
-p80_cesIO_iter(ttot,all_regi,all_in,iteration)                               "Production factor over iterations" 
-p80_demFeForEs_iter(ttot,all_regi,all_enty,all_esty,all_teEs,iteration)      "Final energy which will be used in the energy service layer over iterations [TWa]"
-p80_prodEs_iter(ttot,all_regi,all_enty,all_esty,all_teEs,iteration)          "Energy services over iterations [Tpkm for passenger transport, Ttkm for freight transport]"
 
 
 p80_etaST_correct_safecopy(tall,all_enty,iteration)       "auxiliary parameter to remember short term price correction factor in percent, before new convergence adjustments"

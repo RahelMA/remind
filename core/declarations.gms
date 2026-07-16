@@ -620,6 +620,11 @@ o_vm_fuExtr_pebiolc(iteration,ttot,all_regi)         "track vm_fuExtr for pebiol
 o_vm_pebiolc_price(iteration,ttot,all_regi)          "track vm_pebiolc_price across Nash iterations"
 o_PEDem_Bio_ECrops(iteration,ttot,all_regi)          "track pebiolc demand across Nash iterations"
 o_vm_emiMacSector_co2luc(iteration,ttot,all_regi)    "track co2luc across Nash iterations"
+
+o_vm_cesIO_iter(ttot,all_regi,all_in,iteration)                              "Production factor over iterations" 
+o_vm_demFeForEs_iter(ttot,all_regi,all_enty,all_esty,all_teEs,iteration)     "Final energy which will be used in the energy service layer over iterations [TWa]"
+o_v_prodEs_iter(ttot,all_regi,all_enty,all_esty,all_teEs,iteration)          "Energy services over iterations [Tpkm for passenger transport, Ttkm for freight transport]"
+
 ;
 
 *** ------------- Scalars ----------------------------
