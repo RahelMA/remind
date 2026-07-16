@@ -36,10 +36,23 @@ p80_defic_sum_rel(iteration)                "Surplus monetary value over all tim
 p80_etaLT_correct(all_enty,iteration)       "long term price correction factor in percent"
 p80_etaST_correct(tall,all_enty,iteration)  "short term price correction factor in percent"
 
+*** RP parameters to track model results over iterations to help diagnose convergence problems
+*** Trade
 p80_Mport_iter(ttot,all_regi,all_enty,iteration)          "Imports over iterations"
 p80_Xport_iter(ttot,all_regi,all_enty,iteration)          "Exports over iterations"
 p80_prodPe_iter(ttot,all_regi,all_enty,iteration)         "PE production over iterations"
 p80_fuExtr_iter(ttot,all_regi,all_enty,rlf,iteration)     "Fuel extraction over iterations"
+
+*** edgeTransport
+p80_esCapCost_iter(ttot,all_regi,all_teEs,iteration)                 "Capital energy cost per unit of consumption for end-use capital (energy service layer) over iterations [T$/unit energy service]"
+p80_fe2es_iter(ttot,all_regi,all_teEs,iteration)                     "Conversion factor from final energies to transport energy services over iterations [Tpkm/TWa, Ttkm/TWa]"
+p80_shFeCes_iter(ttot,all_regi,all_enty,all_in,all_teEs,iteration)   "Shares of fuels by CES node over iterations"
+
+*** CES tree 
+p80_cesIO_iter(ttot,all_regi,all_in,iteration)                               "Production factor over iterations" 
+p80_demFeForEs_iter(ttot,all_regi,all_enty,all_esty,all_teEs,iteration)      "Final energy which will be used in the energy service layer over iterations [TWa]"
+p80_prodEs_iter(ttot,all_regi,all_enty,all_esty,all_teEs,iteration)          "Energy services over iterations [Tpkm for passenger transport, Ttkm for freight transport]"
+
 
 p80_etaST_correct_safecopy(tall,all_enty,iteration)       "auxiliary parameter to remember short term price correction factor in percent, before new convergence adjustments"
 o80_counter_iteration_trade_ttot(ttot,all_enty,iteration) "auxiliary parameter to display in which iteration and for which item (ttot, trade) additional convergence measures were taken"

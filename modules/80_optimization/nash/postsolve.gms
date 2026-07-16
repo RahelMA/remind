@@ -36,6 +36,24 @@ loop(ttot$(ttot.val ge 2005),
   ); 
 ); 
 
+*** track parameters read in from edgeTransport over iterations
+if(edgeTransportIter(iteration),
+  loop(ttot$(ttot.val ge 2005),
+    p80_esCapCost_iter(ttot,regi,teEs_dyn35,iteration)                  = pm_esCapCost(ttot,regi,teEs_dyn35);
+    p80_fe2es_iter(ttot,regi,teEs_dyn35,iteration)                      = pm_fe2es(ttot,regi,teEs_dyn35);
+    p80_shFeCes_iter(ttot,regi,entyFe,ppfen_dyn35,teEs_dyn35,iteration) = pm_shFeCes(ttot,regi,entyFe,ppfen_dyn35,teEs_dyn35);
+  );
+); 
+
+*** track CES tree and energy services over iterations
+loop(ttot$(ttot.val ge 2005),
+  p80_cesIO_iter(ttot,regi,in,iteration) = vm_cesIO.l(ttot,regi,in) ;
+  loop(entyFe2Sector(entyFe,"trans"),
+    p80_demFeForEs_iter(ttot,regi,entyFe,esty,teEs,iteration)$fe2es(entyFe,esty,teEs) = vm_demFeForEs.l(ttot,regi,entyFe,esty,teEs);
+    p80_prodEs_iter(ttot,regi,entyFe,esty,teEs,iteration)$fe2es(entyFe,esty,teEs) = v_prodEs.l(ttot,regi,entyFe,esty,teEs);
+  );
+);
+
 ***calculate residual surplus on the markets
 loop(ttot$(ttot.val ge 2005),
   loop(trade$(NOT tradeSe(trade)),
