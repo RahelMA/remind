@@ -36,15 +36,6 @@ loop(ttot$(ttot.val ge 2005),
   ); 
 ); 
 
-*** track parameters read in from edgeTransport over iterations
-if(edgeTransportIter(iteration),
-  loop(ttot$(ttot.val ge 2005),
-    p80_esCapCost_iter(ttot,regi,teEs_dyn35,iteration)                  = pm_esCapCost(ttot,regi,teEs_dyn35);
-    p80_fe2es_iter(ttot,regi,teEs_dyn35,iteration)                      = pm_fe2es(ttot,regi,teEs_dyn35);
-    p80_shFeCes_iter(ttot,regi,entyFe,ppfen_dyn35,teEs_dyn35,iteration) = pm_shFeCes(ttot,regi,entyFe,ppfen_dyn35,teEs_dyn35);
-  );
-); 
-
 ***calculate residual surplus on the markets
 loop(ttot$(ttot.val ge 2005),
   loop(trade$(NOT tradeSe(trade)),

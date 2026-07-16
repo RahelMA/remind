@@ -43,11 +43,6 @@ p80_Xport_iter(ttot,all_regi,all_enty,iteration)          "Exports over iteratio
 p80_prodPe_iter(ttot,all_regi,all_enty,iteration)         "PE production over iterations"
 p80_fuExtr_iter(ttot,all_regi,all_enty,rlf,iteration)     "Fuel extraction over iterations"
 
-*** edgeTransport
-p80_esCapCost_iter(ttot,all_regi,all_teEs,iteration)                 "Capital energy cost per unit of consumption for end-use capital (energy service layer) over iterations [T$/unit energy service]"
-p80_fe2es_iter(ttot,all_regi,all_teEs,iteration)                     "Conversion factor from final energies to transport energy services over iterations [Tpkm/TWa, Ttkm/TWa]"
-p80_shFeCes_iter(ttot,all_regi,all_enty,all_in,all_teEs,iteration)   "Shares of fuels by CES node over iterations"
-
 
 
 p80_etaST_correct_safecopy(tall,all_enty,iteration)       "auxiliary parameter to remember short term price correction factor in percent, before new convergence adjustments"
