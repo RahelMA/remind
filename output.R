@@ -69,7 +69,7 @@ parseOptions <- function() {
                         description="[options] can be the following flags and variables. If variables are not specified but needed, the scripts will ask the user.")
   # these flags appear in the various output scripts and are necessary here
   # if you add a command line argument to a script, add it here as well
-  additionalScriptOptions = list("profileNames", "runs", "folder", "project",
+  additionalScriptOptions = list("profileNames", "runs", "folder", "project", "sections",
     "outputFilename", "model", "mapping", "summationFile", "logFile", "removeFromScen",
     "addToScen", "iiasatemplate", "timesteps", "validationConfig", "interactive")
   for (option in additionalScriptOptions) {
@@ -125,7 +125,7 @@ promptForAliases <- function(outputdirs, scenarios) {
   aliases_str <- gms::getLine()
   aliases_list <- trimws(unlist(strsplit(aliases_str, ",")))
 
-  if (length(scenarios) > length(aliases_list)) {
+  if (length(scenarios) > length(aliases_list) && length(aliases_list) > 0) {
     warning("Not enough aliases supplied. Only renaming first scenarios.")
   }
   for (i in seq_along(aliases_list)) {

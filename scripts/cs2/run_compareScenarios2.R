@@ -8,14 +8,15 @@
 library(piamPlotComparison)
 
 if (!exists("source_include")) {
-  lucode2::readArgs("outputdirs", "outFileName", "profileName", "aliases")
+  lucode2::readArgs("outputdirs", "outFileName", "profileName", "aliases", "sections")
 }
 
 run_compareScenarios2 <- function(
   outputdirs,
   outFileName,
   profileName,
-  aliases=NULL
+  aliases,
+  sections
 ) {
 
   stopifnot(length(profileName) == 1 && is.character(profileName) && !is.na(profileName))
@@ -52,7 +53,8 @@ run_compareScenarios2 <- function(
     outputDir = outDir,
     outputFile = outFileName,
     outputFormat = "pdf",
-    mifScenNames = aliases
+    mifScenNames = aliases,
+    sections = sections
   )
 
   # Load cs2 profile and change args.
@@ -94,4 +96,4 @@ run_compareScenarios2 <- function(
   message("Done!\n")
 }
 
-run_compareScenarios2(outputdirs, outFileName, profileName, aliases)
+run_compareScenarios2(outputdirs, outFileName, profileName, aliases, sections)
