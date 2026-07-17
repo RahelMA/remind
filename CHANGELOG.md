@@ -14,7 +14,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     [[#2413](https://github.com/remindmodel/remind/pull/2413)]
 
 ### added
--
+- **scripts** Add the possibility to build only some sections of the compareScenarios2 report with `--sections=`
+    [[#2415](https://github.com/remindmodel/remind/pull/2415)]
 
 ### removed
 -
