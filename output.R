@@ -54,10 +54,10 @@ parseOptions <- function() {
                 help="string to be added to filenames by some output scripts (compareScenarios, xlsx_IIASA)"),
     make_option("--output", type="character", default=NULL,
                 help="directly select a specific script (without .R extension)"),
-    make_option("--outputdir", type="character", default=NULL,
+    make_option("--outputdirs", type="character", default=NULL,
                 help="directly specify output directories as comma-separated list (e.g. ./output/SSP2-Base-rem-1,./output/NDC-rem-1)"),
     make_option("--aliases", type="character", default=NULL,
-                help="Specify aliases for the runs given in outputdir as a comma-separated list (e.g. aliases=default,modified)"),
+                help="Specify aliases for the runs given in outputdirs as a comma-separated list (e.g. aliases=default,modified)"),
     make_option("--remind_dir", type="character", default=NULL,
                 help="path to remind or output directories where runs can be found. Defaults to ./output. Can specify multiple comma-separated folders (e.g. .,../otherremind)"),
     make_option("--renv", type="character", default=NULL,
@@ -65,14 +65,16 @@ parseOptions <- function() {
     make_option("--slurmConfig", type="character", default=NULL,
                 help="specify SLURM selection: use 'priority', 'short', or 'standby', or pass multiple SLURM arguments (e.g. '--qos=priority --mem=8000')")
   )
-  parser <- OptionParser(usage="Rscript output.R [options]", option_list=options,
+  parser <- OptionParser(usage="Rscript output.R [options prefixed by --, e.g. --comp=single]", option_list=options,
                         description="[options] can be the following flags and variables. If variables are not specified but needed, the scripts will ask the user.")
-  scriptFlags = c("outputDirs", "outFileName", "profileNames", "profileName", "runs", "folder", "special_requests",
-    "project", "outputFilename", "model", "mapping", "summationFile", "logFile", "removeFromScen",
-    "addToScen", "iiasatemplate", "timesteps", "gdx_name", "gdxName", "gdx_ref_name", "gdx_refpolicycost_name",
-    "validationConfig", "startgroup", "titletag")
-  # TODO
-  
+  # these flags appear in the various output scripts and are necessary here
+  # if you add a command line argument to a script, add it here as well
+  additionalScriptOptions = list("profileNames", "runs", "folder", "project",
+    "outputFilename", "model", "mapping", "summationFile", "logFile", "removeFromScen",
+    "addToScen", "iiasatemplate", "timesteps", "validationConfig", "interactive")
+  for (option in additionalScriptOptions) {
+    parser <- add_option(parser, paste0("--", option), help="This option is used in an output script, see your script for information.")
+  }
   return(parse_args(parser))
 }
 
@@ -295,7 +297,7 @@ runSingle <- function(output, outputdirs, slurmConfig, test) { # comp = single
         # send the output script to slurm
         timestamp <- format(Sys.time(), "%Y-%m-%d_%H.%M.%S")
         logfile <- file.path(outputdir, paste0("log_output_", timestamp, ".txt"))
-        Rscripts <- paste0("Rscript scripts/output/single/", name, " outputdir=", outputdir, collapse = "; ")
+        Rscripts <- paste0("Rscript scripts/output/single/", name, " --outputdir=", outputdir, collapse = "; ")
         slurmcmd <- paste0("sbatch ", slurmConfig, " --job-name=", logfile, " --output=", logfile,
                       " --mail-type=END,FAIL --comment=output.R --wrap='", Rscripts, "'")
         message("Sending to slurm: ", paste(name, collapse = ", "), ". Find log in ", logfile)
@@ -320,7 +322,7 @@ output <- function(args) {
   remind_dir <- if (is.null(args[["remind_dir"]])) NULL                                           else unlist(strsplit(args[["remind_dir"]], ","))   
   comp       <- if (is.null(args[["comp"]]))       chooseCompMode()                               else args[["comp"]]
   output     <- if (is.null(args[["output"]]))     chooseOutputScript(comp)                       else unlist(strsplit(args[["output"]], ","))
-  outputdirs <- if (is.null(args[["outputdir"]]))  chooseOutputDirs(output, args[["remind_dir"]]) else unlist(strsplit(args[["outputdir"]], ","))
+  outputdirs <- if (is.null(args[["outputdirs"]]))  chooseOutputDirs(output, args[["remind_dir"]]) else unlist(strsplit(args[["outputdirs"]], ","))
 
   if (comp %in% c("comparison", "export")) {
     # aliases are names for scenarios (=outputdirs) that are prompted when the scenarios have duplicate names

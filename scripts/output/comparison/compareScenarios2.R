@@ -64,10 +64,10 @@ startComp <- function(
       " --mail-type=END,FAIL --time=200",
       if (!grepl("--mem", slurmConfig)) " --mem=8000",
       " --wrap=\"Rscript ", script,
-      " outputDirs=", paste(outputDirs, collapse = ","),
-      " profileName=", profileName,
-      " outFileName=", outFileName,
-      " aliases=", paste(aliases, collapse = ","),
+      " --outputDirs=", paste(outputDirs, collapse = ","),
+      " --profileName=", profileName,
+      " --outFileName=", outFileName,
+      " --aliases=", paste(aliases, collapse = ","),
       "\"")
     cat(clcom, "\n")
     system(clcom)

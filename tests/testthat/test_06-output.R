@@ -8,7 +8,7 @@ skipIfFast()
 skipIfPreviousFailed()
 
 test_that("output.R -> single -> reporting works", {
-  output <- localSystem2("Rscript", c("output.R", "comp=single", "output=reporting", "outputdir=output/testOneRegi",
+  output <- localSystem2("Rscript", c("output.R", "--comp=single", "--output=reporting", "--outputdirs=output/testOneRegi",
                                       "slurmConfig='--qos=priority --mem=8000 --wait --time=120'"))
   printIfFailed(output)
   expectSuccessStatus(output)
@@ -20,8 +20,8 @@ test_that("output.R -> single -> reporting works", {
 test_that("output.R -> export -> xlsx_IIASA works", {
   exportfiles <- Sys.glob(file.path("..", "..", "output", "export", "*TESTTHAT*"))
   unlink(exportfiles)
-  output <- localSystem2("Rscript", c("output.R", "project=TESTTHAT", "filename_prefix=TESTTHAT",
-                                      "comp=export", "output=xlsx_IIASA", "outputdir=output/testOneRegi"))
+  output <- localSystem2("Rscript", c("output.R", "--project=TESTTHAT", "--filename_prefix=TESTTHAT",
+                                      "--comp=export", "--output=xlsx_IIASA", "--outputdirs=output/testOneRegi"))
   printIfFailed(output)
   exportfiles <- Sys.glob(file.path("..", "..", "output", "export", "*TESTTHAT*"))
   expect_true(sum(grepl("REMIND_TESTTHAT.*xlsx$", exportfiles)) == 1)

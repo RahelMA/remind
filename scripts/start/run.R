@@ -265,7 +265,7 @@ run <- function() {
   # these arguments are read by output.R to replace the command line interface
   # this is not more explicit yet due to renv doubts
   passedArgs <- list(
-    outputdir = cfg$results_folder,
+    outputdirs = cfg$results_folder,
     output    = cfg$output,
     comp      = "single",
     test      = FALSE
