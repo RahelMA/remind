@@ -38,7 +38,7 @@ determineDefaultProfiles <- function(outputDir) {
 
 # Start compareScenarios2 either on the cluster or locally.
 startComp <- function(
-  outputDirs,
+  outputdirs,
   nameCore,
   profileName,
   aliases=NULL
@@ -64,10 +64,10 @@ startComp <- function(
       " --mail-type=END,FAIL --time=200",
       if (!grepl("--mem", slurmConfig)) " --mem=8000",
       " --wrap=\"Rscript ", script,
-      " outputDirs=", paste(outputDirs, collapse = ","),
-      " profileName=", profileName,
-      " outFileName=", outFileName,
-      " aliases=", paste(aliases, collapse = ","),
+      " --outputdirs=", paste(outputdirs, collapse = ","),
+      " --profileName=", profileName,
+      " --outFileName=", outFileName,
+      " --aliases=", paste(aliases, collapse = ","),
       "\"")
     cat(clcom, "\n")
     system(clcom)
@@ -115,7 +115,7 @@ nameCore <- paste0(filename_prefix, ifelse(filename_prefix == "", "", "-"), time
 # Start a job for each profile.
 for (profileName in profileNames) {
   startComp(
-    outputDirs = outputdirs,
+    outputdirs = outputdirs,
     nameCore = nameCore,
     profileName = profileName,
     aliases = aliases)

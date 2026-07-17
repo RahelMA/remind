@@ -8,11 +8,11 @@
 library(piamPlotComparison)
 
 if (!exists("source_include")) {
-  lucode2::readArgs("outputDirs", "outFileName", "profileName", "aliases")
+  lucode2::readArgs("outputdirs", "outFileName", "profileName", "aliases")
 }
 
 run_compareScenarios2 <- function(
-  outputDirs,
+  outputdirs,
   outFileName,
   profileName,
   aliases=NULL
@@ -34,15 +34,15 @@ run_compareScenarios2 <- function(
   system(paste0("mkdir ", outFileName))
   outDir <- normalizePath(outFileName, mustWork = TRUE)
 
-  outputDirs <- unique(normalizePath(outputDirs, mustWork = TRUE))
+  outputdirs <- unique(normalizePath(outputdirs, mustWork = TRUE))
 
   if (profileName == "EDGE-Transport") {
-    mifPath <- normalizePath(file.path(outputDirs, "EDGE-T", "Transport.mif"), mustWork = TRUE)
+    mifPath <- normalizePath(file.path(outputdirs, "EDGE-T", "Transport.mif"), mustWork = TRUE)
   } else {
-    mifPath <- remind2::getMifScenPath(outputDirs, mustWork = TRUE)
+    mifPath <- remind2::getMifScenPath(outputdirs, mustWork = TRUE)
   }
-  histPath <- remind2::getMifHistPath(outputDirs[1], mustWork = TRUE)
-  scenConfigPath <- remind2::getCfgScenPath(outputDirs, mustWork = TRUE)
+  histPath <- remind2::getMifHistPath(outputdirs[1], mustWork = TRUE)
+  scenConfigPath <- remind2::getCfgScenPath(outputdirs, mustWork = TRUE)
 
   # predefined arguments
   args <- list(
@@ -94,4 +94,4 @@ run_compareScenarios2 <- function(
   message("Done!\n")
 }
 
-run_compareScenarios2(outputDirs, outFileName, profileName, aliases)
+run_compareScenarios2(outputdirs, outFileName, profileName, aliases)
