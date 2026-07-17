@@ -10,7 +10,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### input data/calibration
 
 ### changed
--
+- **scripts** Harmonize command line arguments for output.R: prefix `--` is now required, change `--outputdir` to `--outputdirs`
+    [[#2413](https://github.com/remindmodel/remind/pull/2413)]
 
 ### added
 -
