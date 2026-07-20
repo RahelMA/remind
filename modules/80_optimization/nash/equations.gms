@@ -27,6 +27,25 @@ q80_budg_intertemp(regi)..
       )
     );
 
+
+$ifthen "%emicapregi%" == "JUSTMip" 
+
+Equation q80_budg_intertemp_perm;
+q80_budg_intertemp_perm..
+
+0 =e=
+    SUM(ttot$(ttot.val ge 2005 and ttot.val le 2100),
+        pm_ts(ttot)
+        *
+        SUM(regi,
+            (vm_Xport(ttot,regi,"perm")
+            - vm_Mport(ttot,regi,"perm"))
+            * pm_pvp(ttot,"perm")
+        )
+    );
+
+$endif
+
 *' quadratic adjustment costs, penalizing deviations from the trade pattern of the last iteration.
 q80_costAdjNash(ttot,regi)$( ttot.val ge cm_startyear ) ..
   vm_costAdjNash(ttot,regi) 

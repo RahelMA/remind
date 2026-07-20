@@ -10,17 +10,10 @@
 *** read in data of cost-optimal reference climate policy run
 *' load CO2 emissions from reference run to assign the allocated permits
 
-* Load a starting value for p41_co2eq from the cost optimal reference run.
-
-Execute_Loadpoint "input_ref" p41_co2eq = vm_co2eq.l;
-
-
-
 *** initialization of pm_shPermit and vm_perm for bounds
-pm_emicapglob(t) = sum(regi, max(0, p41_co2eq(t,regi)));
-pm_shPerm(t,regi) = 0;
-pm_shPerm(t,regi)$(pm_emicapglob(t) > 0) =
-    max(0, p41_co2eq(t,regi)) / pm_emicapglob(t);
+pm_emicapglob(t) = 100;
+pm_shPerm(t,regi) = 1;
+
 
 vm_perm.fx(t,regi) = 0;
 

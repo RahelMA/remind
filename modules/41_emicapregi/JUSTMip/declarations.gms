@@ -13,7 +13,6 @@ vm_perm(ttot,all_regi)                          "emission allowances [GtCeq]"
 parameter
 pm_shPerm(tall, all_regi)                       "emission permit shares [share]"
 pm_emicapglob(tall)                             "global emission cap [GtC]"
-p41_co2eq(ttot,all_regi)                        "tradeable CO2 emissions"
 p41_gdpGlob(ttot)                                "global GDP"
 ;
 

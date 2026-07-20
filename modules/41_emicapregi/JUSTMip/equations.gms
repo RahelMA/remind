@@ -9,7 +9,7 @@
 *' @equations
 
 *' calculate emission cap in absolute terms (1e9 converts GtCeq to tonnes of CO2-equivalent and 1e-12 then converts the result to trillion USD)
-q41_globalPermitTradeCap(t,regi)$(t.val gt 2030 and t.val le 2100) ..
+q41_globalPermitTradeCap(t,regi)$(t.val gt 2025) ..
 
     sum(regi2,
         (vm_Xport(t,regi2,"perm") + vm_Mport(t,regi2,"perm"))
